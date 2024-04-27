@@ -103,80 +103,16 @@ export class e_changeOwner__Params {
     this._event = event;
   }
 
-  get param0(): BigInt {
+  get _goodid(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get param1(): Address {
+  get _owner(): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get param2(): Address {
+  get _to(): Address {
     return this._event.parameters[2].value.toAddress();
-  }
-}
-
-export class e_collectProtocolFee extends ethereum.Event {
-  get params(): e_collectProtocolFee__Params {
-    return new e_collectProtocolFee__Params(this);
-  }
-}
-
-export class e_collectProtocolFee__Params {
-  _event: e_collectProtocolFee;
-
-  constructor(event: e_collectProtocolFee) {
-    this._event = event;
-  }
-
-  get param0(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get param1(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get param2(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-}
-
-export class e_initNormalGood extends ethereum.Event {
-  get params(): e_initNormalGood__Params {
-    return new e_initNormalGood__Params(this);
-  }
-}
-
-export class e_initNormalGood__Params {
-  _event: e_initNormalGood;
-
-  constructor(event: e_initNormalGood) {
-    this._event = event;
-  }
-
-  get param0(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get param1(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get param2(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get param3(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
-  }
-
-  get param4(): Address {
-    return this._event.parameters[4].value.toAddress();
-  }
-
-  get param5(): Address {
-    return this._event.parameters[5].value.toAddress();
   }
 }
 
@@ -195,54 +131,6 @@ export class e_proof__Params {
 
   get param0(): BigInt {
     return this._event.parameters[0].value.toBigInt();
-  }
-}
-
-export class e_updateGood extends ethereum.Event {
-  get params(): e_updateGood__Params {
-    return new e_updateGood__Params(this);
-  }
-}
-
-export class e_updateGood__Params {
-  _event: e_updateGood;
-
-  constructor(event: e_updateGood) {
-    this._event = event;
-  }
-
-  get param0(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get param1(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-}
-
-export class e_updategoodconfig extends ethereum.Event {
-  get params(): e_updategoodconfig__Params {
-    return new e_updategoodconfig__Params(this);
-  }
-}
-
-export class e_updategoodconfig__Params {
-  _event: e_updategoodconfig;
-
-  constructor(event: e_updategoodconfig) {
-    this._event = event;
-  }
-
-  get param0(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get param1(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get param2(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -272,7 +160,7 @@ export class MarketManager__getGoodStateResultGood_Struct extends ethereum.Tuple
   }
 }
 
-export class MarketManager__getProofIdInputInvestproofkeyStruct extends ethereum.Tuple {
+export class MarketManager__getProofIdInput_investproofkeyStruct extends ethereum.Tuple {
   get owner(): Address {
     return this[0].toAddress();
   }
@@ -309,66 +197,6 @@ export class MarketManager__getProofStateResultProof_Struct extends ethereum.Tup
 
   get valueinvest(): BigInt {
     return this[5].toBigInt();
-  }
-}
-
-export class MarketManager__goodsResult {
-  value0: BigInt;
-  value1: Address;
-  value2: Address;
-  value3: BigInt;
-  value4: BigInt;
-  value5: BigInt;
-
-  constructor(
-    value0: BigInt,
-    value1: Address,
-    value2: Address,
-    value3: BigInt,
-    value4: BigInt,
-    value5: BigInt,
-  ) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-    this.value4 = value4;
-    this.value5 = value5;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromAddress(this.value1));
-    map.set("value2", ethereum.Value.fromAddress(this.value2));
-    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
-    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
-    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
-    return map;
-  }
-
-  getGoodConfig(): BigInt {
-    return this.value0;
-  }
-
-  getOwner(): Address {
-    return this.value1;
-  }
-
-  getErc20address(): Address {
-    return this.value2;
-  }
-
-  getCurrentState(): BigInt {
-    return this.value3;
-  }
-
-  getInvestState(): BigInt {
-    return this.value4;
-  }
-
-  getFeeQunitityState(): BigInt {
-    return this.value5;
   }
 }
 
@@ -437,38 +265,6 @@ export class MarketManager extends ethereum.SmartContract {
     return new MarketManager("MarketManager", address);
   }
 
-  _ownerproofs(param0: Address, param1: BigInt): BigInt {
-    let result = super.call(
-      "_ownerproofs",
-      "_ownerproofs(address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromUnsignedBigInt(param1),
-      ],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try__ownerproofs(
-    param0: Address,
-    param1: BigInt,
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "_ownerproofs",
-      "_ownerproofs(address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromUnsignedBigInt(param1),
-      ],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   addbanlist(_user: Address): boolean {
     let result = super.call("addbanlist", "addbanlist(address):(bool)", [
       ethereum.Value.fromAddress(_user),
@@ -480,6 +276,25 @@ export class MarketManager extends ethereum.SmartContract {
   try_addbanlist(_user: Address): ethereum.CallResult<boolean> {
     let result = super.tryCall("addbanlist", "addbanlist(address):(bool)", [
       ethereum.Value.fromAddress(_user),
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  addreferer(_referer: Address): boolean {
+    let result = super.call("addreferer", "addreferer(address):(bool)", [
+      ethereum.Value.fromAddress(_referer),
+    ]);
+
+    return result[0].toBoolean();
+  }
+
+  try_addreferer(_referer: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall("addreferer", "addreferer(address):(bool)", [
+      ethereum.Value.fromAddress(_referer),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -507,10 +322,10 @@ export class MarketManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  changeOwner(_goodid: BigInt, _to: Address): boolean {
+  changeGoodOwner(_goodid: BigInt, _to: Address): boolean {
     let result = super.call(
-      "changeOwner",
-      "changeOwner(uint256,address):(bool)",
+      "changeGoodOwner",
+      "changeGoodOwner(uint256,address):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(_goodid),
         ethereum.Value.fromAddress(_to),
@@ -520,10 +335,13 @@ export class MarketManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try_changeOwner(_goodid: BigInt, _to: Address): ethereum.CallResult<boolean> {
+  try_changeGoodOwner(
+    _goodid: BigInt,
+    _to: Address,
+  ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
-      "changeOwner",
-      "changeOwner(uint256,address):(bool)",
+      "changeGoodOwner",
+      "changeGoodOwner(uint256,address):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(_goodid),
         ethereum.Value.fromAddress(_to),
@@ -568,19 +386,25 @@ export class MarketManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  cusomerno(): BigInt {
-    let result = super.call("cusomerno", "cusomerno():(uint256)", []);
+  check_banlist(_user: Address): boolean {
+    let result = super.call("check_banlist", "check_banlist(address):(bool)", [
+      ethereum.Value.fromAddress(_user),
+    ]);
 
-    return result[0].toBigInt();
+    return result[0].toBoolean();
   }
 
-  try_cusomerno(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("cusomerno", "cusomerno():(uint256)", []);
+  try_check_banlist(_user: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "check_banlist",
+      "check_banlist(address):(bool)",
+      [ethereum.Value.fromAddress(_user)],
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   customerno(param0: Address): BigInt {
@@ -595,6 +419,21 @@ export class MarketManager extends ethereum.SmartContract {
     let result = super.tryCall("customerno", "customerno(address):(uint256)", [
       ethereum.Value.fromAddress(param0),
     ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  customernum(): BigInt {
+    let result = super.call("customernum", "customernum():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_customernum(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("customernum", "customernum():(uint256)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -686,24 +525,24 @@ export class MarketManager extends ethereum.SmartContract {
   }
 
   getProofId(
-    investproofkey: MarketManager__getProofIdInputInvestproofkeyStruct,
+    _investproofkey: MarketManager__getProofIdInput_investproofkeyStruct,
   ): BigInt {
     let result = super.call(
       "getProofId",
       "getProofId((address,uint256,uint256)):(uint256)",
-      [ethereum.Value.fromTuple(investproofkey)],
+      [ethereum.Value.fromTuple(_investproofkey)],
     );
 
     return result[0].toBigInt();
   }
 
   try_getProofId(
-    investproofkey: MarketManager__getProofIdInputInvestproofkeyStruct,
+    _investproofkey: MarketManager__getProofIdInput_investproofkeyStruct,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getProofId",
       "getProofId((address,uint256,uint256)):(uint256)",
-      [ethereum.Value.fromTuple(investproofkey)],
+      [ethereum.Value.fromTuple(_investproofkey)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -758,45 +597,6 @@ export class MarketManager extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  goods(param0: BigInt): MarketManager__goodsResult {
-    let result = super.call(
-      "goods",
-      "goods(uint256):(uint256,address,address,uint256,uint256,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)],
-    );
-
-    return new MarketManager__goodsResult(
-      result[0].toBigInt(),
-      result[1].toAddress(),
-      result[2].toAddress(),
-      result[3].toBigInt(),
-      result[4].toBigInt(),
-      result[5].toBigInt(),
-    );
-  }
-
-  try_goods(param0: BigInt): ethereum.CallResult<MarketManager__goodsResult> {
-    let result = super.tryCall(
-      "goods",
-      "goods(uint256):(uint256,address,address,uint256,uint256,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new MarketManager__goodsResult(
-        value[0].toBigInt(),
-        value[1].toAddress(),
-        value[2].toAddress(),
-        value[3].toBigInt(),
-        value[4].toBigInt(),
-        value[5].toBigInt(),
-      ),
-    );
   }
 
   goodseq(param0: Bytes): BigInt {
@@ -881,6 +681,38 @@ export class MarketManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  ownerproofs(param0: Address, param1: BigInt): BigInt {
+    let result = super.call(
+      "ownerproofs",
+      "ownerproofs(address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_ownerproofs(
+    param0: Address,
+    param1: BigInt,
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "ownerproofs",
+      "ownerproofs(address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   payGood(_goodid: BigInt, _payquanity: BigInt, _recipent: Address): boolean {
     let result = super.call(
       "payGood",
@@ -914,6 +746,21 @@ export class MarketManager extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  proofnum(): BigInt {
+    let result = super.call("proofnum", "proofnum():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_proofnum(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("proofnum", "proofnum():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   proofs(param0: BigInt): MarketManager__proofsResult {
@@ -1212,6 +1059,10 @@ export class AddrefererCall__Outputs {
   constructor(call: AddrefererCall) {
     this._call = call;
   }
+
+  get is_success_(): boolean {
+    return this._call.outputValues[0].value.toBoolean();
+  }
 }
 
 export class BuyGoodCall extends ethereum.Call {
@@ -1330,20 +1181,20 @@ export class BuyGoodForPayCall__Outputs {
   }
 }
 
-export class ChangeOwnerCall extends ethereum.Call {
-  get inputs(): ChangeOwnerCall__Inputs {
-    return new ChangeOwnerCall__Inputs(this);
+export class ChangeGoodOwnerCall extends ethereum.Call {
+  get inputs(): ChangeGoodOwnerCall__Inputs {
+    return new ChangeGoodOwnerCall__Inputs(this);
   }
 
-  get outputs(): ChangeOwnerCall__Outputs {
-    return new ChangeOwnerCall__Outputs(this);
+  get outputs(): ChangeGoodOwnerCall__Outputs {
+    return new ChangeGoodOwnerCall__Outputs(this);
   }
 }
 
-export class ChangeOwnerCall__Inputs {
-  _call: ChangeOwnerCall;
+export class ChangeGoodOwnerCall__Inputs {
+  _call: ChangeGoodOwnerCall;
 
-  constructor(call: ChangeOwnerCall) {
+  constructor(call: ChangeGoodOwnerCall) {
     this._call = call;
   }
 
@@ -1356,10 +1207,10 @@ export class ChangeOwnerCall__Inputs {
   }
 }
 
-export class ChangeOwnerCall__Outputs {
-  _call: ChangeOwnerCall;
+export class ChangeGoodOwnerCall__Outputs {
+  _call: ChangeGoodOwnerCall;
 
-  constructor(call: ChangeOwnerCall) {
+  constructor(call: ChangeGoodOwnerCall) {
     this._call = call;
   }
 

@@ -116,11 +116,7 @@ type Transaction @entity {
   togoodQuantity:BigInt!
   togoodfee:BigInt!
   timestamp: BigInt!
-  #derived values
 }
-
-
-
 
 type GoodData @entity {
   # hour:GoodId+h+minute (60 rows)
@@ -184,7 +180,11 @@ type ParGoodData @entity {
 }
 
 type MarketData @entity {
-  #market address
+  # hour:GoodId+h+minute (60 rows)
+  # day: GoodId+d+20minute (72 rows)
+  # week:GoodId+w+3hour  (56 rows)
+  # month:GoodId+m+12hour (62 rows)
+  # year: GoodId+y+5day (73)
   id: ID!
   marketConfig: BigInt!
   pargoodCount: BigInt!

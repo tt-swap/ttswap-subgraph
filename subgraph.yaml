@@ -9,7 +9,7 @@ dataSources:
     name: MarketManager
     network: mainnet
     source:
-      address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+      address: "0xB05BFcb8E46fdF3660ED62479d0b44D5f9320e3e"
       abi: MarketManager
       startBlock: 0
     mapping:
@@ -18,12 +18,16 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/marketmanage.ts
       entities:
-        - marketstate
-        - goodsstate
-        - tokenstate
+        - Customer
+        - MarketState
+        - GoodState
+        - ParGoodState
+        - ProofState
+        - Transaction
+        - GoodData
+        - ParGoodData
+        - MarketData
       abis:
-        - name: GoodManage
-          file: ./abis/GoodManage.json
         - name: MarketManager
           file: ./abis/MarketManager.json
         - name: ERC20

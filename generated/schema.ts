@@ -2202,19 +2202,6 @@ export class MarketData extends Entity {
   set modifiedTime(value: BigInt) {
     this.set("modifiedTime", Value.fromBigInt(value));
   }
-
-  get marketCreator(): string {
-    let value = this.get("marketCreator");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set marketCreator(value: string) {
-    this.set("marketCreator", Value.fromString(value));
-  }
 }
 
 export class ProofStateLoader extends Entity {
