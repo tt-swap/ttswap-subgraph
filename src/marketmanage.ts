@@ -1983,21 +1983,21 @@ export function handle_fn_disinvestValueProof(
 }
 //nomalgood
 export function handle_fn_investNormalGood(call: InvestNormalGoodCall): void {
-        let actualFeeQuantity = call.outputs.valueInvest.actualFeeQuantity;
-        let contructFeeQuantity = call.outputs.valueInvest.contructFeeQuantity; //构建手续费
-        let actualInvestValue = call.outputs.valueInvest.actualInvestValue; //实际投资价值
+        let actualFeeQuantity = call.outputs.valueInvest_.actualFeeQuantity;
+        let contructFeeQuantity = call.outputs.valueInvest_.contructFeeQuantity; //构建手续费
+        let actualInvestValue = call.outputs.valueInvest_.actualInvestValue; //实际投资价值
         let actualInvestQuantity =
-                call.outputs.valueInvest.actualInvestQuantity; //实际投资数量
+                call.outputs.valueInvest_.actualInvestQuantity; //实际投资数量
         let goodid = call.inputs._valuegood;
 
         let normalactualFeeQuantity =
-                call.outputs.normalInvest.actualFeeQuantity;
+                call.outputs.normalInvest_.actualFeeQuantity;
         let normalcontructFeeQuantity =
-                call.outputs.normalInvest.contructFeeQuantity; //构建手续费
+                call.outputs.normalInvest_.contructFeeQuantity; //构建手续费
         let normalactualInvestValue =
-                call.outputs.normalInvest.actualInvestValue; //实际投资价值
+                call.outputs.normalInvest_.actualInvestValue; //实际投资价值
         let normalactualInvestQuantity =
-                call.outputs.normalInvest.actualInvestQuantity; //实际投资数量
+                call.outputs.normalInvest_.actualInvestQuantity; //实际投资数量
         let normalgoodid = call.inputs._togood;
 
         let modifiedTime = call.block.timestamp;
