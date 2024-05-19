@@ -1,15 +1,55 @@
 /* eslint-disable prefer-const */
-import { BigInt, BigDecimal, Address } from '@graphprotocol/graph-ts'
-import { MarketManager as MarketContract } from "../../generated/MarketManager/MarketManager"
+import { BigInt, BigDecimal, Address } from "@graphprotocol/graph-ts";
+import { MarketManager as MarketContract } from "../../generated/MarketManager/MarketManager";
 
-export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
-export const MARKET_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F984'
+export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
+export const MARKET_ADDRESS = "0x9d0108882640990941FbC5677C1D9e3281a4e74C";
 
-export let ZERO_BI = BigInt.fromI32(0)
-export let ONE_BI = BigInt.fromI32(1)
-export let ZERO_BD = BigDecimal.fromString('0')
-export let ONE_BD = BigDecimal.fromString('1')
-export let BI_18 = BigInt.fromI32(18)
-export let BI_128 = BigInt.fromI32(170141183460469231731687303715884105728)
+export let ZERO_BI = BigInt.fromI32(0);
+export let ONE_BI = BigInt.fromI32(1);
+export let ZERO_BD = BigDecimal.fromString("0");
+export let ONE_BD = BigDecimal.fromString("1");
+export let BI_18 = BigInt.fromI32(18);
+export let BI_128 = BigInt.fromString(
+        "340282366920938463463374607431768211456"
+);
 
-export let marketContract = MarketContract.bind(Address.fromString(MARKET_ADDRESS))
+export let marketContract = MarketContract.bind(
+        Address.fromString(MARKET_ADDRESS)
+);
+export function convertQuantityToDecimal(
+        tokenAmount: BigInt,
+        exchangeDecimals: BigInt
+): BigDecimal {
+        if (exchangeDecimals == ZERO_BI) {
+                return tokenAmount.toBigDecimal();
+        }
+        return tokenAmount
+                .toBigDecimal()
+                .div(exponentToBigDecimal(exchangeDecimals));
+}
+
+export function convertValueToDecimal(tokenAmount: BigInt): BigDecimal {
+        return tokenAmount
+                .toBigDecimal()
+                .div(exponentToBigDecimal(BigInt.fromString("6")));
+}
+
+export function exponentToBigDecimal(decimals: BigInt): BigDecimal {
+        let bd = BigDecimal.fromString("1");
+        for (let i = ZERO_BI; i.lt(decimals as BigInt); i = i.plus(ONE_BI)) {
+                bd = bd.times(BigDecimal.fromString("10"));
+        }
+        return bd;
+}
+
+export function compareprice(price1: BigInt, price2: BigInt): boolean {
+        if (
+                price1.div(BI_128).times(price2.mod(BI_128)) <
+                price1.mod(BI_128).times(price2.div(BI_128))
+        ) {
+                return true;
+        } else {
+                return false;
+        }
+}

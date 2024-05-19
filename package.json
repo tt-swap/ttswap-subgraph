@@ -5,9 +5,9 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ ttswap",
-    "create-local": "graph create --node http://localhost:8020/ ttswap",
-    "remove-local": "graph remove --node http://localhost:8020/ ttswap",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ttswap",
+    "create-local": "graph create --node http://148.135.122.26:8020/ ttswap",
+    "remove-local": "graph remove --node http://148.135.122.26:8020/ ttswap",
+    "deploy-local": "graph deploy --node http://148.135.122.26:8020/ --ipfs http://148.135.122.26:5001 ttswap",
     "test": "graph test"
   },
   "dependencies": {

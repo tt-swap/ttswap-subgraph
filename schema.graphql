@@ -29,9 +29,6 @@ type MarketState @entity {
   marketCreator: String! # address
 }
 
-
-
-
 type GoodState @entity {
   id: ID!
   pargood:ParGoodState!
@@ -42,15 +39,15 @@ type GoodState @entity {
   owner: String!
   erc20Address: String!
   goodConfig: BigInt!
-  currentValue: BigInt!
-  currentQuantity: BigInt!
-  investValue: BigInt!
-  investQuantity: BigInt!
-  feeQuantity: BigInt!
+  currentValue:BigInt!
+  currentQuantity:BigInt!
+  investValue:BigInt!
+  investQuantity:BigInt!
+  feeQuantity:BigInt!
   contructFee: BigInt!
-  totalTradeQuantity: BigInt!
-  totalInvestQuantity: BigInt!
-  totalDisinvestQuantity: BigInt!
+  totalTradeQuantity:BigInt!
+  totalInvestQuantity:BigInt!
+  totalDisinvestQuantity:BigInt!
   totalProfit: BigInt!
   totalTradeCount: BigInt!
   totalInvestCount: BigInt!
@@ -69,15 +66,15 @@ type ParGoodState @entity {
   tokentotalsuply: BigInt!
   tokendecimals: BigInt!
   erc20Address: String!
-  currentValue: BigInt!
-  currentQuantity: BigInt!
-  investValue: BigInt!
-  investQuantity: BigInt!
-  feeQuantity: BigInt!
+  currentValue:BigInt!
+  currentQuantity:BigInt!
+  investValue:BigInt!
+  investQuantity:BigInt!
+  feeQuantity:BigInt!
   contructFee: BigInt!
-  totalTradeQuantity: BigInt!
-  totalInvestQuantity: BigInt!
-  totalDisinvestQuantity: BigInt!
+  totalTradeQuantity:BigInt!
+  totalInvestQuantity:BigInt!
+  totalDisinvestQuantity:BigInt!
   totalProfit: BigInt!
   totalTradeCount: BigInt!
   totalInvestCount: BigInt!
@@ -93,11 +90,11 @@ type ProofState @entity {
   owner: String!
   good1: GoodState!
   good2: GoodState!
-  proofValue: BigInt!
+  proofValue:BigInt!
   good1ContructFee: BigInt!
-  good1Quantity: BigInt!
+  good1Quantity:BigInt!
   good2ContructFee: BigInt!
-  good2Quantity: BigInt!
+  good2Quantity:BigInt!
   createTime: BigInt!
 
 }
@@ -128,23 +125,23 @@ type GoodData @entity {
   good: GoodState!
   modifiedTime: BigInt!
   decimals: BigInt!
-  currentValue: BigInt!
-  currentQuantity: BigInt!
-  investValue: BigInt!
-  investQuantity: BigInt!
-  feeQuantity: BigInt!
-  contructFee: BigInt!
-  totalTradeQuantity: BigInt!
-  totalInvestQuantity: BigInt!
-  totalDisinvestQuantity: BigInt!
-  totalProfit: BigInt!
+  currentValue:BigInt!
+  currentQuantity:BigInt!
+  investValue:BigInt!
+  investQuantity:BigInt!
+  feeQuantity:BigInt!
+  contructFee:BigInt!
+  totalTradeQuantity:BigInt!
+  totalInvestQuantity:BigInt!
+  totalDisinvestQuantity:BigInt!
+  totalProfit:BigInt!
   totalTradeCount: BigInt!
   totalInvestCount: BigInt!
   totalDisinvestCount: BigInt!
-  open: BigDecimal!
-  high: BigDecimal!
-  low: BigDecimal!
-  close: BigDecimal!
+  open: BigInt!
+  high: BigInt!
+  low: BigInt!
+  close: BigInt!
 }
 
 
@@ -160,23 +157,23 @@ type ParGoodData @entity {
   pargood: ParGoodState!
   modifiedTime: BigInt!
   decimals: BigInt!
-  currentValue: BigInt!
-  currentQuantity: BigInt!
-  investValue: BigInt!
-  investQuantity: BigInt!
-  feeQuantity: BigInt!
-  contructFee: BigInt!
-  totalTradeQuantity: BigInt!
-  totalInvestQuantity: BigInt!
-  totalDisinvestQuantity: BigInt!
-  totalProfit: BigInt!
+  currentValue:BigInt!
+  currentQuantity:BigInt!
+  investValue:BigInt!
+  investQuantity:BigInt!
+  feeQuantity:BigInt!
+  contructFee:BigInt!
+  totalTradeQuantity:BigInt!
+  totalInvestQuantity:BigInt!
+  totalDisinvestQuantity:BigInt!
+  totalProfit:BigInt!
   totalTradeCount: BigInt!
   totalInvestCount: BigInt!
   totalDisinvestCount: BigInt!
-  open: BigDecimal!
-  high: BigDecimal!
-  low: BigDecimal!
-  close: BigDecimal!
+  open: BigInt!
+  high: BigInt!
+  low:  BigInt!
+  close: BigInt!
 }
 
 type MarketData @entity {
@@ -192,9 +189,9 @@ type MarketData @entity {
   proofCount: BigInt!
   userCount: BigInt!
   txCount: BigInt!
-  totalTradeValue: BigInt!
-  totalInvestValue: BigInt!
-  totalDisinvestValue: BigInt!
+  totalTradeValue:BigInt!
+  totalInvestValue:BigInt!
+  totalDisinvestValue:BigInt!
   totalTradeCount: BigInt!
   totalInvestCount: BigInt!
   totalDisinvestCount: BigInt!

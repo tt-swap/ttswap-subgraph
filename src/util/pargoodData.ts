@@ -5,9 +5,21 @@ import {
         ParGoodData,
 } from "../../generated/schema";
 
-import { Address, BigDecimal, BigInt, bigInt } from "@graphprotocol/graph-ts";
+import {
+        Address,
+        BigDecimal,
+        BigInt,
+        bigDecimal,
+        bigInt,
+} from "@graphprotocol/graph-ts";
 
-import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./constants";
+import {
+        MARKET_ADDRESS,
+        BI_128,
+        ZERO_BI,
+        ONE_BI,
+        compareprice,
+} from "./constants";
 
 export function log_ParGoodData(
         normal_pargood: ParGoodState,
@@ -19,11 +31,19 @@ export function log_ParGoodData(
         let pargoodData_hour = ParGoodData.load(
                 normal_pargood.id + "h" + data_hour.toString()
         );
+        let price = normal_pargood.currentValue
+                .times(BI_128)
+                .plus(normal_pargood.currentQuantity);
         if (pargoodData_hour === null) {
                 pargoodData_hour = new ParGoodData(
                         normal_pargood.id + "h" + data_hour.toString()
                 );
                 pargoodData_hour.modifiedTime = ZERO_BI;
+
+                pargoodData_hour.open = price;
+                pargoodData_hour.high = price;
+                pargoodData_hour.low = price;
+                pargoodData_hour.close = price;
         }
         pargoodData_hour.pargood = normal_pargood.id;
         pargoodData_hour.decimals = normal_pargood.tokendecimals;
@@ -43,9 +63,7 @@ export function log_ParGoodData(
         pargoodData_hour.totalInvestCount = normal_pargood.totalInvestCount;
         pargoodData_hour.totalDisinvestCount =
                 normal_pargood.totalDisinvestCount;
-        let price = (pargoodData_hour.open = pargoodData_hour.currentValue
-                .toBigDecimal()
-                .div(pargoodData_hour.currentQuantity.toBigDecimal()));
+
         if (
                 pargoodData_hour.modifiedTime
                         .mod(BigInt.fromU32(3600))
@@ -54,11 +72,11 @@ export function log_ParGoodData(
         ) {
                 pargoodData_hour.open = price;
         }
-        if (pargoodData_hour.high < price) {
+        if (compareprice(pargoodData_hour.high, price)) {
                 pargoodData_hour.high = price;
         }
 
-        if (pargoodData_hour.low > price) {
+        if (compareprice(price, pargoodData_hour.low)) {
                 pargoodData_hour.low = price;
         }
         if (
@@ -84,6 +102,10 @@ export function log_ParGoodData(
                         normal_pargood.id + "d" + data_day.toString()
                 );
                 pargoodData_day.modifiedTime = ZERO_BI;
+                pargoodData_day.open = price;
+                pargoodData_day.high = price;
+                pargoodData_day.low = price;
+                pargoodData_day.close = price;
         }
         if (
                 pargoodData_day.modifiedTime.plus(BigInt.fromU32(60)) <=
@@ -123,11 +145,12 @@ export function log_ParGoodData(
                 ) {
                         pargoodData_day.open = price;
                 }
-                if (pargoodData_day.high < pargoodData_hour.high) {
+
+                if (compareprice(pargoodData_day.high, pargoodData_hour.high)) {
                         pargoodData_day.high = pargoodData_hour.high;
                 }
 
-                if (pargoodData_day.low > pargoodData_hour.low) {
+                if (compareprice(pargoodData_hour.low, pargoodData_day.low)) {
                         pargoodData_day.low = pargoodData_hour.low;
                 }
                 if (
@@ -156,6 +179,10 @@ export function log_ParGoodData(
                         normal_pargood.id + "w" + data_week.toString()
                 );
                 pargoodData_week.modifiedTime = ZERO_BI;
+                pargoodData_week.open = price;
+                pargoodData_week.high = price;
+                pargoodData_week.low = price;
+                pargoodData_week.close = price;
         }
         if (
                 pargoodData_week.modifiedTime.plus(BigInt.fromU32(1200)) <=
@@ -195,11 +222,11 @@ export function log_ParGoodData(
                 ) {
                         pargoodData_week.open = price;
                 }
-                if (pargoodData_week.high < pargoodData_day.high) {
+                if (compareprice(pargoodData_week.high, pargoodData_day.high)) {
                         pargoodData_week.high = pargoodData_day.high;
                 }
 
-                if (pargoodData_week.low > pargoodData_day.low) {
+                if (compareprice(pargoodData_day.low, pargoodData_week.low)) {
                         pargoodData_week.low = pargoodData_day.low;
                 }
                 if (
@@ -228,6 +255,11 @@ export function log_ParGoodData(
                         normal_pargood.id + "m" + data_month.toString()
                 );
                 pargoodData_month.modifiedTime = ZERO_BI;
+
+                pargoodData_month.open = price;
+                pargoodData_month.high = price;
+                pargoodData_month.low = price;
+                pargoodData_month.close = price;
         }
         if (
                 pargoodData_month.modifiedTime.plus(BigInt.fromU32(10800)) <=
@@ -267,11 +299,16 @@ export function log_ParGoodData(
                 ) {
                         pargoodData_month.open = price;
                 }
-                if (pargoodData_month.high < pargoodData_week.high) {
+                if (
+                        compareprice(
+                                pargoodData_month.high,
+                                pargoodData_week.high
+                        )
+                ) {
                         pargoodData_month.high = pargoodData_week.high;
                 }
 
-                if (pargoodData_month.low > pargoodData_week.low) {
+                if (compareprice(pargoodData_week.low, pargoodData_month.low)) {
                         pargoodData_month.low = pargoodData_week.low;
                 }
                 if (
@@ -300,6 +337,11 @@ export function log_ParGoodData(
                         normal_pargood.id + "y" + data_year.toString()
                 );
                 pargoodData_year.modifiedTime = ZERO_BI;
+
+                pargoodData_year.open = price;
+                pargoodData_year.high = price;
+                pargoodData_year.low = price;
+                pargoodData_year.close = price;
         }
         if (
                 pargoodData_year.modifiedTime.plus(BigInt.fromU32(43200)) <=
@@ -339,11 +381,16 @@ export function log_ParGoodData(
                 ) {
                         pargoodData_year.open = price;
                 }
-                if (pargoodData_year.high < pargoodData_month.high) {
+                if (
+                        compareprice(
+                                pargoodData_year.high,
+                                pargoodData_month.high
+                        )
+                ) {
                         pargoodData_year.high = pargoodData_month.high;
                 }
 
-                if (pargoodData_year.low > pargoodData_month.low) {
+                if (compareprice(pargoodData_month.low, pargoodData_year.low)) {
                         pargoodData_year.low = pargoodData_month.low;
                 }
                 if (

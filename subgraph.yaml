@@ -7,11 +7,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: MarketManager
-    network: mainnet
+    network: sepolia
     source:
-      address: "0xB05BFcb8E46fdF3660ED62479d0b44D5f9320e3e"
+      address: "0x9d0108882640990941FbC5677C1D9e3281a4e74C"
       abi: MarketManager
-      startBlock: 5785546
+      startBlock: 5928619
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -36,50 +36,39 @@ dataSources:
           file: ./abis/ERC20NameBytes.json
         - name: ERC20SymbolBytes
           file: ./abis/ERC20SymbolBytes.json
-      callHandlers:
-        #init
-        - function: initMetaGood(address,uint256,uint256)
-          handler: handle_fn_initMetaGood
-        - function: initNormalGood(uint256,uint256,address,uint256,address)
-          handler: handle_fn_initNormalGood
-        #valueGood
-        - function: investValueGood(uint256,uint128,address)
-          handler: handle_fn_investValueGood
-        - function: disinvestValueGood(uint256,uint128,address)
-          handler: handle_fn_disinvestValueGood
-        - function: disinvestValueProof(uint256,uint128,address)
-          handler: handle_fn_disinvestValueProof
-        #nomalgood
-        - function: investNormalGood(uint256,uint256,uint128,address)
-          handler: handle_fn_investNormalGood
-        - function: disinvestNormalGood(uint256,uint256,uint128,address)
-          handler: handle_fn_disinvestNormalGood
-        - function: disinvestNormalProof(uint256,uint128,address)
-          handler: handle_fn_disinvestNormalProof
-        # banlist
-        - function: addbanlist(address)
-          handler: handle_fn_addbanlist
-        - function: removebanlist(address)
-          handler: handle_fn_removebanlist
-        # goodconfig
-        - function: updatetoValueGood(uint256)
-          handler: handle_fn_updatetoValueGood
-        - function: updatetoNormalGood(uint256)
-          handler: handle_fn_updatetoNormalGood
-        - function: updateGoodConfig(uint256,uint256)
-          handler: handle_fn_updateGoodConfig
-        # marketconfig
-        - function: setMarketConfig(uint256)
-          handler: handle_fn_setMarketConfig
-        # relation
-        - function: addreferer(address)
-          handler: handle_fn_addReferer
       eventHandlers:  
-        - event: e_proof(indexed uint256)
-          handler: handle_e_updateProof
-        - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
-          handler: handle_e_buyGood
-        - event: e_buyGoodForPay(indexed uint256,indexed uint256,address,address,uint128,uint256,uint256)
-          handler: handle_e_buyGoodForPay
+        - event: e_initMetaGood(indexed uint256,uint256,address,uint256,uint256)
+          handler: handle_e_initMetaGood
+        - event: e_initGood(indexed uint256,uint256,uint256,address,uint256,uint256,uint256)
+          handler: handle_e_initGood
+        # - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
+        #   handler: handle_e_buyGood
+        # - event: e_buyGoodForPay(indexed uint256,indexed uint256,address,address,uint128,uint256,uint256)
+        #   handler: handle_e_buyGoodForPay
+        - event: e_investGood(indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handle_e_investGood
+        - event: e_disinvestProof(indexed uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handle_e_disinvestProof
+        # - event: e_collectProofFee(indexed uint256,uint256,uint256,uint256,uint256)
+        #   handler: handle_e_collectProofFee
+        # - event: e_setMarketConfig(uint256)
+        #   handler: handle_e_setMarketConfig
+        # - event: e_changeOwner(indexed uint256,address,address)
+        #   handler: handle_e_changeOwner
+        # - event: e_updateGoodConfig(uint256,uint256)
+        #   handler: handle_e_updateGoodConfig
+        # - event: e_updatetoNormalGood(uint256)
+        #   handler: handle_e_updatetoNormalGood
+        # - event: e_updatetoValueGood(uint256)
+        #   handler: handle_e_updatetoValueGood
+        # - event: e_updatetoNormalGood(uint256)
+        #   handler: handle_e_updatetoNormalGood
+        # - event: e_addbanlist(address)
+        #   handler: handle_e_addbanlist
+        # - event: e_removebanlist(address)
+        #   handler: handle_e_removebanlist
+        # - event: e_addreferer(address,address)
+        #   handler: handle_e_addreferer
+        
         
 

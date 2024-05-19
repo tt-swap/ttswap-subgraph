@@ -8,7 +8,15 @@ import {
 
 import { Address, BigDecimal, BigInt, bigInt } from "@graphprotocol/graph-ts";
 
-import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./constants";
+import {
+        MARKET_ADDRESS,
+        BI_128,
+        ZERO_BI,
+        ONE_BI,
+        compareprice,
+} from "./constants";
+import { fetchTokenDecimals } from "./token";
+import { MarketManager } from "../../generated/MarketManager/MarketManager";
 
 export function log_GoodData(
         normal_good: GoodState,
@@ -20,11 +28,16 @@ export function log_GoodData(
         let goodData_hour = GoodData.load(
                 normal_good.id + "h" + data_hour.toString()
         );
+        let price = normal_good.currentValue.div(normal_good.currentQuantity);
         if (goodData_hour === null) {
                 goodData_hour = new GoodData(
                         normal_good.id + "h" + data_hour.toString()
                 );
                 goodData_hour.modifiedTime = ZERO_BI;
+                goodData_hour.open = price;
+                goodData_hour.high = price;
+                goodData_hour.low = price;
+                goodData_hour.close = price;
         }
         goodData_hour.good = normal_good.id;
         goodData_hour.decimals = normal_good.tokendecimals;
@@ -42,9 +55,7 @@ export function log_GoodData(
         goodData_hour.totalTradeCount = normal_good.totalTradeCount;
         goodData_hour.totalInvestCount = normal_good.totalInvestCount;
         goodData_hour.totalDisinvestCount = normal_good.totalDisinvestCount;
-        let price = (goodData_hour.open = goodData_hour.currentValue
-                .toBigDecimal()
-                .div(goodData_hour.currentQuantity.toBigDecimal()));
+
         if (
                 goodData_hour.modifiedTime
                         .mod(BigInt.fromU32(3600))
@@ -53,11 +64,11 @@ export function log_GoodData(
         ) {
                 goodData_hour.open = price;
         }
-        if (goodData_hour.high < price) {
+        if (compareprice(goodData_hour.high, price)) {
                 goodData_hour.high = price;
         }
 
-        if (goodData_hour.low > price) {
+        if (compareprice(price, goodData_hour.low)) {
                 goodData_hour.low = price;
         }
         if (
@@ -69,6 +80,10 @@ export function log_GoodData(
         ) {
                 goodData_hour.close = price;
         }
+        goodData_hour.open = price;
+        goodData_hour.high = price;
+        goodData_hour.low = price;
+        goodData_hour.close = price;
         goodData_hour.modifiedTime = modifiedTime;
         goodData_hour.save();
 
@@ -83,6 +98,10 @@ export function log_GoodData(
                         normal_good.id + "d" + data_day.toString()
                 );
                 goodData_day.modifiedTime = ZERO_BI;
+                goodData_day.open = price;
+                goodData_day.high = price;
+                goodData_day.low = price;
+                goodData_day.close = price;
         }
         if (
                 goodData_day.modifiedTime.plus(BigInt.fromU32(60)) <=
@@ -118,11 +137,11 @@ export function log_GoodData(
                 ) {
                         goodData_day.open = price;
                 }
-                if (goodData_day.high < goodData_hour.high) {
+                if (compareprice(goodData_day.high, goodData_hour.high)) {
                         goodData_day.high = goodData_hour.high;
                 }
 
-                if (goodData_day.low > goodData_hour.low) {
+                if (compareprice(goodData_hour.low, goodData_day.low)) {
                         goodData_day.low = goodData_hour.low;
                 }
                 if (
@@ -151,6 +170,10 @@ export function log_GoodData(
                         normal_good.id + "w" + data_week.toString()
                 );
                 goodData_week.modifiedTime = ZERO_BI;
+                goodData_week.open = price;
+                goodData_week.high = price;
+                goodData_week.low = price;
+                goodData_week.close = price;
         }
         if (
                 goodData_week.modifiedTime.plus(BigInt.fromU32(1200)) <=
@@ -186,11 +209,11 @@ export function log_GoodData(
                 ) {
                         goodData_week.open = price;
                 }
-                if (goodData_week.high < goodData_day.high) {
+                if (compareprice(goodData_week.high, goodData_day.high)) {
                         goodData_week.high = goodData_day.high;
                 }
 
-                if (goodData_week.low > goodData_day.low) {
+                if (compareprice(goodData_day.low, goodData_week.low)) {
                         goodData_week.low = goodData_day.low;
                 }
                 if (
@@ -219,6 +242,11 @@ export function log_GoodData(
                         normal_good.id + "m" + data_month.toString()
                 );
                 goodData_month.modifiedTime = ZERO_BI;
+
+                goodData_month.open = price;
+                goodData_month.high = price;
+                goodData_month.low = price;
+                goodData_month.close = price;
         }
         if (
                 goodData_month.modifiedTime.plus(BigInt.fromU32(10800)) <=
@@ -255,11 +283,11 @@ export function log_GoodData(
                 ) {
                         goodData_month.open = price;
                 }
-                if (goodData_month.high < goodData_week.high) {
+                if (compareprice(goodData_month.high, goodData_week.high)) {
                         goodData_month.high = goodData_week.high;
                 }
 
-                if (goodData_month.low > goodData_week.low) {
+                if (compareprice(goodData_week.low, goodData_month.low)) {
                         goodData_month.low = goodData_week.low;
                 }
                 if (
@@ -288,6 +316,11 @@ export function log_GoodData(
                         normal_good.id + "y" + data_year.toString()
                 );
                 goodData_year.modifiedTime = ZERO_BI;
+
+                goodData_year.open = price;
+                goodData_year.high = price;
+                goodData_year.low = price;
+                goodData_year.close = price;
         }
         if (
                 goodData_year.modifiedTime.plus(BigInt.fromU32(43200)) <=
@@ -324,11 +357,11 @@ export function log_GoodData(
                 ) {
                         goodData_year.open = price;
                 }
-                if (goodData_year.high < goodData_month.high) {
+                if (compareprice(goodData_year.high, goodData_month.high)) {
                         goodData_year.high = goodData_month.high;
                 }
 
-                if (goodData_year.low > goodData_month.low) {
+                if (compareprice(goodData_month.low, goodData_year.low)) {
                         goodData_year.low = goodData_month.low;
                 }
                 if (
@@ -345,4 +378,32 @@ export function log_GoodData(
                 goodData_year.modifiedTime = modifiedTime;
                 goodData_year.save();
         }
+}
+
+export function fetchGoodDecimals(goodid: string): BigInt {
+        let goodState = GoodState.load(goodid);
+        let decimals = BigInt.fromString("0");
+
+        if (goodState === null) {
+                decimals = BigInt.fromString("0");
+        } else {
+                decimals = goodState.tokendecimals;
+                if (decimals == BigInt.fromString("0")) {
+                        decimals = fetchTokenDecimals(
+                                Address.fromString(goodState.erc20Address)
+                        );
+                }
+        }
+        return decimals;
+}
+
+export function fetchGoodConfig(goodid: BigInt): BigInt {
+        let contract = MarketManager.bind(Address.fromString(MARKET_ADDRESS));
+        // try types uint8 for decimals
+        let decimalValue = BigInt.fromU32(0);
+        let decimalResult = contract.try_getGoodState(goodid);
+        if (!decimalResult.reverted) {
+                decimalValue = decimalResult.value.goodConfig;
+        }
+        return decimalValue;
 }
