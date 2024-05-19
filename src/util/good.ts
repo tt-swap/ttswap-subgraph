@@ -40,6 +40,8 @@ export function log_GoodData(
                 goodData_hour.close = price;
         }
         goodData_hour.good = normal_good.id;
+        goodData_hour.goodconfig = normal_good.goodConfig;
+        goodData_hour.isvaluegood = normal_good.isvaluegood;
         goodData_hour.decimals = normal_good.tokendecimals;
         goodData_hour.currentValue = normal_good.currentValue;
         goodData_hour.currentQuantity = normal_good.currentQuantity;
@@ -109,6 +111,8 @@ export function log_GoodData(
         ) {
                 goodData_day.good = goodData_hour.good;
                 goodData_day.decimals = goodData_hour.decimals;
+                goodData_day.goodConfig = goodData_hour.goodConfig;
+                goodData_day.isvaluegood = goodData_hour.isvaluegood;
                 goodData_day.currentValue = goodData_hour.currentValue;
                 goodData_day.currentQuantity = goodData_hour.currentQuantity;
                 goodData_day.investValue = goodData_hour.investValue;
@@ -181,6 +185,8 @@ export function log_GoodData(
         ) {
                 goodData_week.good = goodData_day.good;
                 goodData_week.decimals = goodData_day.decimals;
+                goodData_week.goodConfig = goodData_day.goodConfig;
+                goodData_week.isvaluegood = goodData_day.isvaluegood;
                 goodData_week.currentValue = goodData_day.currentValue;
                 goodData_week.currentQuantity = goodData_day.currentQuantity;
                 goodData_week.investValue = goodData_day.investValue;
@@ -254,6 +260,8 @@ export function log_GoodData(
         ) {
                 goodData_month.good = goodData_week.good;
                 goodData_month.decimals = goodData_week.decimals;
+                goodData_month.goodConfig = goodData_week.goodConfig;
+                goodData_month.isvaluegood = goodData_week.isvaluegood;
                 goodData_month.currentValue = goodData_week.currentValue;
                 goodData_month.currentQuantity = goodData_week.currentQuantity;
                 goodData_month.investValue = goodData_week.investValue;
@@ -328,6 +336,8 @@ export function log_GoodData(
         ) {
                 goodData_year.good = goodData_month.good;
                 goodData_year.decimals = goodData_month.decimals;
+                goodData_year.goodConfig = goodData_month.goodConfig;
+                goodData_year.isvaluegood = goodData_month.isvaluegood;
                 goodData_year.currentValue = goodData_month.currentValue;
                 goodData_year.currentQuantity = goodData_month.currentQuantity;
                 goodData_year.investValue = goodData_month.investValue;

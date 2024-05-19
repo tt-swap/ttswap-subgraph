@@ -32,6 +32,7 @@ type MarketState @entity {
 type GoodState @entity {
   id: ID!
   pargood:ParGoodState!
+  isvaluegood:Boolean!
   tokenname: String!
   tokensymbol: String!
   tokentotalsuply: BigInt!
@@ -124,6 +125,8 @@ type GoodData @entity {
   id: ID!
   good: GoodState!
   modifiedTime: BigInt!
+  goodConfig: BigInt!
+  isvaluegood:Boolean!
   decimals: BigInt!
   currentValue:BigInt!
   currentQuantity:BigInt!

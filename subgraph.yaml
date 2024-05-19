@@ -41,34 +41,34 @@ dataSources:
           handler: handle_e_initMetaGood
         - event: e_initGood(indexed uint256,uint256,uint256,address,uint256,uint256,uint256)
           handler: handle_e_initGood
-        # - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
-        #   handler: handle_e_buyGood
-        # - event: e_buyGoodForPay(indexed uint256,indexed uint256,address,address,uint128,uint256,uint256)
-        #   handler: handle_e_buyGoodForPay
+        - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
+          handler: handle_e_buyGood
+        - event: e_buyGoodForPay(indexed uint256,indexed uint256,address,address,uint128,uint256,uint256)
+          handler: handle_e_buyGoodForPay
         - event: e_investGood(indexed uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_investGood
         - event: e_disinvestProof(indexed uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_disinvestProof
-        # - event: e_collectProofFee(indexed uint256,uint256,uint256,uint256,uint256)
-        #   handler: handle_e_collectProofFee
-        # - event: e_setMarketConfig(uint256)
-        #   handler: handle_e_setMarketConfig
-        # - event: e_changeOwner(indexed uint256,address,address)
-        #   handler: handle_e_changeOwner
-        # - event: e_updateGoodConfig(uint256,uint256)
-        #   handler: handle_e_updateGoodConfig
-        # - event: e_updatetoNormalGood(uint256)
-        #   handler: handle_e_updatetoNormalGood
-        # - event: e_updatetoValueGood(uint256)
-        #   handler: handle_e_updatetoValueGood
-        # - event: e_updatetoNormalGood(uint256)
-        #   handler: handle_e_updatetoNormalGood
-        # - event: e_addbanlist(address)
-        #   handler: handle_e_addbanlist
-        # - event: e_removebanlist(address)
-        #   handler: handle_e_removebanlist
-        # - event: e_addreferer(address,address)
-        #   handler: handle_e_addreferer
+        - event: e_collectProofFee(indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handle_e_collectProofFee
+        - event: e_setMarketConfig(uint256)
+          handler: handle_e_setMarketConfig
+        - event: e_changeOwner(indexed uint256,address,address)
+          handler: handle_e_changeOwner
+        - event: e_updateGoodConfig(uint256,uint256)
+          handler: handle_e_updateGoodConfig
+        - event: e_updatetoNormalGood(uint256)
+          handler: handle_e_updatetoNormalGood
+        - event: e_updatetoValueGood(uint256)
+          handler: handle_e_updatetoValueGood
+        - event: e_updatetoNormalGood(uint256)
+          handler: handle_e_updatetoNormalGood
+        - event: e_addbanlist(address)
+          handler: handle_e_addbanlist
+        - event: e_removebanlist(address)
+          handler: handle_e_removebanlist
+        - event: e_addreferer(address,address)
+          handler: handle_e_addreferer
         
         
 
