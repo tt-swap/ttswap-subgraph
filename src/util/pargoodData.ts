@@ -40,11 +40,13 @@ export function log_ParGoodData(
                 );
                 pargoodData_hour.modifiedTime = ZERO_BI;
 
+                pargoodData_hour.timetype = "h";
                 pargoodData_hour.open = price;
                 pargoodData_hour.high = price;
                 pargoodData_hour.low = price;
                 pargoodData_hour.close = price;
         }
+        pargoodData_hour.timetype = "h";
         pargoodData_hour.pargood = normal_pargood.id;
         pargoodData_hour.decimals = normal_pargood.tokendecimals;
         pargoodData_hour.currentValue = normal_pargood.currentValue;
@@ -101,6 +103,7 @@ export function log_ParGoodData(
                 pargoodData_day = new ParGoodData(
                         normal_pargood.id + "d" + data_day.toString()
                 );
+                pargoodData_day.timetype = "d";
                 pargoodData_day.modifiedTime = ZERO_BI;
                 pargoodData_day.open = price;
                 pargoodData_day.high = price;
@@ -111,6 +114,7 @@ export function log_ParGoodData(
                 pargoodData_day.modifiedTime.plus(BigInt.fromU32(60)) <=
                 pargoodData_hour.modifiedTime
         ) {
+                pargoodData_day.timetype = "d";
                 pargoodData_day.pargood = pargoodData_hour.pargood;
                 pargoodData_day.decimals = pargoodData_hour.decimals;
                 pargoodData_day.currentValue = pargoodData_hour.currentValue;
@@ -178,6 +182,7 @@ export function log_ParGoodData(
                 pargoodData_week = new ParGoodData(
                         normal_pargood.id + "w" + data_week.toString()
                 );
+                pargoodData_week.timetype = "w";
                 pargoodData_week.modifiedTime = ZERO_BI;
                 pargoodData_week.open = price;
                 pargoodData_week.high = price;
@@ -188,6 +193,7 @@ export function log_ParGoodData(
                 pargoodData_week.modifiedTime.plus(BigInt.fromU32(1200)) <=
                 pargoodData_day.modifiedTime
         ) {
+                pargoodData_week.timetype = "w";
                 pargoodData_week.pargood = pargoodData_day.pargood;
                 pargoodData_week.decimals = pargoodData_day.decimals;
                 pargoodData_week.currentValue = pargoodData_day.currentValue;
@@ -256,6 +262,7 @@ export function log_ParGoodData(
                 );
                 pargoodData_month.modifiedTime = ZERO_BI;
 
+                pargoodData_month.timetype = "m";
                 pargoodData_month.open = price;
                 pargoodData_month.high = price;
                 pargoodData_month.low = price;
@@ -265,6 +272,7 @@ export function log_ParGoodData(
                 pargoodData_month.modifiedTime.plus(BigInt.fromU32(10800)) <=
                 pargoodData_week.modifiedTime
         ) {
+                pargoodData_month.timetype = "m";
                 pargoodData_month.pargood = pargoodData_week.pargood;
                 pargoodData_month.decimals = pargoodData_week.decimals;
                 pargoodData_month.currentValue = pargoodData_week.currentValue;
@@ -338,6 +346,7 @@ export function log_ParGoodData(
                 );
                 pargoodData_year.modifiedTime = ZERO_BI;
 
+                pargoodData_year.timetype = "y";
                 pargoodData_year.open = price;
                 pargoodData_year.high = price;
                 pargoodData_year.low = price;
@@ -347,6 +356,7 @@ export function log_ParGoodData(
                 pargoodData_year.modifiedTime.plus(BigInt.fromU32(43200)) <=
                 pargoodData_month.modifiedTime
         ) {
+                pargoodData_year.timetype = "y";
                 pargoodData_year.pargood = pargoodData_month.pargood;
                 pargoodData_year.decimals = pargoodData_month.decimals;
                 pargoodData_year.currentValue = pargoodData_month.currentValue;

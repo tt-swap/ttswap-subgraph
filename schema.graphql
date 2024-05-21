@@ -113,6 +113,7 @@ type Transaction @entity {
   fromgoodfee:BigInt!
   togoodQuantity:BigInt!
   togoodfee:BigInt!
+  hash:String!
   timestamp: BigInt!
 }
 
@@ -124,6 +125,7 @@ type GoodData @entity {
   # year: GoodId+y+5day (73)
   id: ID!
   good: GoodState!
+  timetype:String!
   modifiedTime: BigInt!
   goodConfig: BigInt!
   isvaluegood:Boolean!
@@ -158,6 +160,7 @@ type ParGoodData @entity {
   # year: GoodId+y+5day (73)
   id: ID!
   pargood: ParGoodState!
+  timetype:String!
   modifiedTime: BigInt!
   decimals: BigInt!
   currentValue:BigInt!
@@ -180,12 +183,13 @@ type ParGoodData @entity {
 }
 
 type MarketData @entity {
-  # hour:GoodId+h+minute (60 rows)
-  # day: GoodId+d+20minute (72 rows)
-  # week:GoodId+w+3hour  (56 rows)
-  # month:GoodId+m+12hour (62 rows)
-  # year: GoodId+y+5day (73)
+  # hour:h+minute (60 rows)
+  # day: d+20minute (72 rows)
+  # week:w+3hour  (56 rows)
+  # month:m+12hour (62 rows)
+  # year: y+5day (73)
   id: ID!
+  timetype:String!
   marketConfig: BigInt!
   pargoodCount: BigInt!
   goodCount: BigInt!

@@ -15,7 +15,10 @@ export function log_MarketData(
         if (marketData_hour === null) {
                 marketData_hour = new MarketData("h" + data_hour.toString());
                 marketData_hour.modifiedTime = ZERO_BI;
+
+                marketData_hour.timetype = "h";
         }
+        marketData_hour.timetype = "h";
         marketData_hour.marketConfig = marketstate.marketConfig;
         marketData_hour.pargoodCount = marketstate.pargoodCount;
         marketData_hour.goodCount = marketstate.goodCount;
@@ -38,11 +41,13 @@ export function log_MarketData(
         if (marketData_day === null) {
                 marketData_day = new MarketData("d" + data_day.toString());
                 marketData_day.modifiedTime = ZERO_BI;
+                marketData_day.timetype = "d";
         }
         if (
                 marketData_day.modifiedTime.plus(BigInt.fromU32(60)) <=
                 marketData_hour.modifiedTime
         ) {
+                marketData_day.timetype = "d";
                 marketData_day.marketConfig = marketData_hour.marketConfig;
                 marketData_day.pargoodCount = marketData_hour.pargoodCount;
                 marketData_day.goodCount = marketData_hour.goodCount;
@@ -72,11 +77,13 @@ export function log_MarketData(
         if (marketData_week === null) {
                 marketData_week = new MarketData("w" + data_week.toString());
                 marketData_week.modifiedTime = ZERO_BI;
+                marketData_week.timetype = "w";
         }
         if (
                 marketData_week.modifiedTime.plus(BigInt.fromU32(1200)) <=
                 marketData_day.modifiedTime
         ) {
+                marketData_week.timetype = "w";
                 marketData_week.marketConfig = marketData_day.marketConfig;
                 marketData_week.pargoodCount = marketData_day.pargoodCount;
                 marketData_week.goodCount = marketData_day.goodCount;
@@ -106,11 +113,13 @@ export function log_MarketData(
         if (marketData_month === null) {
                 marketData_month = new MarketData("m" + data_month.toString());
                 marketData_month.modifiedTime = ZERO_BI;
+                marketData_month.timetype = "m";
         }
         if (
                 marketData_month.modifiedTime.plus(BigInt.fromU32(10800)) <=
                 marketData_week.modifiedTime
         ) {
+                marketData_month.timetype = "m";
                 marketData_month.marketConfig = marketData_week.marketConfig;
                 marketData_month.pargoodCount = marketData_week.pargoodCount;
                 marketData_month.goodCount = marketData_week.goodCount;
@@ -140,11 +149,13 @@ export function log_MarketData(
         if (marketData_year === null) {
                 marketData_year = new MarketData("y" + data_year.toString());
                 marketData_year.modifiedTime = ZERO_BI;
+                marketData_year.timetype = "y";
         }
         if (
                 marketData_year.modifiedTime.plus(BigInt.fromU32(43200)) <=
                 marketData_month.modifiedTime
         ) {
+                marketData_year.timetype = "y";
                 marketData_year.marketConfig = marketData_month.marketConfig;
                 marketData_year.pargoodCount = marketData_month.pargoodCount;
                 marketData_year.goodCount = marketData_month.goodCount;

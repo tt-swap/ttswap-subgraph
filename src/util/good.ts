@@ -28,19 +28,23 @@ export function log_GoodData(
         let goodData_hour = GoodData.load(
                 normal_good.id + "h" + data_hour.toString()
         );
-        let price = normal_good.currentValue.div(normal_good.currentQuantity);
+        let price = normal_good.currentValue
+                .times(BI_128)
+                .plus(normal_good.currentQuantity);
         if (goodData_hour === null) {
                 goodData_hour = new GoodData(
                         normal_good.id + "h" + data_hour.toString()
                 );
                 goodData_hour.modifiedTime = ZERO_BI;
+                goodData_hour.timetype = "h";
                 goodData_hour.open = price;
                 goodData_hour.high = price;
                 goodData_hour.low = price;
                 goodData_hour.close = price;
         }
+        goodData_hour.timetype = "h";
         goodData_hour.good = normal_good.id;
-        goodData_hour.goodconfig = normal_good.goodConfig;
+        goodData_hour.goodConfig = normal_good.goodConfig;
         goodData_hour.isvaluegood = normal_good.isvaluegood;
         goodData_hour.decimals = normal_good.tokendecimals;
         goodData_hour.currentValue = normal_good.currentValue;
@@ -100,6 +104,7 @@ export function log_GoodData(
                         normal_good.id + "d" + data_day.toString()
                 );
                 goodData_day.modifiedTime = ZERO_BI;
+                goodData_day.timetype = "d";
                 goodData_day.open = price;
                 goodData_day.high = price;
                 goodData_day.low = price;
@@ -109,6 +114,7 @@ export function log_GoodData(
                 goodData_day.modifiedTime.plus(BigInt.fromU32(60)) <=
                 goodData_hour.modifiedTime
         ) {
+                goodData_day.timetype = "d";
                 goodData_day.good = goodData_hour.good;
                 goodData_day.decimals = goodData_hour.decimals;
                 goodData_day.goodConfig = goodData_hour.goodConfig;
@@ -173,6 +179,8 @@ export function log_GoodData(
                 goodData_week = new GoodData(
                         normal_good.id + "w" + data_week.toString()
                 );
+
+                goodData_week.timetype = "w";
                 goodData_week.modifiedTime = ZERO_BI;
                 goodData_week.open = price;
                 goodData_week.high = price;
@@ -183,6 +191,7 @@ export function log_GoodData(
                 goodData_week.modifiedTime.plus(BigInt.fromU32(1200)) <=
                 goodData_day.modifiedTime
         ) {
+                goodData_week.timetype = "w";
                 goodData_week.good = goodData_day.good;
                 goodData_week.decimals = goodData_day.decimals;
                 goodData_week.goodConfig = goodData_day.goodConfig;
@@ -249,6 +258,7 @@ export function log_GoodData(
                 );
                 goodData_month.modifiedTime = ZERO_BI;
 
+                goodData_month.timetype = "m";
                 goodData_month.open = price;
                 goodData_month.high = price;
                 goodData_month.low = price;
@@ -258,6 +268,7 @@ export function log_GoodData(
                 goodData_month.modifiedTime.plus(BigInt.fromU32(10800)) <=
                 goodData_week.modifiedTime
         ) {
+                goodData_month.timetype = "m";
                 goodData_month.good = goodData_week.good;
                 goodData_month.decimals = goodData_week.decimals;
                 goodData_month.goodConfig = goodData_week.goodConfig;
@@ -325,6 +336,7 @@ export function log_GoodData(
                 );
                 goodData_year.modifiedTime = ZERO_BI;
 
+                goodData_year.timetype = "y";
                 goodData_year.open = price;
                 goodData_year.high = price;
                 goodData_year.low = price;
@@ -334,6 +346,7 @@ export function log_GoodData(
                 goodData_year.modifiedTime.plus(BigInt.fromU32(43200)) <=
                 goodData_month.modifiedTime
         ) {
+                goodData_year.timetype = "y";
                 goodData_year.good = goodData_month.good;
                 goodData_year.decimals = goodData_month.decimals;
                 goodData_year.goodConfig = goodData_month.goodConfig;
