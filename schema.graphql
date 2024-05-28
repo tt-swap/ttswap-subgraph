@@ -114,6 +114,7 @@ type Transaction @entity {
   togoodQuantity:BigInt!
   togoodfee:BigInt!
   hash:String!
+  recipent:String!
   timestamp: BigInt!
 }
 
