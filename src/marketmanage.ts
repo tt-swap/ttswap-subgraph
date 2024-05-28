@@ -299,8 +299,8 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         meta_pargood.txCount = ONE_BI;
         meta_pargood.save();
 
-        let null_pargood = new ParGoodState("#");
-        null_pargood.id = "#";
+        let null_pargood = new ParGoodState("0");
+        null_pargood.id = "0";
         null_pargood.tokenname = "#";
         null_pargood.tokensymbol = "#";
         null_pargood.tokentotalsuply = ZERO_BI;
@@ -351,7 +351,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         meta_good.txCount = ONE_BI;
         meta_good.save();
 
-        let null_good = new GoodState("#");
+        let null_good = new GoodState("0");
 
         null_good.pargood = null_pargood.id;
 
@@ -421,6 +421,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         tx.togoodQuantity = ZERO_BI;
         tx.togoodfee = ZERO_BI;
         tx.timestamp = modifiedTime;
+        tx.recipent = event.transaction.from.toHexString();
         tx.hash = event.transaction.hash.toHexString();
         tx.save();
 
@@ -779,6 +780,7 @@ export function handle_e_initGood(event: e_initGood): void {
         tx.fromgoodQuanity = trade_normalgood_quantity;
         tx.togoodQuantity = trade_valuegood_quantity;
         tx.timestamp = modifiedTime;
+        tx.recipent = event.transaction.from.toHexString();
         tx.hash = event.transaction.hash.toHexString();
         tx.save();
 
@@ -1077,6 +1079,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
         tx.togoodQuantity = to_quantity;
         tx.togoodfee = to_fee;
         tx.timestamp = event.block.timestamp;
+        tx.recipent = event.transaction.from.toHexString();
         tx.hash = event.transaction.hash.toHexString();
         tx.save();
 
@@ -1374,6 +1377,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         tx.togoodQuantity = to_quantity;
         tx.togoodfee = to_fee;
         tx.timestamp = event.block.timestamp;
+        tx.recipent = event.transaction.from.toHexString();
         tx.hash = event.transaction.hash.toHexString();
         tx.save();
 
@@ -1625,6 +1629,7 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
                 tx.togoodQuantity = event.params._profit.mod(BI_128);
                 tx.togoodfee = event.params._protocalfee.mod(BI_128);
                 tx.timestamp = event.block.timestamp;
+                tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
 
@@ -1674,6 +1679,7 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
                 tx.fromgoodQuanity = event.params._profit.div(BI_128);
                 tx.fromgoodfee = event.params._protocalfee.div(BI_128);
                 tx.timestamp = event.block.timestamp;
+                tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
 
@@ -2132,6 +2138,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 tx.togoodQuantity = value_Quantity;
                 tx.togoodfee = value_fee;
                 tx.timestamp = event.block.timestamp;
+                tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
 
@@ -2206,6 +2213,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 tx.fromgoodQuanity = normal_Quantity;
                 tx.fromgoodfee = normal_fee;
                 tx.timestamp = event.block.timestamp;
+                tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
 
@@ -2678,6 +2686,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 tx.togoodQuantity = tx.togoodQuantity.minus(value_Quantity);
                 tx.togoodfee = value_fee;
                 tx.timestamp = event.block.timestamp;
+                tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
                 proof.proofValue = invest_value;
@@ -2751,6 +2760,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 tx.fromgoodQuanity = tx.fromgoodQuanity.minus(normal_Quantity);
                 tx.fromgoodfee = normal_fee;
                 tx.timestamp = event.block.timestamp;
+                tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
 
