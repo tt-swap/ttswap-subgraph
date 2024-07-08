@@ -5,8 +5,6 @@ import {
         ParGoodState,
         GoodState,
         ProofState,
-        GoodData,
-        MarketData,
         Transaction,
         Customer,
 } from "../generated/schema";
@@ -25,20 +23,12 @@ import {
         e_changeOwner,
         e_investGood,
         e_disinvestProof,
-        e_addreferer,
+        e_addreferal,
         e_addbanlist,
         e_removebanlist,
 } from "../generated/MarketManager/MarketManager";
 
-import {
-        MARKET_ADDRESS,
-        BI_128,
-        ZERO_BI,
-        ONE_BI,
-        convertQuantityToDecimal,
-        convertValueToDecimal,
-        ONE_BD,
-} from "./util/constants";
+import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./util/constants";
 
 import {
         fetchTokenSymbol,
@@ -1394,10 +1384,10 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
         let proofNo = event.params._proofNo.toString();
         let normalprofit = event.params._profit
                 .div(BI_128)
-                .plus(event.params._protocalfee.div(BI_128));
+                .plus(event.params._profit.div(BI_128));
         let valueprofit = event.params._profit
                 .mod(BI_128)
-                .plus(event.params._protocalfee.mod(BI_128));
+                .plus(event.params._profit.mod(BI_128));
         let proof = ProofState.load(proofNo);
         if (proof === null) {
                 proof = new ProofState(proofNo);
@@ -1625,9 +1615,9 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
                 tx.frompargood = normal_pargood.id;
                 tx.topargood = value_pargood.id;
                 tx.fromgoodQuanity = event.params._profit.div(BI_128);
-                tx.fromgoodfee = event.params._protocalfee.div(BI_128);
+                tx.fromgoodfee = ZERO_BI;
                 tx.togoodQuantity = event.params._profit.mod(BI_128);
-                tx.togoodfee = event.params._protocalfee.mod(BI_128);
+                tx.togoodfee = ZERO_BI;
                 tx.timestamp = event.block.timestamp;
                 tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
@@ -1677,7 +1667,7 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
                 tx.frompargood = normal_pargood.id;
                 tx.topargood = "0";
                 tx.fromgoodQuanity = event.params._profit.div(BI_128);
-                tx.fromgoodfee = event.params._protocalfee.div(BI_128);
+                tx.fromgoodfee = ZERO_BI;
                 tx.timestamp = event.block.timestamp;
                 tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
@@ -2809,10 +2799,12 @@ export function handle_e_removebanlist(event: e_removebanlist): void {
         newcustomer.save();
 }
 
-export function handle_e_addreferer(event: e_addreferer): void {
-        let newcustomer = Customer.load(event.params._user.toHexString());
+export function handle_e_addreferer(event: e_addreferal): void {
+        let newcustomer = Customer.load(event.transaction.from.toHexString());
         if (newcustomer === null) {
-                newcustomer = new Customer(event.params._user.toHexString());
+                newcustomer = new Customer(
+                        event.transaction.from.toHexString()
+                );
                 newcustomer.tradeValue = ZERO_BI;
                 newcustomer.investValue = ZERO_BI;
                 newcustomer.disinvestValue = ZERO_BI;
@@ -2821,6 +2813,8 @@ export function handle_e_addreferer(event: e_addreferer): void {
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
         }
-        newcustomer.refer = event.params._referer.toHexString();
-        newcustomer.save();
+        if (newcustomer.refer != "#") {
+                newcustomer.refer = event.transaction.from.toHexString();
+                newcustomer.save();
+        }
 }

@@ -49,7 +49,7 @@ dataSources:
           handler: handle_e_investGood
         - event: e_disinvestProof(indexed uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_disinvestProof
-        - event: e_collectProofFee(indexed uint256,uint256,uint256,uint256,uint256)
+        - event: e_collectProofFee(indexed uint256,uint256,uint256,uint256)
           handler: handle_e_collectProofFee
         - event: e_setMarketConfig(uint256)
           handler: handle_e_setMarketConfig
@@ -67,7 +67,7 @@ dataSources:
           handler: handle_e_addbanlist
         - event: e_removebanlist(address)
           handler: handle_e_removebanlist
-        - event: e_addreferer(address,address)
+        - event: e_addreferal(address)
           handler: handle_e_addreferer
         
         
