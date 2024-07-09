@@ -9,9 +9,9 @@ dataSources:
     name: MarketManager
     network: sepolia
     source:
-      address: "0x9d0108882640990941FbC5677C1D9e3281a4e74C"
+      address: "0xB756137A6fE9acD420fEECD9dE30282b93d35861"
       abi: MarketManager
-      startBlock: 5928619
+      startBlock: 6276721
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -49,8 +49,8 @@ dataSources:
           handler: handle_e_investGood
         - event: e_disinvestProof(indexed uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_disinvestProof
-        - event: e_collectProofFee(indexed uint256,uint256,uint256,uint256)
-          handler: handle_e_collectProofFee
+        - event: e_collectProof(indexed uint256,uint256,uint256,uint256)
+          handler: handle_e_collectProof
         - event: e_setMarketConfig(uint256)
           handler: handle_e_setMarketConfig
         - event: e_changeOwner(indexed uint256,address,address)
@@ -61,8 +61,6 @@ dataSources:
           handler: handle_e_updatetoNormalGood
         - event: e_updatetoValueGood(uint256)
           handler: handle_e_updatetoValueGood
-        - event: e_updatetoNormalGood(uint256)
-          handler: handle_e_updatetoNormalGood
         - event: e_addbanlist(address)
           handler: handle_e_addbanlist
         - event: e_removebanlist(address)
