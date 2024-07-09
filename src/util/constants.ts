@@ -3,7 +3,7 @@ import { BigInt, BigDecimal, Address } from "@graphprotocol/graph-ts";
 import { MarketManager as MarketContract } from "../../generated/MarketManager/MarketManager";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
-export const MARKET_ADDRESS = "0x9d0108882640990941FbC5677C1D9e3281a4e74C";
+export const MARKET_ADDRESS = "0xB756137A6fE9acD420fEECD9dE30282b93d35861";
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);

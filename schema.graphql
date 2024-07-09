@@ -31,6 +31,7 @@ type MarketState @entity {
 
 type GoodState @entity {
   id: ID!
+  goodseq:BigInt!
   pargood:ParGoodState!
   isvaluegood:Boolean!
   tokenname: String!
@@ -55,6 +56,7 @@ type GoodState @entity {
   totalDisinvestCount: BigInt!
   modifiedTime: BigInt!
   txCount:BigInt!
+  create_time: BigInt!
   normalProof_v: [ProofState!] @derivedFrom(field: "good2")
   normalProof_n: [ProofState!] @derivedFrom(field: "good1")
   goodData: [GoodData!] @derivedFrom(field: "good")

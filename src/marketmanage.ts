@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, bigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 
 import {
         MarketState,
@@ -11,7 +11,7 @@ import {
 
 import {
         MarketManager,
-        e_collectProofFee,
+        e_collectProof,
         e_buyGood,
         e_buyGoodForPay,
         e_initMetaGood,
@@ -39,7 +39,7 @@ import {
 
 import { fetchMarketConfig, fetchMarketCreator } from "./util/market";
 
-import { log_GoodData, fetchGoodDecimals, fetchGoodConfig } from "./util/good";
+import { log_GoodData, fetchGoodConfig } from "./util/good";
 import { log_ParGoodData } from "./util/pargoodData";
 import { log_MarketData } from "./util/marketData";
 //ok;
@@ -70,6 +70,7 @@ export function handle_e_changeOwner(event: e_changeOwner): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good === null) {
                 from_good = new GoodState(event.params._goodid.toString());
+                from_good.goodseq = ZERO_BI;
                 from_good.pargood = "0";
                 from_good.isvaluegood = false;
                 from_good.tokenname = "#";
@@ -94,6 +95,7 @@ export function handle_e_changeOwner(event: e_changeOwner): void {
                 from_good.totalDisinvestCount = ZERO_BI;
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
+                from_good.create_time = ZERO_BI;
         }
         from_good.owner = event.params._to.toHexString();
         from_good.save();
@@ -103,6 +105,7 @@ export function handle_e_updateGoodConfig(event: e_updateGoodConfig): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good === null) {
                 from_good = new GoodState(event.params._goodid.toString());
+                from_good.goodseq = ZERO_BI;
                 from_good.pargood = "0";
                 from_good.isvaluegood = false;
                 from_good.tokenname = "#";
@@ -127,6 +130,7 @@ export function handle_e_updateGoodConfig(event: e_updateGoodConfig): void {
                 from_good.totalDisinvestCount = ZERO_BI;
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
+                from_good.create_time = ZERO_BI;
         }
 
         if (
@@ -151,6 +155,7 @@ export function handle_e_updatetoNormalGood(event: e_updatetoNormalGood): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good === null) {
                 from_good = new GoodState(event.params._goodid.toString());
+                from_good.goodseq = ZERO_BI;
                 from_good.pargood = "0";
                 from_good.tokenname = "#";
                 from_good.tokensymbol = "#";
@@ -174,6 +179,7 @@ export function handle_e_updatetoNormalGood(event: e_updatetoNormalGood): void {
                 from_good.totalDisinvestCount = ZERO_BI;
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
+                from_good.create_time = ZERO_BI;
         }
         from_good.goodConfig = fetchGoodConfig(event.params._goodid);
         from_good.isvaluegood = false;
@@ -183,6 +189,7 @@ export function handle_e_updatetoValueGood(event: e_updatetoValueGood): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good === null) {
                 from_good = new GoodState(event.params._goodid.toString());
+                from_good.goodseq = ZERO_BI;
                 from_good.pargood = "0";
                 from_good.tokenname = "#";
                 from_good.tokensymbol = "#";
@@ -206,6 +213,7 @@ export function handle_e_updatetoValueGood(event: e_updatetoValueGood): void {
                 from_good.totalDisinvestCount = ZERO_BI;
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
+                from_good.create_time = ZERO_BI;
         }
         from_good.goodConfig = fetchGoodConfig(event.params._goodid);
         from_good.isvaluegood = true;
@@ -218,8 +226,6 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         let metaowner = event.transaction.from.toHexString();
         let metaid = event.params._goodNo.toString();
         let modifiedTime = event.block.timestamp;
-        let decimals = fetchTokenDecimals(address_erc20);
-
         let trade_value = event.params._initial.div(BI_128);
         let trade_quantity = event.params._initial.mod(BI_128);
         let newcustomer = new Customer(metaowner);
@@ -315,6 +321,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
 
         let meta_good = new GoodState(metaid);
         meta_good.id = metaid;
+        meta_good.goodseq = ONE_BI;
         meta_good.pargood = meta_pargood.id;
         meta_good.isvaluegood = true;
         meta_good.tokenname = fetchTokenName(address_erc20);
@@ -339,12 +346,13 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         meta_good.totalDisinvestCount = ZERO_BI;
         meta_good.modifiedTime = modifiedTime;
         meta_good.txCount = ONE_BI;
+        meta_good.create_time = modifiedTime;
         meta_good.save();
 
         let null_good = new GoodState("0");
 
         null_good.pargood = null_pargood.id;
-
+        null_good.goodseq = ZERO_BI;
         null_good.isvaluegood = false;
         null_good.tokenname = "#";
         null_good.tokensymbol = "#";
@@ -368,6 +376,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         null_good.totalDisinvestCount = ZERO_BI;
         null_good.modifiedTime = modifiedTime;
         null_good.txCount = ZERO_BI;
+        null_good.create_time = modifiedTime;
         null_good.save();
 
         let proof = new ProofState(event.params._proofNo.toString());
@@ -419,8 +428,6 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         log_ParGoodData(meta_pargood, modifiedTime);
         log_MarketData(marketstate, modifiedTime);
 }
-
-//ok
 export function handle_e_initGood(event: e_initGood): void {
         let addresserc = event.params._erc20address;
         let erc20address = addresserc.toHexString();
@@ -537,10 +544,11 @@ export function handle_e_initGood(event: e_initGood): void {
 
         let normal_good = GoodState.load(normalgoodid);
         if (normal_good === null) {
+                marketstate.goodCount = marketstate.goodCount.plus(ONE_BI);
                 normal_good = new GoodState(normalgoodid);
                 normal_good.modifiedTime = modifiedTime;
                 normal_good.pargood = normal_pargood.id;
-
+                normal_good.goodseq = marketstate.goodCount;
                 normal_good.isvaluegood = false;
                 normal_good.tokenname = fetchTokenName(addresserc);
                 normal_good.tokensymbol = fetchTokenSymbol(addresserc);
@@ -564,7 +572,7 @@ export function handle_e_initGood(event: e_initGood): void {
                 normal_good.totalDisinvestCount = ZERO_BI;
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
-                marketstate.goodCount = marketstate.goodCount.plus(ONE_BI);
+                normal_good.create_time = modifiedTime;
         }
         normal_good.erc20Address = erc20address;
         normal_good.goodConfig = goodConfig;
@@ -597,6 +605,7 @@ export function handle_e_initGood(event: e_initGood): void {
         let value_good = GoodState.load(valuegoodid);
         if (value_good === null) {
                 value_good = new GoodState(valuegoodid);
+                value_good.goodseq = ZERO_BI;
                 value_good.pargood = "0";
 
                 value_good.isvaluegood = false;
@@ -622,6 +631,7 @@ export function handle_e_initGood(event: e_initGood): void {
                 value_good.totalDisinvestCount = ZERO_BI;
                 value_good.modifiedTime = ZERO_BI;
                 value_good.txCount = ZERO_BI;
+                value_good.create_time = ZERO_BI;
         }
         let value_pargood = ParGoodState.load(value_good.erc20Address);
         if (value_pargood === null) {
@@ -810,6 +820,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
         let from_good = GoodState.load(fromgood.toString());
         if (from_good === null) {
                 from_good = new GoodState(fromgood.toString());
+                from_good.goodseq = ZERO_BI;
                 from_good.pargood = "0";
                 from_good.isvaluegood = false;
                 from_good.tokenname = "#";
@@ -834,6 +845,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 from_good.totalDisinvestCount = ZERO_BI;
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
+                from_good.create_time = ZERO_BI;
         }
         let from_pargood = ParGoodState.load(from_good.erc20Address);
         if (from_pargood === null) {
@@ -912,6 +924,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
         let to_good = GoodState.load(togood.toString());
         if (to_good === null) {
                 to_good = new GoodState(togood.toString());
+                to_good.goodseq = ZERO_BI;
                 to_good.pargood = "0";
                 to_good.isvaluegood = false;
                 to_good.tokenname = "#";
@@ -936,6 +949,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 to_good.totalDisinvestCount = ZERO_BI;
                 to_good.modifiedTime = ZERO_BI;
                 to_good.txCount = ZERO_BI;
+                to_good.create_time = ZERO_BI;
         }
         let to_pargood = ParGoodState.load(to_good.erc20Address);
         if (to_pargood === null) {
@@ -1108,6 +1122,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         let from_good = GoodState.load(fromgood.toString());
         if (from_good === null) {
                 from_good = new GoodState(fromgood.toString());
+                from_good.goodseq = ZERO_BI;
                 from_good.pargood = "0";
                 from_good.isvaluegood = false;
                 from_good.tokenname = "#";
@@ -1132,6 +1147,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 from_good.totalDisinvestCount = ZERO_BI;
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
+                from_good.create_time = ZERO_BI;
         }
         let from_pargood = ParGoodState.load(from_good.erc20Address);
         if (from_pargood === null) {
@@ -1210,6 +1226,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         let to_good = GoodState.load(togood.toString());
         if (to_good === null) {
                 to_good = new GoodState(togood.toString());
+                to_good.goodseq = ZERO_BI;
                 to_good.pargood = "0";
                 to_good.isvaluegood = false;
                 to_good.tokenname = "#";
@@ -1234,6 +1251,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 to_good.totalDisinvestCount = ZERO_BI;
                 to_good.modifiedTime = ZERO_BI;
                 to_good.txCount = ZERO_BI;
+                to_good.create_time = ZERO_BI;
         }
         let to_pargood = ParGoodState.load(to_good.erc20Address);
         if (to_pargood === null) {
@@ -1378,7 +1396,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         log_MarketData(marketstate, event.block.timestamp);
 }
 
-export function handle_e_collectProofFee(event: e_collectProofFee): void {
+export function handle_e_collectProof(event: e_collectProof): void {
         let normalgoodid = event.params._normalGoodNo.toString();
         let valuegoodid = event.params._valueGoodNo.toString();
         let proofNo = event.params._proofNo.toString();
@@ -1422,6 +1440,7 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
         let normal_good = GoodState.load(normalgoodid);
         if (normal_good === null) {
                 normal_good = new GoodState(normalgoodid);
+                normal_good.goodseq = ZERO_BI;
                 normal_good.pargood = "0";
                 normal_good.isvaluegood = false;
                 normal_good.tokenname = "#";
@@ -1446,6 +1465,7 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
                 normal_good.totalDisinvestCount = ZERO_BI;
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
+                normal_good.create_time = ZERO_BI;
         }
 
         let normal_pargood = ParGoodState.load(normal_good.erc20Address);
@@ -1499,6 +1519,7 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
                 let value_good = GoodState.load(valuegoodid);
                 if (value_good === null) {
                         value_good = new GoodState(valuegoodid);
+                        value_good.goodseq = ZERO_BI;
                         value_good.pargood = "0";
                         value_good.isvaluegood = false;
                         value_good.tokenname = "#";
@@ -1523,6 +1544,7 @@ export function handle_e_collectProofFee(event: e_collectProofFee): void {
                         value_good.totalDisinvestCount = ZERO_BI;
                         value_good.modifiedTime = ZERO_BI;
                         value_good.txCount = ZERO_BI;
+                        value_good.create_time = ZERO_BI;
                 }
 
                 let value_pargood = ParGoodState.load(value_good.erc20Address);
@@ -1712,6 +1734,7 @@ export function handle_e_investGood(event: e_investGood): void {
         let normal_good = GoodState.load(normalgoodid);
         if (normal_good === null) {
                 normal_good = new GoodState(normalgoodid);
+                normal_good.goodseq = ZERO_BI;
                 normal_good.pargood = "0";
                 normal_good.isvaluegood = false;
                 normal_good.tokenname = "#";
@@ -1736,6 +1759,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 normal_good.totalDisinvestCount = ZERO_BI;
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
+                normal_good.create_time = ZERO_BI;
         }
 
         let normal_pargood = ParGoodState.load(normal_good.erc20Address);
@@ -1920,6 +1944,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 let value_good = GoodState.load(valuegoodid);
                 if (value_good === null) {
                         value_good = new GoodState(valuegoodid);
+                        value_good.goodseq = ZERO_BI;
                         value_good.pargood = "0";
                         value_good.isvaluegood = false;
                         value_good.tokenname = "#";
@@ -1944,6 +1969,7 @@ export function handle_e_investGood(event: e_investGood): void {
                         value_good.totalDisinvestCount = ZERO_BI;
                         value_good.modifiedTime = ZERO_BI;
                         value_good.txCount = ZERO_BI;
+                        value_good.create_time = ZERO_BI;
                 }
 
                 let value_pargood = ParGoodState.load(value_good.erc20Address);
@@ -2251,6 +2277,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
         let normal_good = GoodState.load(normalgoodid);
         if (normal_good === null) {
                 normal_good = new GoodState(normalgoodid);
+                normal_good.goodseq = ZERO_BI;
                 normal_good.pargood = "0";
                 normal_good.isvaluegood = false;
                 normal_good.tokenname = "#";
@@ -2275,6 +2302,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 normal_good.totalDisinvestCount = ZERO_BI;
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
+                normal_good.create_time = ZERO_BI;
         }
 
         let normal_pargood = ParGoodState.load(normal_good.erc20Address);
@@ -2460,6 +2488,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 let value_good = GoodState.load(valuegoodid);
                 if (value_good === null) {
                         value_good = new GoodState(valuegoodid);
+                        value_good.goodseq = ZERO_BI;
                         value_good.pargood = "0";
                         value_good.isvaluegood = false;
                         value_good.tokenname = "#";
@@ -2484,6 +2513,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         value_good.totalDisinvestCount = ZERO_BI;
                         value_good.modifiedTime = ZERO_BI;
                         value_good.txCount = ZERO_BI;
+                        value_good.create_time = ZERO_BI;
                 }
 
                 let value_pargood = ParGoodState.load(value_good.erc20Address);
@@ -2812,8 +2842,9 @@ export function handle_e_addreferer(event: e_addreferal): void {
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
+                newcustomer.refer = "#";
         }
-        if (newcustomer.refer != "#") {
+        if ((newcustomer.refer = "#")) {
                 newcustomer.refer = event.transaction.from.toHexString();
                 newcustomer.save();
         }
