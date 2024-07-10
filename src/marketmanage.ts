@@ -26,6 +26,7 @@ import {
         e_addreferal,
         e_addbanlist,
         e_removebanlist,
+        Transfer,
 } from "../generated/MarketManager/MarketManager";
 
 import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./util/constants";
@@ -438,6 +439,7 @@ export function handle_e_initGood(event: e_initGood): void {
         let marketmanage = MarketManager.bind(
                 Address.fromString(MARKET_ADDRESS)
         );
+        let goodowner = event.transaction.from.toHex();
         let proofstate = marketmanage.try_getProofState(proofid_BG);
 
         let trade_value = event.params._normalinitial.mod(BI_128);
@@ -584,6 +586,7 @@ export function handle_e_initGood(event: e_initGood): void {
         normal_good.totalInvestCount = ONE_BI;
         normal_good.modifiedTime = modifiedTime;
         normal_good.txCount = normal_good.txCount.plus(ONE_BI);
+        normal_good.owner = goodowner;
         if (
                 normal_good.goodConfig.div(
                         BigInt.fromString(
@@ -2848,4 +2851,25 @@ export function handle_e_addreferer(event: e_addreferal): void {
                 newcustomer.refer = event.transaction.from.toHexString();
                 newcustomer.save();
         }
+}
+
+export function handle_e_Transfer(event: Transfer): void {
+        let from = event.params.from.toHexString();
+        let to = event.params.to.toHexString();
+        let token = event.params.tokenId;
+        let proof = ProofState.load(token.toString());
+        if (proof === null) {
+                proof = new ProofState(token.toString());
+                proof.owner = to;
+                proof.good1 = "#";
+                proof.good2 = "#";
+                proof.proofValue = ZERO_BI;
+                proof.good1Quantity = ZERO_BI;
+                proof.good2Quantity = ZERO_BI;
+                proof.good1ContructFee = ZERO_BI;
+                proof.good2ContructFee = ZERO_BI;
+                proof.createTime = event.block.timestamp;
+        }
+        proof.owner = to;
+        proof.save();
 }

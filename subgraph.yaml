@@ -67,6 +67,8 @@ dataSources:
           handler: handle_e_removebanlist
         - event: e_addreferal(address)
           handler: handle_e_addreferer
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handle_e_Transfer
         
         
 
