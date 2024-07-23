@@ -99,7 +99,7 @@ type ProofState @entity {
   good2ContructFee: BigInt!
   good2Quantity:BigInt!
   createTime: BigInt!
-
+  
 }
 
 type Transaction @entity {
@@ -107,6 +107,7 @@ type Transaction @entity {
   id: ID!
   blockNumber: BigInt!
   transtype:String!
+  transvalue:BigInt!
   fromgood:GoodState!
   togood:GoodState!
   frompargood:ParGoodState!

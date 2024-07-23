@@ -3,15 +3,15 @@ description: ttswap is a decentralized protocol for automated token exchange on 
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: MarketManager
     network: sepolia
     source:
-      address: "0xB756137A6fE9acD420fEECD9dE30282b93d35861"
+      address: "0xE9dA137397D63aD942EC3860B2aE2cc1Fee2C342"
       abi: MarketManager
-      startBlock: 6276721
+      startBlock: 6339893
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -36,16 +36,17 @@ dataSources:
           file: ./abis/ERC20NameBytes.json
         - name: ERC20SymbolBytes
           file: ./abis/ERC20SymbolBytes.json
-      eventHandlers:  
+      eventHandlers:
         - event: e_initMetaGood(indexed uint256,uint256,address,uint256,uint256)
           handler: handle_e_initMetaGood
         - event: e_initGood(indexed uint256,uint256,uint256,address,uint256,uint256,uint256)
           handler: handle_e_initGood
         - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
           handler: handle_e_buyGood
-        - event: e_buyGoodForPay(indexed uint256,indexed uint256,address,address,uint128,uint256,uint256)
+        - event: e_buyGoodForPay(indexed uint256,indexed
+            uint256,address,address,uint128,uint256,uint256)
           handler: handle_e_buyGoodForPay
-        - event: e_investGood(indexed uint256,uint256,uint256,uint256,uint256)
+        - event: e_investGood(indexed uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_investGood
         - event: e_disinvestProof(indexed uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_disinvestProof
@@ -57,16 +58,13 @@ dataSources:
           handler: handle_e_changeOwner
         - event: e_updateGoodConfig(uint256,uint256)
           handler: handle_e_updateGoodConfig
-        - event: e_updatetoNormalGood(uint256)
-          handler: handle_e_updatetoNormalGood
-        - event: e_updatetoValueGood(uint256)
-          handler: handle_e_updatetoValueGood
+        - event: e_modifyGoodConfig(uint256,uint256)
+          handler: handle_e_modifyGoodConfig
         - event: e_addbanlist(address)
           handler: handle_e_addbanlist
         - event: e_removebanlist(address)
           handler: handle_e_removebanlist
         - event: e_addreferal(address)
           handler: handle_e_addreferer
-        
-        
-
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handle_e_Transfer
