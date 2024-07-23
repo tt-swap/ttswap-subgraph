@@ -18,8 +18,7 @@ import {
         e_initGood,
         e_setMarketConfig,
         e_updateGoodConfig,
-        e_updatetoValueGood,
-        e_updatetoNormalGood,
+        e_modifyGoodConfig,
         e_changeOwner,
         e_investGood,
         e_disinvestProof,
@@ -152,7 +151,7 @@ export function handle_e_updateGoodConfig(event: e_updateGoodConfig): void {
         );
         from_good.save();
 }
-export function handle_e_updatetoNormalGood(event: e_updatetoNormalGood): void {
+export function handle_e_modifyGoodConfig(event: e_modifyGoodConfig): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good === null) {
                 from_good = new GoodState(event.params._goodid.toString());
@@ -182,45 +181,22 @@ export function handle_e_updatetoNormalGood(event: e_updatetoNormalGood): void {
                 from_good.txCount = ZERO_BI;
                 from_good.create_time = ZERO_BI;
         }
+
         from_good.goodConfig = fetchGoodConfig(event.params._goodid);
-        from_good.isvaluegood = false;
-        from_good.save();
-}
-export function handle_e_updatetoValueGood(event: e_updatetoValueGood): void {
-        let from_good = GoodState.load(event.params._goodid.toString());
-        if (from_good === null) {
-                from_good = new GoodState(event.params._goodid.toString());
-                from_good.goodseq = ZERO_BI;
-                from_good.pargood = "0";
-                from_good.tokenname = "#";
-                from_good.tokensymbol = "#";
-                from_good.tokentotalsuply = ZERO_BI;
-                from_good.tokendecimals = ZERO_BI;
-                from_good.owner = "#";
-                from_good.erc20Address = "#";
-                from_good.goodConfig = ZERO_BI;
-                from_good.currentValue = ZERO_BI;
-                from_good.currentQuantity = ZERO_BI;
-                from_good.investValue = ZERO_BI;
-                from_good.investQuantity = ZERO_BI;
-                from_good.feeQuantity = ZERO_BI;
-                from_good.contructFee = ZERO_BI;
-                from_good.totalTradeQuantity = ZERO_BI;
-                from_good.totalInvestQuantity = ZERO_BI;
-                from_good.totalDisinvestQuantity = ZERO_BI;
-                from_good.totalProfit = ZERO_BI;
-                from_good.totalTradeCount = ZERO_BI;
-                from_good.totalInvestCount = ZERO_BI;
-                from_good.totalDisinvestCount = ZERO_BI;
-                from_good.modifiedTime = ZERO_BI;
-                from_good.txCount = ZERO_BI;
-                from_good.create_time = ZERO_BI;
+        if (
+                from_good.goodConfig.div(
+                        BigInt.fromString(
+                                "57896044618658097711785492504343953926634992332820282019728792003956564819968"
+                        )
+                ) >= ONE_BI
+        ) {
+                from_good.isvaluegood = true;
+        } else {
+                from_good.isvaluegood = false;
         }
-        from_good.goodConfig = fetchGoodConfig(event.params._goodid);
-        from_good.isvaluegood = true;
         from_good.save();
 }
-//ok;
+
 export function handle_e_initMetaGood(event: e_initMetaGood): void {
         let address_erc20 = event.params._erc20address;
         let erc20address = address_erc20.toHexString();
@@ -238,6 +214,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         newcustomer.investCount = BigInt.fromU32(1);
         newcustomer.disinvestCount = ZERO_BI;
         newcustomer.isBanlist = false;
+        //newcustomer.customerno = BigInt.fromU32(1);
         newcustomer.save();
 
         let marketstate = MarketState.load(MARKET_ADDRESS);
@@ -412,6 +389,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         }
         tx.blockNumber = event.block.number;
         tx.transtype = "meta";
+        tx.transvalue = trade_value;
         tx.fromgood = meta_good.id;
         tx.togood = meta_good.id;
         tx.frompargood = meta_pargood.id;
@@ -494,6 +472,7 @@ export function handle_e_initGood(event: e_initGood): void {
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
                 marketstate.userCount = marketstate.userCount.plus(ONE_BI);
+                //newcustomer.customerno = marketstate.userCount;
         }
         newcustomer.investValue = newcustomer.investValue.plus(trade_value);
         newcustomer.investValue = newcustomer.investValue.plus(trade_value);
@@ -610,7 +589,6 @@ export function handle_e_initGood(event: e_initGood): void {
                 value_good = new GoodState(valuegoodid);
                 value_good.goodseq = ZERO_BI;
                 value_good.pargood = "0";
-
                 value_good.isvaluegood = false;
                 value_good.tokenname = "#";
                 value_good.tokensymbol = "#";
@@ -776,6 +754,7 @@ export function handle_e_initGood(event: e_initGood): void {
         }
         tx.blockNumber = event.block.number;
         tx.transtype = "init";
+        tx.transvalue = trade_value.times(BigInt.fromString("2"));
         tx.fromgood = normal_good.id;
         tx.togood = value_good.id;
         tx.frompargood = normal_pargood.id;
@@ -1042,6 +1021,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
                 marketstate.userCount = marketstate.userCount.plus(ONE_BI);
+                //newcustomer.customerno = marketstate.userCount;
         }
 
         newcustomer.tradeValue = newcustomer.tradeValue.plus(
@@ -1077,6 +1057,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
         }
         tx.blockNumber = event.block.number;
         tx.transtype = "buy";
+        tx.transvalue = trade_value;
         tx.fromgood = from_good.id;
         tx.togood = to_good.id;
         tx.frompargood = from_pargood.id;
@@ -1344,6 +1325,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
                 marketstate.userCount = marketstate.userCount.plus(ONE_BI);
+                //newcustomer.customerno = marketstate.userCount;
         }
 
         newcustomer.tradeValue = newcustomer.tradeValue.plus(
@@ -1379,6 +1361,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         }
         tx.blockNumber = event.block.number;
         tx.transtype = "pay";
+        tx.transvalue = trade_value;
         tx.fromgood = from_good.id;
         tx.togood = to_good.id;
         tx.frompargood = from_pargood.id;
@@ -1635,6 +1618,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "collect";
+                tx.transvalue = BigInt.fromString("0");
                 tx.fromgood = normal_good.id;
                 tx.togood = value_good.id;
                 tx.frompargood = normal_pargood.id;
@@ -1687,6 +1671,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "collect";
+                tx.transvalue = BigInt.fromString("0");
                 tx.fromgood = normal_good.id;
                 tx.togood = "0";
                 tx.frompargood = normal_pargood.id;
@@ -1929,6 +1914,7 @@ export function handle_e_investGood(event: e_investGood): void {
                         newcustomer.isBanlist = false;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
+                        //newcustomer.customerno = marketstate.userCount;
                 }
 
                 newcustomer.investValue = newcustomer.investValue.minus(
@@ -2148,19 +2134,25 @@ export function handle_e_investGood(event: e_investGood): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "invest";
+                tx.transvalue = event.params._invest
+                        .div(BI_128)
+                        .times(BigInt.fromString("2"));
                 tx.fromgood = normal_good.id;
                 tx.togood = value_good.id;
                 tx.frompargood = normal_pargood.id;
                 tx.topargood = value_pargood.id;
-                tx.fromgoodQuanity = normal_Quantity;
-                tx.fromgoodfee = normal_fee;
-                tx.togoodQuantity = value_Quantity;
-                tx.togoodfee = value_fee;
+
+                tx.fromgoodQuanity = event.params._invest.mod(BI_128);
+                tx.fromgoodfee = event.params._invest.div(BI_128);
+                tx.togoodQuantity = event.params._valueinvest.mod(BI_128);
+                tx.togoodfee = event.params._valueinvest.div(BI_128);
                 tx.timestamp = event.block.timestamp;
                 tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
 
+                proof.good1 = normalgoodid;
+                proof.good2 = valuegoodid;
                 proof.proofValue = invest_value;
                 proof.good1ContructFee = normal_contructFee;
                 proof.good1Quantity = normal_Quantity;
@@ -2191,6 +2183,7 @@ export function handle_e_investGood(event: e_investGood): void {
                         newcustomer.isBanlist = false;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
+                        //newcustomer.customerno = marketstate.userCount;
                 }
 
                 newcustomer.investValue = newcustomer.investValue.minus(
@@ -2225,6 +2218,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "invest";
+                tx.transvalue = event.params._invest.div(BI_128);
                 tx.fromgood = normal_good.id;
                 tx.togood = "0";
                 tx.frompargood = normal_pargood.id;
@@ -2236,9 +2230,13 @@ export function handle_e_investGood(event: e_investGood): void {
                 tx.hash = event.transaction.hash.toHexString();
                 tx.save();
 
+                proof.good1 = normalgoodid;
+                proof.good2 = valuegoodid;
                 proof.proofValue = invest_value;
                 proof.good1ContructFee = normal_contructFee;
                 proof.good1Quantity = normal_Quantity;
+                proof.good2ContructFee = ZERO_BI;
+                proof.good2Quantity = ZERO_BI;
                 proof.save();
 
                 log_GoodData(normal_good, event.block.timestamp);
@@ -2255,9 +2253,11 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 Address.fromString(MARKET_ADDRESS)
         );
         let proofstate = marketmanage.try_getProofState(event.params._proofNo);
+
         let invest_value = proofstate.value.state.div(BI_128);
         let normal_contructFee = proofstate.value.invest.div(BI_128);
         let normal_Quantity = proofstate.value.invest.mod(BI_128);
+        456;
         let normal_fee = event.params._normalgood.div(BI_128);
         let value_contructFee = proofstate.value.valueinvest.div(BI_128);
         let value_Quantity = proofstate.value.valueinvest.mod(BI_128);
@@ -2276,7 +2276,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 proof.good2ContructFee = ZERO_BI;
                 proof.createTime = event.block.timestamp;
         }
-
+        let devestvalue = proof.proofValue.minus(invest_value);
         let normal_good = GoodState.load(normalgoodid);
         if (normal_good === null) {
                 normal_good = new GoodState(normalgoodid);
@@ -2471,6 +2471,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.isBanlist = false;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
+                        //newcustomer.customerno = marketstate.userCount;
                 }
 
                 newcustomer.disinvestValue = newcustomer.disinvestValue.plus(
@@ -2697,7 +2698,8 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         tx.timestamp = ZERO_BI;
                 }
                 tx.blockNumber = event.block.number;
-                tx.transtype = "disinvest";
+                tx.transtype = "devest";
+                tx.transvalue = devestvalue;
                 tx.fromgood = normal_good.id;
                 tx.togood = value_good.id;
                 tx.frompargood = normal_pargood.id;
@@ -2742,6 +2744,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.isBanlist = false;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
+                        //newcustomer.customerno = marketstate.userCount;
                 }
                 newcustomer.disinvestValue = newcustomer.disinvestValue.plus(
                         proof.proofValue
@@ -2774,7 +2777,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         tx.timestamp = ZERO_BI;
                 }
                 tx.blockNumber = event.block.number;
-                tx.transtype = "disinvest";
+                tx.transtype = "devest";
                 tx.fromgood = normal_good.id;
                 tx.togood = "0";
                 tx.frompargood = normal_pargood.id;
@@ -2810,6 +2813,7 @@ export function handle_e_addbanlist(event: e_addbanlist): void {
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
+                //newcustomer.customerno = ZERO_BI;
         }
         newcustomer.isBanlist = true;
         newcustomer.save();
@@ -2827,6 +2831,7 @@ export function handle_e_removebanlist(event: e_removebanlist): void {
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
+                //newcustomer.customerno = ZERO_BI;
         }
         newcustomer.isBanlist = true;
         newcustomer.save();
@@ -2846,6 +2851,7 @@ export function handle_e_addreferer(event: e_addreferal): void {
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
                 newcustomer.refer = "#";
+                //newcustomer.customerno = ZERO_BI;
         }
         if ((newcustomer.refer = "#")) {
                 newcustomer.refer = event.transaction.from.toHexString();
