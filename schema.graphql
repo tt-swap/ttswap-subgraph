@@ -9,6 +9,7 @@ type Customer @entity {
   investCount: BigInt!
   disinvestCount: BigInt!
   isBanlist:Boolean!
+  customerno:BigInt!
 }
 
 type MarketState @entity {
