@@ -2134,14 +2134,13 @@ export function handle_e_investGood(event: e_investGood): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "invest";
-                tx.transvalue = event.params._invest
+                tx.transvalue = event.params._value
                         .div(BI_128)
                         .times(BigInt.fromString("2"));
                 tx.fromgood = normal_good.id;
                 tx.togood = value_good.id;
                 tx.frompargood = normal_pargood.id;
                 tx.topargood = value_pargood.id;
-
                 tx.fromgoodQuanity = event.params._invest.mod(BI_128);
                 tx.fromgoodfee = event.params._invest.div(BI_128);
                 tx.togoodQuantity = event.params._valueinvest.mod(BI_128);
@@ -2218,13 +2217,13 @@ export function handle_e_investGood(event: e_investGood): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "invest";
-                tx.transvalue = event.params._invest.div(BI_128);
+                tx.transvalue = event.params._value.div(BI_128);
                 tx.fromgood = normal_good.id;
                 tx.togood = "0";
                 tx.frompargood = normal_pargood.id;
                 tx.topargood = "0";
-                tx.fromgoodQuanity = normal_Quantity;
-                tx.fromgoodfee = normal_fee;
+                tx.fromgoodQuanity = event.params._invest.mod(BI_128);
+                tx.fromgoodfee = event.params._invest.div(BI_128);
                 tx.timestamp = event.block.timestamp;
                 tx.recipent = event.transaction.from.toHexString();
                 tx.hash = event.transaction.hash.toHexString();
@@ -2699,7 +2698,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "devest";
-                tx.transvalue = devestvalue;
+                tx.transvalue = event.params._value;
                 tx.fromgood = normal_good.id;
                 tx.togood = value_good.id;
                 tx.frompargood = normal_pargood.id;
@@ -2778,6 +2777,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "devest";
+                tx.transvalue = event.params._value;
                 tx.fromgood = normal_good.id;
                 tx.togood = "0";
                 tx.frompargood = normal_pargood.id;

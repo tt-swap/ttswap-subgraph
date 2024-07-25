@@ -9,7 +9,7 @@ export function log_MarketData(
         modifiedTime: BigInt
 ): void {
         let data_hour = modifiedTime
-                .mod(BigInt.fromU32(3600))
+                .mod(BigInt.fromU32(3660))
                 .div(BigInt.fromU32(60));
         let marketData_hour = MarketData.load("h" + data_hour.toString());
         if (marketData_hour === null) {
@@ -35,7 +35,7 @@ export function log_MarketData(
         marketData_hour.save();
 
         let data_day = modifiedTime
-                .mod(BigInt.fromU32(86400))
+                .mod(BigInt.fromU32(87600))
                 .div(BigInt.fromU32(1200));
         let marketData_day = MarketData.load("d" + data_day.toString());
         if (marketData_day === null) {
@@ -71,7 +71,7 @@ export function log_MarketData(
         }
 
         let data_week = modifiedTime
-                .mod(BigInt.fromU32(604800))
+                .mod(BigInt.fromU32(615600))
                 .div(BigInt.fromU32(10800));
         let marketData_week = MarketData.load("w" + data_week.toString());
         if (marketData_week === null) {
@@ -107,7 +107,7 @@ export function log_MarketData(
         }
 
         let data_month = modifiedTime
-                .mod(BigInt.fromU32(2678400))
+                .mod(BigInt.fromU32(2721600))
                 .div(BigInt.fromU32(43200));
         let marketData_month = MarketData.load("m" + data_month.toString());
         if (marketData_month === null) {
@@ -142,9 +142,7 @@ export function log_MarketData(
                 marketData_month.save();
         }
 
-        let data_year = modifiedTime
-                .mod(BigInt.fromU32(2678400))
-                .div(BigInt.fromU32(43200));
+        let data_year = modifiedTime.div(BigInt.fromU32(432000));
         let marketData_year = MarketData.load("y" + data_year.toString());
         if (marketData_year === null) {
                 marketData_year = new MarketData("y" + data_year.toString());
