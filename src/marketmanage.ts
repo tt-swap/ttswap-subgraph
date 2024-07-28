@@ -2697,7 +2697,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         tx.timestamp = ZERO_BI;
                 }
                 tx.blockNumber = event.block.number;
-                tx.transtype = "devest";
+                tx.transtype = "divest";
                 tx.transvalue = event.params._value;
                 tx.fromgood = normal_good.id;
                 tx.togood = value_good.id;
@@ -2776,7 +2776,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         tx.timestamp = ZERO_BI;
                 }
                 tx.blockNumber = event.block.number;
-                tx.transtype = "devest";
+                tx.transtype = "divest";
                 tx.transvalue = event.params._value;
                 tx.fromgood = normal_good.id;
                 tx.togood = "0";

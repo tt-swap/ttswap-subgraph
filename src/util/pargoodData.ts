@@ -94,7 +94,7 @@ export function log_ParGoodData(
         pargoodData_hour.save();
 
         let data_day = modifiedTime
-                .mod(BigInt.fromU32(87600))
+                .mod(BigInt.fromU32(174000))
                 .div(BigInt.fromU32(1200));
         let pargoodData_day = ParGoodData.load(
                 normal_pargood.id + "d" + data_day.toString()
@@ -162,7 +162,7 @@ export function log_ParGoodData(
                                 .mod(BigInt.fromU32(87600))
                                 .div(BigInt.fromU32(1200)) <
                         modifiedTime
-                                .plus(BigInt.fromU32(60))
+                                .plus(BigInt.fromU32(1200))
                                 .mod(BigInt.fromU32(87600))
                                 .div(BigInt.fromU32(1200))
                 ) {
