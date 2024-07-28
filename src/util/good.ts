@@ -23,7 +23,7 @@ export function log_GoodData(
         modifiedTime: BigInt
 ): void {
         let data_hour = modifiedTime
-                .mod(BigInt.fromU32(3600))
+                .mod(BigInt.fromU32(3660))
                 .div(BigInt.fromU32(60));
         let goodData_hour = GoodData.load(
                 normal_good.id + "h" + data_hour.toString()
@@ -64,9 +64,9 @@ export function log_GoodData(
 
         if (
                 goodData_hour.modifiedTime
-                        .mod(BigInt.fromU32(3600))
+                        .mod(BigInt.fromU32(3660))
                         .div(BigInt.fromU32(60)) <
-                modifiedTime.mod(BigInt.fromU32(3600)).div(BigInt.fromU32(60))
+                modifiedTime.mod(BigInt.fromU32(3660)).div(BigInt.fromU32(60))
         ) {
                 goodData_hour.open = price;
         }
@@ -78,10 +78,10 @@ export function log_GoodData(
                 goodData_hour.low = price;
         }
         if (
-                modifiedTime.mod(BigInt.fromU32(3600)).div(BigInt.fromU32(60)) <
+                modifiedTime.mod(BigInt.fromU32(3660)).div(BigInt.fromU32(60)) <
                 modifiedTime
                         .plus(ONE_BI)
-                        .mod(BigInt.fromU32(3600))
+                        .mod(BigInt.fromU32(3660))
                         .div(BigInt.fromU32(60))
         ) {
                 goodData_hour.close = price;
@@ -94,7 +94,7 @@ export function log_GoodData(
         goodData_hour.save();
 
         let data_day = modifiedTime
-                .mod(BigInt.fromU32(86400))
+                .mod(BigInt.fromU32(87600))
                 .div(BigInt.fromU32(1200));
         let goodData_day = GoodData.load(
                 normal_good.id + "d" + data_day.toString()
@@ -139,10 +139,10 @@ export function log_GoodData(
 
                 if (
                         goodData_day.modifiedTime
-                                .mod(BigInt.fromU32(86400))
+                                .mod(BigInt.fromU32(87600))
                                 .div(BigInt.fromU32(1200)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(86400))
+                                .mod(BigInt.fromU32(87600))
                                 .div(BigInt.fromU32(1200))
                 ) {
                         goodData_day.open = price;
@@ -156,11 +156,11 @@ export function log_GoodData(
                 }
                 if (
                         modifiedTime
-                                .mod(BigInt.fromU32(86400))
+                                .mod(BigInt.fromU32(87600))
                                 .div(BigInt.fromU32(1200)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(60))
-                                .mod(BigInt.fromU32(86400))
+                                .mod(BigInt.fromU32(87600))
                                 .div(BigInt.fromU32(1200))
                 ) {
                         goodData_day.close = price;
@@ -170,7 +170,7 @@ export function log_GoodData(
         }
 
         let data_week = modifiedTime
-                .mod(BigInt.fromU32(604800))
+                .mod(BigInt.fromU32(615600))
                 .div(BigInt.fromU32(10800));
         let goodData_week = GoodData.load(
                 normal_good.id + "w" + data_week.toString()
@@ -216,10 +216,10 @@ export function log_GoodData(
 
                 if (
                         goodData_week.modifiedTime
-                                .mod(BigInt.fromU32(604800))
+                                .mod(BigInt.fromU32(615600))
                                 .div(BigInt.fromU32(10800)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(604800))
+                                .mod(BigInt.fromU32(615600))
                                 .div(BigInt.fromU32(10800))
                 ) {
                         goodData_week.open = price;
@@ -233,11 +233,11 @@ export function log_GoodData(
                 }
                 if (
                         modifiedTime
-                                .mod(BigInt.fromU32(604800))
+                                .mod(BigInt.fromU32(615600))
                                 .div(BigInt.fromU32(10800)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(1200))
-                                .mod(BigInt.fromU32(604800))
+                                .mod(BigInt.fromU32(615600))
                                 .div(BigInt.fromU32(10800))
                 ) {
                         goodData_week.close = price;
@@ -247,7 +247,7 @@ export function log_GoodData(
         }
 
         let data_month = modifiedTime
-                .mod(BigInt.fromU32(2678400))
+                .mod(BigInt.fromU32(2721600))
                 .div(BigInt.fromU32(43200));
         let goodData_month = GoodData.load(
                 normal_good.id + "m" + data_month.toString()
@@ -294,10 +294,10 @@ export function log_GoodData(
 
                 if (
                         goodData_month.modifiedTime
-                                .mod(BigInt.fromU32(2678400))
+                                .mod(BigInt.fromU32(2721600))
                                 .div(BigInt.fromU32(43200)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(2678400))
+                                .mod(BigInt.fromU32(2721600))
                                 .div(BigInt.fromU32(43200))
                 ) {
                         goodData_month.open = price;
@@ -311,11 +311,11 @@ export function log_GoodData(
                 }
                 if (
                         modifiedTime
-                                .mod(BigInt.fromU32(2678400))
+                                .mod(BigInt.fromU32(2721600))
                                 .div(BigInt.fromU32(43200)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(10800))
-                                .mod(BigInt.fromU32(2678400))
+                                .mod(BigInt.fromU32(2721600))
                                 .div(BigInt.fromU32(43200))
                 ) {
                         goodData_month.close = price;
@@ -324,9 +324,7 @@ export function log_GoodData(
                 goodData_month.save();
         }
 
-        let data_year = modifiedTime
-                .mod(BigInt.fromU32(2678400))
-                .div(BigInt.fromU32(43200));
+        let data_year = modifiedTime.div(BigInt.fromU32(432000));
         let goodData_year = GoodData.load(
                 normal_good.id + "y" + data_year.toString()
         );
@@ -371,12 +369,8 @@ export function log_GoodData(
                         goodData_month.totalDisinvestCount;
 
                 if (
-                        goodData_year.modifiedTime
-                                .mod(BigInt.fromU32(31536000))
-                                .div(BigInt.fromU32(432000)) <
-                        modifiedTime
-                                .mod(BigInt.fromU32(31536000))
-                                .div(BigInt.fromU32(432000))
+                        goodData_year.modifiedTime.div(BigInt.fromU32(432000)) <
+                        modifiedTime.div(BigInt.fromU32(432000))
                 ) {
                         goodData_year.open = price;
                 }
@@ -388,12 +382,9 @@ export function log_GoodData(
                         goodData_year.low = goodData_month.low;
                 }
                 if (
+                        modifiedTime.div(BigInt.fromU32(432000)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(31536000))
-                                .div(BigInt.fromU32(432000)) <
-                        modifiedTime
-                                .plus(BigInt.fromU32(43200))
-                                .mod(BigInt.fromU32(31536000))
+                                .plus(BigInt.fromU32(10800))
                                 .div(BigInt.fromU32(432000))
                 ) {
                         goodData_year.close = price;
