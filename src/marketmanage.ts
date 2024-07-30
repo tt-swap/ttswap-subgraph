@@ -405,6 +405,14 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
 
         log_GoodData(meta_good, modifiedTime);
         log_ParGoodData(meta_pargood, modifiedTime);
+        log_GoodData(
+                meta_good,
+                event.block.timestamp.minus(BigInt.fromString("86400"))
+        );
+        log_ParGoodData(
+                meta_pargood,
+                event.block.timestamp.minus(BigInt.fromString("86400"))
+        );
         log_MarketData(marketstate, modifiedTime);
 }
 export function handle_e_initGood(event: e_initGood): void {
@@ -768,7 +776,14 @@ export function handle_e_initGood(event: e_initGood): void {
 
         log_GoodData(value_good, modifiedTime);
         log_ParGoodData(value_pargood, modifiedTime);
-
+        log_GoodData(
+                value_good,
+                event.block.timestamp.minus(BigInt.fromString("86400"))
+        );
+        log_ParGoodData(
+                value_pargood,
+                event.block.timestamp.minus(BigInt.fromString("86400"))
+        );
         log_GoodData(normal_good, modifiedTime);
         log_ParGoodData(normal_pargood, modifiedTime);
         log_MarketData(marketstate, modifiedTime);
@@ -1073,6 +1088,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
 
         log_GoodData(from_good, event.block.timestamp);
         log_ParGoodData(from_pargood, event.block.timestamp);
+
         log_GoodData(to_good, event.block.timestamp);
         log_ParGoodData(to_pargood, event.block.timestamp);
         log_MarketData(marketstate, event.block.timestamp);
