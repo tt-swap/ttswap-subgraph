@@ -26,7 +26,7 @@ export function log_ParGoodData(
         modifiedTime: BigInt
 ): void {
         let data_hour = modifiedTime
-                .mod(BigInt.fromU32(3660))
+                .mod(BigInt.fromU32(7260))
                 .div(BigInt.fromU32(60));
         let pargoodData_hour = ParGoodData.load(
                 normal_pargood.id + "h" + data_hour.toString()
@@ -68,9 +68,9 @@ export function log_ParGoodData(
 
         if (
                 pargoodData_hour.modifiedTime
-                        .mod(BigInt.fromU32(3660))
+                        .mod(BigInt.fromU32(7260))
                         .div(BigInt.fromU32(60)) <
-                modifiedTime.mod(BigInt.fromU32(3660)).div(BigInt.fromU32(60))
+                modifiedTime.mod(BigInt.fromU32(7260)).div(BigInt.fromU32(60))
         ) {
                 pargoodData_hour.open = price;
         }
@@ -82,10 +82,10 @@ export function log_ParGoodData(
                 pargoodData_hour.low = price;
         }
         if (
-                modifiedTime.mod(BigInt.fromU32(3660)).div(BigInt.fromU32(60)) <
+                modifiedTime.mod(BigInt.fromU32(7260)).div(BigInt.fromU32(60)) <
                 modifiedTime
                         .plus(ONE_BI)
-                        .mod(BigInt.fromU32(3660))
+                        .mod(BigInt.fromU32(7260))
                         .div(BigInt.fromU32(60))
         ) {
                 pargoodData_hour.close = price;
@@ -141,10 +141,10 @@ export function log_ParGoodData(
 
                 if (
                         pargoodData_day.modifiedTime
-                                .mod(BigInt.fromU32(87600))
+                                .mod(BigInt.fromU32(174000))
                                 .div(BigInt.fromU32(1200)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(87600))
+                                .mod(BigInt.fromU32(174000))
                                 .div(BigInt.fromU32(1200))
                 ) {
                         pargoodData_day.open = price;
@@ -159,11 +159,11 @@ export function log_ParGoodData(
                 }
                 if (
                         modifiedTime
-                                .mod(BigInt.fromU32(87600))
+                                .mod(BigInt.fromU32(174000))
                                 .div(BigInt.fromU32(1200)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(1200))
-                                .mod(BigInt.fromU32(87600))
+                                .mod(BigInt.fromU32(174000))
                                 .div(BigInt.fromU32(1200))
                 ) {
                         pargoodData_day.close = price;
