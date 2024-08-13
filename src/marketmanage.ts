@@ -405,15 +405,23 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
 
         log_GoodData(meta_good, modifiedTime);
         log_ParGoodData(meta_pargood, modifiedTime);
-        log_GoodData(
-                meta_good,
-                event.block.timestamp.minus(BigInt.fromString("86400"))
-        );
-        log_ParGoodData(
-                meta_pargood,
-                event.block.timestamp.minus(BigInt.fromString("86400"))
-        );
         log_MarketData(marketstate, modifiedTime);
+        // day
+        modifiedTime = modifiedTime.minus(BigInt.fromString("86400"));
+        log_GoodData(meta_good, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
+        // week
+        modifiedTime = modifiedTime.minus(BigInt.fromString("604800"));
+        log_GoodData(meta_good, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
+        // month
+        modifiedTime = modifiedTime.minus(BigInt.fromString("2073600"));
+        log_GoodData(meta_good, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
+        // year
+        modifiedTime = modifiedTime.minus(BigInt.fromString("29376000"));
+        log_GoodData(meta_good, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
 }
 export function handle_e_initGood(event: e_initGood): void {
         let addresserc = event.params._erc20address;
@@ -776,17 +784,25 @@ export function handle_e_initGood(event: e_initGood): void {
 
         log_GoodData(value_good, modifiedTime);
         log_ParGoodData(value_pargood, modifiedTime);
-        log_GoodData(
-                value_good,
-                event.block.timestamp.minus(BigInt.fromString("86400"))
-        );
-        log_ParGoodData(
-                value_pargood,
-                event.block.timestamp.minus(BigInt.fromString("86400"))
-        );
         log_GoodData(normal_good, modifiedTime);
         log_ParGoodData(normal_pargood, modifiedTime);
         log_MarketData(marketstate, modifiedTime);
+        //day
+        modifiedTime = modifiedTime.minus(BigInt.fromString("86400"));
+        log_GoodData(normal_good, modifiedTime);
+        log_ParGoodData(normal_pargood, modifiedTime);
+        //week
+        modifiedTime = modifiedTime.minus(BigInt.fromString("604800"));
+        log_GoodData(normal_good, modifiedTime);
+        log_ParGoodData(normal_pargood, modifiedTime);
+        //month
+        modifiedTime = modifiedTime.minus(BigInt.fromString("2073600"));
+        log_GoodData(normal_good, modifiedTime);
+        log_ParGoodData(normal_pargood, modifiedTime);
+        //year
+        modifiedTime = modifiedTime.minus(BigInt.fromString("29376000"));
+        log_GoodData(normal_good, modifiedTime);
+        log_ParGoodData(normal_pargood, modifiedTime);
 }
 
 export function handle_e_buyGood(event: e_buyGood): void {
