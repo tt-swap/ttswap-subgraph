@@ -170,7 +170,7 @@ export function log_GoodData(
         }
 
         let data_week = modifiedTime
-                .mod(BigInt.fromU32(615600))
+                .mod(BigInt.fromU32(1220400))
                 .div(BigInt.fromU32(10800));
         let goodData_week = GoodData.load(
                 normal_good.id + "w" + data_week.toString()
@@ -216,10 +216,10 @@ export function log_GoodData(
 
                 if (
                         goodData_week.modifiedTime
-                                .mod(BigInt.fromU32(615600))
+                                .mod(BigInt.fromU32(1220400))
                                 .div(BigInt.fromU32(10800)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(615600))
+                                .mod(BigInt.fromU32(1220400))
                                 .div(BigInt.fromU32(10800))
                 ) {
                         goodData_week.open = price;
@@ -233,11 +233,11 @@ export function log_GoodData(
                 }
                 if (
                         modifiedTime
-                                .mod(BigInt.fromU32(615600))
+                                .mod(BigInt.fromU32(1220400))
                                 .div(BigInt.fromU32(10800)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(1200))
-                                .mod(BigInt.fromU32(615600))
+                                .mod(BigInt.fromU32(1220400))
                                 .div(BigInt.fromU32(10800))
                 ) {
                         goodData_week.close = price;
@@ -247,7 +247,7 @@ export function log_GoodData(
         }
 
         let data_month = modifiedTime
-                .mod(BigInt.fromU32(2721600))
+                .mod(BigInt.fromU32(3024000))
                 .div(BigInt.fromU32(43200));
         let goodData_month = GoodData.load(
                 normal_good.id + "m" + data_month.toString()
@@ -294,10 +294,10 @@ export function log_GoodData(
 
                 if (
                         goodData_month.modifiedTime
-                                .mod(BigInt.fromU32(2721600))
+                                .mod(BigInt.fromU32(3024000))
                                 .div(BigInt.fromU32(43200)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(2721600))
+                                .mod(BigInt.fromU32(3024000))
                                 .div(BigInt.fromU32(43200))
                 ) {
                         goodData_month.open = price;
@@ -311,11 +311,11 @@ export function log_GoodData(
                 }
                 if (
                         modifiedTime
-                                .mod(BigInt.fromU32(2721600))
+                                .mod(BigInt.fromU32(3024000))
                                 .div(BigInt.fromU32(43200)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(10800))
-                                .mod(BigInt.fromU32(2721600))
+                                .mod(BigInt.fromU32(3024000))
                                 .div(BigInt.fromU32(43200))
                 ) {
                         goodData_month.close = price;
