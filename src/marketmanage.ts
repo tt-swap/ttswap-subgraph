@@ -40,161 +40,66 @@ import {
 import { fetchMarketConfig, fetchMarketCreator } from "./util/market";
 
 import { log_GoodData, fetchGoodConfig } from "./util/good";
-import { log_ParGoodData } from "./util/pargoodData";
+//import { //log_ParGoodData } from "./util/pargoodData";
 import { log_MarketData } from "./util/marketData";
 //ok;
 export function handle_e_setMarketConfig(event: e_setMarketConfig): void {
         let marketstate = MarketState.load(MARKET_ADDRESS);
-        if (marketstate === null) {
-                marketstate = new MarketState(MARKET_ADDRESS);
-                marketstate.marketConfig = ZERO_BI;
-                marketstate.pargoodCount = ZERO_BI;
-                marketstate.goodCount = ZERO_BI;
-                marketstate.proofCount = ZERO_BI;
-                marketstate.userCount = ZERO_BI;
-                marketstate.txCount = ZERO_BI;
-                marketstate.totalTradeCount = ZERO_BI;
-                marketstate.totalInvestCount = ZERO_BI;
-                marketstate.totalDisinvestCount = ZERO_BI;
-                marketstate.totalDisinvestValue = ZERO_BI;
-                marketstate.totalInvestValue = ZERO_BI;
-                marketstate.totalTradeValue = ZERO_BI;
-                marketstate.marketCreator = "#";
+        if (marketstate !== null) {
+                marketstate.marketCreator =
+                        event.transaction.from.toHexString();
+                marketstate.marketConfig = event.params._marketconfig;
+                marketstate.save();
         }
-        marketstate.marketCreator = event.transaction.from.toHexString();
-        marketstate.marketConfig = event.params._marketconfig;
-        marketstate.save();
 }
 
 export function handle_e_changeOwner(event: e_changeOwner): void {
         let from_good = GoodState.load(event.params._goodid.toString());
-        if (from_good === null) {
-                from_good = new GoodState(event.params._goodid.toString());
-                from_good.goodseq = ZERO_BI;
-                from_good.pargood = "0";
-                from_good.isvaluegood = false;
-                from_good.tokenname = "#";
-                from_good.tokensymbol = "#";
-                from_good.tokentotalsuply = ZERO_BI;
-                from_good.tokendecimals = ZERO_BI;
-                from_good.owner = "#";
-                from_good.erc20Address = "#";
-                from_good.goodConfig = ZERO_BI;
-                from_good.currentValue = ZERO_BI;
-                from_good.currentQuantity = ZERO_BI;
-                from_good.investValue = ZERO_BI;
-                from_good.investQuantity = ZERO_BI;
-                from_good.feeQuantity = ZERO_BI;
-                from_good.contructFee = ZERO_BI;
-                from_good.totalTradeQuantity = ZERO_BI;
-                from_good.totalInvestQuantity = ZERO_BI;
-                from_good.totalDisinvestQuantity = ZERO_BI;
-                from_good.totalProfit = ZERO_BI;
-                from_good.totalTradeCount = ZERO_BI;
-                from_good.totalInvestCount = ZERO_BI;
-                from_good.totalDisinvestCount = ZERO_BI;
-                from_good.modifiedTime = ZERO_BI;
-                from_good.txCount = ZERO_BI;
-                from_good.create_time = ZERO_BI;
+        if (from_good !== null) {
+                from_good.owner = event.params._to.toHexString();
+                from_good.save();
         }
-        from_good.owner = event.params._to.toHexString();
-        from_good.save();
 }
 
 export function handle_e_updateGoodConfig(event: e_updateGoodConfig): void {
         let from_good = GoodState.load(event.params._goodid.toString());
-        if (from_good === null) {
-                from_good = new GoodState(event.params._goodid.toString());
-                from_good.goodseq = ZERO_BI;
-                from_good.pargood = "0";
-                from_good.isvaluegood = false;
-                from_good.tokenname = "#";
-                from_good.tokensymbol = "#";
-                from_good.tokentotalsuply = ZERO_BI;
-                from_good.tokendecimals = ZERO_BI;
-                from_good.owner = "#";
-                from_good.erc20Address = "#";
-                from_good.goodConfig = ZERO_BI;
-                from_good.currentValue = ZERO_BI;
-                from_good.currentQuantity = ZERO_BI;
-                from_good.investValue = ZERO_BI;
-                from_good.investQuantity = ZERO_BI;
-                from_good.feeQuantity = ZERO_BI;
-                from_good.contructFee = ZERO_BI;
-                from_good.totalTradeQuantity = ZERO_BI;
-                from_good.totalInvestQuantity = ZERO_BI;
-                from_good.totalDisinvestQuantity = ZERO_BI;
-                from_good.totalProfit = ZERO_BI;
-                from_good.totalTradeCount = ZERO_BI;
-                from_good.totalInvestCount = ZERO_BI;
-                from_good.totalDisinvestCount = ZERO_BI;
-                from_good.modifiedTime = ZERO_BI;
-                from_good.txCount = ZERO_BI;
-                from_good.create_time = ZERO_BI;
-        }
-
-        if (
-                from_good.goodConfig.div(
+        if (from_good !== null) {
+                if (
+                        from_good.goodConfig.div(
+                                BigInt.fromString(
+                                        "57896044618658097711785492504343953926634992332820282019728792003956564819968"
+                                )
+                        ) >= ONE_BI
+                ) {
+                        from_good.isvaluegood = true;
+                } else {
+                        from_good.isvaluegood = false;
+                }
+                from_good.goodConfig = event.params._goodConfig.mod(
                         BigInt.fromString(
                                 "57896044618658097711785492504343953926634992332820282019728792003956564819968"
                         )
-                ) >= ONE_BI
-        ) {
-                from_good.isvaluegood = true;
-        } else {
-                from_good.isvaluegood = false;
+                );
+                from_good.save();
         }
-        from_good.goodConfig = event.params._goodConfig.mod(
-                BigInt.fromString(
-                        "57896044618658097711785492504343953926634992332820282019728792003956564819968"
-                )
-        );
-        from_good.save();
 }
 export function handle_e_modifyGoodConfig(event: e_modifyGoodConfig): void {
         let from_good = GoodState.load(event.params._goodid.toString());
-        if (from_good === null) {
-                from_good = new GoodState(event.params._goodid.toString());
-                from_good.goodseq = ZERO_BI;
-                from_good.pargood = "0";
-                from_good.tokenname = "#";
-                from_good.tokensymbol = "#";
-                from_good.tokentotalsuply = ZERO_BI;
-                from_good.tokendecimals = ZERO_BI;
-                from_good.owner = "#";
-                from_good.erc20Address = "#";
-                from_good.goodConfig = ZERO_BI;
-                from_good.currentValue = ZERO_BI;
-                from_good.currentQuantity = ZERO_BI;
-                from_good.investValue = ZERO_BI;
-                from_good.investQuantity = ZERO_BI;
-                from_good.feeQuantity = ZERO_BI;
-                from_good.contructFee = ZERO_BI;
-                from_good.totalTradeQuantity = ZERO_BI;
-                from_good.totalInvestQuantity = ZERO_BI;
-                from_good.totalDisinvestQuantity = ZERO_BI;
-                from_good.totalProfit = ZERO_BI;
-                from_good.totalTradeCount = ZERO_BI;
-                from_good.totalInvestCount = ZERO_BI;
-                from_good.totalDisinvestCount = ZERO_BI;
-                from_good.modifiedTime = ZERO_BI;
-                from_good.txCount = ZERO_BI;
-                from_good.create_time = ZERO_BI;
+        if (from_good !== null) {
+                from_good.goodConfig = fetchGoodConfig(event.params._goodid);
+                if (
+                        from_good.goodConfig.div(
+                                BigInt.fromString(
+                                        "57896044618658097711785492504343953926634992332820282019728792003956564819968"
+                                )
+                        ) >= ONE_BI
+                ) {
+                        from_good.isvaluegood = true;
+                } else {
+                        from_good.isvaluegood = false;
+                }
+                from_good.save();
         }
-
-        from_good.goodConfig = fetchGoodConfig(event.params._goodid);
-        if (
-                from_good.goodConfig.div(
-                        BigInt.fromString(
-                                "57896044618658097711785492504343953926634992332820282019728792003956564819968"
-                        )
-                ) >= ONE_BI
-        ) {
-                from_good.isvaluegood = true;
-        } else {
-                from_good.isvaluegood = false;
-        }
-        from_good.save();
 }
 
 export function handle_e_initMetaGood(event: e_initMetaGood): void {
@@ -404,24 +309,24 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         tx.save();
 
         log_GoodData(meta_good, modifiedTime);
-        log_ParGoodData(meta_pargood, modifiedTime);
+        //log_ParGoodData(meta_pargood, modifiedTime);
         log_MarketData(marketstate, modifiedTime);
         // day
         modifiedTime = modifiedTime.minus(BigInt.fromString("86400"));
         log_GoodData(meta_good, modifiedTime);
-        log_ParGoodData(meta_pargood, modifiedTime);
+        //log_ParGoodData(meta_pargood, modifiedTime);
         // week
         modifiedTime = modifiedTime.minus(BigInt.fromString("604800"));
         log_GoodData(meta_good, modifiedTime);
-        log_ParGoodData(meta_pargood, modifiedTime);
+        //log_ParGoodData(meta_pargood, modifiedTime);
         // month
         modifiedTime = modifiedTime.minus(BigInt.fromString("2073600"));
         log_GoodData(meta_good, modifiedTime);
-        log_ParGoodData(meta_pargood, modifiedTime);
+        //log_ParGoodData(meta_pargood, modifiedTime);
         // year
         modifiedTime = modifiedTime.minus(BigInt.fromString("29376000"));
         log_GoodData(meta_good, modifiedTime);
-        log_ParGoodData(meta_pargood, modifiedTime);
+        //log_ParGoodData(meta_pargood, modifiedTime);
 }
 export function handle_e_initGood(event: e_initGood): void {
         let addresserc = event.params._erc20address;
@@ -783,26 +688,30 @@ export function handle_e_initGood(event: e_initGood): void {
         tx.save();
 
         log_GoodData(value_good, modifiedTime);
-        log_ParGoodData(value_pargood, modifiedTime);
+        //log_ParGoodData(value_pargood, modifiedTime);
         log_GoodData(normal_good, modifiedTime);
-        log_ParGoodData(normal_pargood, modifiedTime);
+        //log_ParGoodData(normal_pargood, modifiedTime);
         log_MarketData(marketstate, modifiedTime);
         //day
         modifiedTime = modifiedTime.minus(BigInt.fromString("86400"));
         log_GoodData(normal_good, modifiedTime);
-        log_ParGoodData(normal_pargood, modifiedTime);
+        //if (normal_pargood.goodCount === ONE_BI)
+        //log_ParGoodData(normal_pargood, modifiedTime);
         //week
         modifiedTime = modifiedTime.minus(BigInt.fromString("604800"));
         log_GoodData(normal_good, modifiedTime);
-        log_ParGoodData(normal_pargood, modifiedTime);
+        //if (normal_pargood.goodCount === ONE_BI)
+        //log_ParGoodData(normal_pargood, modifiedTime);
         //month
         modifiedTime = modifiedTime.minus(BigInt.fromString("2073600"));
         log_GoodData(normal_good, modifiedTime);
-        log_ParGoodData(normal_pargood, modifiedTime);
+        //if (normal_pargood.goodCount === ONE_BI)
+        //log_ParGoodData(normal_pargood, modifiedTime);
         //year
         modifiedTime = modifiedTime.minus(BigInt.fromString("29376000"));
         log_GoodData(normal_good, modifiedTime);
-        log_ParGoodData(normal_pargood, modifiedTime);
+        //if (normal_pargood.goodCount === ONE_BI)
+        //log_ParGoodData(normal_pargood, modifiedTime);
 }
 
 export function handle_e_buyGood(event: e_buyGood): void {
@@ -1103,10 +1012,10 @@ export function handle_e_buyGood(event: e_buyGood): void {
         tx.save();
 
         log_GoodData(from_good, event.block.timestamp);
-        log_ParGoodData(from_pargood, event.block.timestamp);
+        //log_ParGoodData(from_pargood, event.block.timestamp);
 
         log_GoodData(to_good, event.block.timestamp);
-        log_ParGoodData(to_pargood, event.block.timestamp);
+        //log_ParGoodData(to_pargood, event.block.timestamp);
         log_MarketData(marketstate, event.block.timestamp);
 }
 
@@ -1408,9 +1317,9 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         tx.save();
 
         log_GoodData(from_good, event.block.timestamp);
-        log_ParGoodData(from_pargood, event.block.timestamp);
+        //log_ParGoodData(from_pargood, event.block.timestamp);
         log_GoodData(to_good, event.block.timestamp);
-        log_ParGoodData(to_pargood, event.block.timestamp);
+        //log_ParGoodData(to_pargood, event.block.timestamp);
         log_MarketData(marketstate, event.block.timestamp);
 }
 
@@ -1665,9 +1574,9 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 tx.save();
 
                 log_GoodData(value_good, event.block.timestamp);
-                log_ParGoodData(value_pargood, event.block.timestamp);
+                //log_ParGoodData(value_pargood, event.block.timestamp);
                 log_GoodData(normal_good, event.block.timestamp);
-                log_ParGoodData(normal_pargood, event.block.timestamp);
+                //log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         } else {
                 let marketstate = MarketState.load(MARKET_ADDRESS);
@@ -1716,7 +1625,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 tx.save();
 
                 log_GoodData(normal_good, event.block.timestamp);
-                log_ParGoodData(normal_pargood, event.block.timestamp);
+                //log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         }
 }
@@ -2192,9 +2101,9 @@ export function handle_e_investGood(event: e_investGood): void {
                 proof.save();
 
                 log_GoodData(value_good, event.block.timestamp);
-                log_ParGoodData(value_pargood, event.block.timestamp);
+                //log_ParGoodData(value_pargood, event.block.timestamp);
                 log_GoodData(normal_good, event.block.timestamp);
-                log_ParGoodData(normal_pargood, event.block.timestamp);
+                //log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         } else {
                 let newcustomer = Customer.load(
@@ -2271,7 +2180,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 proof.save();
 
                 log_GoodData(normal_good, event.block.timestamp);
-                log_ParGoodData(normal_pargood, event.block.timestamp);
+                //log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         }
 }
@@ -2753,9 +2662,9 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 proof.save();
 
                 log_GoodData(value_good, event.block.timestamp);
-                log_ParGoodData(value_pargood, event.block.timestamp);
+                //log_ParGoodData(value_pargood, event.block.timestamp);
                 log_GoodData(normal_good, event.block.timestamp);
-                log_ParGoodData(normal_pargood, event.block.timestamp);
+                //log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         } else {
                 let newcustomer = Customer.load(
@@ -2827,7 +2736,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 proof.good1Quantity = normal_Quantity;
                 proof.save();
                 log_GoodData(normal_good, event.block.timestamp);
-                log_ParGoodData(normal_pargood, event.block.timestamp);
+                //log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         }
 }

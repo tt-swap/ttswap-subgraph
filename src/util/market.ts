@@ -15,6 +15,7 @@ export function fetchMarketConfig(tokenAddress: Address): BigInt {
         }
         return MarketConfig;
 }
+
 export function fetchMarketCreator(tokenAddress: Address): string {
         let contract = MarketManager.bind(tokenAddress);
         let MarketCreator = "0";
