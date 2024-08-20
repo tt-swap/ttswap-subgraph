@@ -162,7 +162,7 @@ export function log_ParGoodData(
                                 .mod(BigInt.fromU32(174000))
                                 .div(BigInt.fromU32(1200)) <
                         modifiedTime
-                                .plus(BigInt.fromU32(1200))
+                                .plus(BigInt.fromU32(60))
                                 .mod(BigInt.fromU32(174000))
                                 .div(BigInt.fromU32(1200))
                 ) {
@@ -251,7 +251,7 @@ export function log_ParGoodData(
         }
 
         let data_month = modifiedTime
-                .mod(BigInt.fromU32(3024000))
+                .mod(BigInt.fromU32(5356800))
                 .div(BigInt.fromU32(43200));
         let pargoodData_month = ParGoodData.load(
                 normal_pargood.id + "m" + data_month.toString()
@@ -299,10 +299,10 @@ export function log_ParGoodData(
 
                 if (
                         pargoodData_month.modifiedTime
-                                .mod(BigInt.fromU32(3024000))
+                                .mod(BigInt.fromU32(5356800))
                                 .div(BigInt.fromU32(43200)) <
                         modifiedTime
-                                .mod(BigInt.fromU32(3024000))
+                                .mod(BigInt.fromU32(5356800))
                                 .div(BigInt.fromU32(43200))
                 ) {
                         pargoodData_month.open = price;
@@ -321,11 +321,11 @@ export function log_ParGoodData(
                 }
                 if (
                         modifiedTime
-                                .mod(BigInt.fromU32(3024000))
+                                .mod(BigInt.fromU32(5356800))
                                 .div(BigInt.fromU32(43200)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(10800))
-                                .mod(BigInt.fromU32(3024000))
+                                .mod(BigInt.fromU32(5356800))
                                 .div(BigInt.fromU32(43200))
                 ) {
                         pargoodData_month.close = price;
@@ -380,9 +380,12 @@ export function log_ParGoodData(
                         pargoodData_month.totalDisinvestCount;
 
                 if (
-                        pargoodData_year.modifiedTime.div(
-                                BigInt.fromU32(432000)
-                        ) < modifiedTime.div(BigInt.fromU32(432000))
+                        pargoodData_year.modifiedTime
+                                .mod(BigInt.fromU32(2721600))
+                                .div(BigInt.fromU32(432000)) <
+                        modifiedTime
+                                .mod(BigInt.fromU32(2721600))
+                                .div(BigInt.fromU32(432000))
                 ) {
                         pargoodData_year.open = price;
                 }
@@ -399,9 +402,12 @@ export function log_ParGoodData(
                         pargoodData_year.low = pargoodData_month.low;
                 }
                 if (
-                        modifiedTime.div(BigInt.fromU32(432000)) <
+                        modifiedTime
+                                .mod(BigInt.fromU32(2721600))
+                                .div(BigInt.fromU32(432000)) <
                         modifiedTime
                                 .plus(BigInt.fromU32(43200))
+                                .mod(BigInt.fromU32(2721600))
                                 .div(BigInt.fromU32(432000))
                 ) {
                         pargoodData_year.close = price;

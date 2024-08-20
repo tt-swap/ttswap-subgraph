@@ -107,7 +107,7 @@ export function log_MarketData(
         }
 
         let data_month = modifiedTime
-                .mod(BigInt.fromU32(3024000))
+                .mod(BigInt.fromU32(5356800))
                 .div(BigInt.fromU32(43200));
         let marketData_month = MarketData.load("m" + data_month.toString());
         if (marketData_month === null) {

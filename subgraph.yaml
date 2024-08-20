@@ -9,9 +9,9 @@ dataSources:
     name: MarketManager
     network: sepolia
     source:
-      address: "0xC564c491EF1639C83b6F721374b5531ba6A1EcEb"
+      address: "0xE576D59b921c60C96EBae7C459B0D6095FD782dC"
       abi: MarketManager
-      startBlock: 6401300
+      startBlock: 6535384
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -25,7 +25,6 @@ dataSources:
         - ProofState
         - Transaction
         - GoodData
-        - ParGoodData
         - MarketData
       abis:
         - name: MarketManager

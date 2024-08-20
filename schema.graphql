@@ -86,7 +86,7 @@ type ParGoodState @entity {
   goodCount:BigInt!  
   txCount:BigInt!
   Goodlist:[GoodState!] @derivedFrom(field: "pargood")
-  parGooddata:[ParGoodData!] @derivedFrom(field: "pargood")
+  # parGooddata:[ParGoodData!] @derivedFrom(field: "pargood")
 }
 
 type ProofState @entity {
@@ -157,35 +157,35 @@ type GoodData @entity {
 
 
 
-type ParGoodData @entity {
-  # hour:GoodId+h+minute (60 rows)
-  # day: GoodId+d+20minute (72 rows)
-  # week:GoodId+w+3hour  (56 rows)
-  # month:GoodId+m+12hour (62 rows)
-  # year: GoodId+y+5day (73)
-  id: ID!
-  pargood: ParGoodState!
-  timetype:String!
-  modifiedTime: BigInt!
-  decimals: BigInt!
-  currentValue:BigInt!
-  currentQuantity:BigInt!
-  investValue:BigInt!
-  investQuantity:BigInt!
-  feeQuantity:BigInt!
-  contructFee:BigInt!
-  totalTradeQuantity:BigInt!
-  totalInvestQuantity:BigInt!
-  totalDisinvestQuantity:BigInt!
-  totalProfit:BigInt!
-  totalTradeCount: BigInt!
-  totalInvestCount: BigInt!
-  totalDisinvestCount: BigInt!
-  open: BigInt!
-  high: BigInt!
-  low:  BigInt!
-  close: BigInt!
-}
+# type ParGoodData @entity {
+#   # hour:GoodId+h+minute (60 rows)
+#   # day: GoodId+d+20minute (72 rows)
+#   # week:GoodId+w+3hour  (56 rows)
+#   # month:GoodId+m+12hour (62 rows)
+#   # year: GoodId+y+5day (73)
+#   id: ID!
+#   pargood: ParGoodState!
+#   timetype:String!
+#   modifiedTime: BigInt!
+#   decimals: BigInt!
+#   currentValue:BigInt!
+#   currentQuantity:BigInt!
+#   investValue:BigInt!
+#   investQuantity:BigInt!
+#   feeQuantity:BigInt!
+#   contructFee:BigInt!
+#   totalTradeQuantity:BigInt!
+#   totalInvestQuantity:BigInt!
+#   totalDisinvestQuantity:BigInt!
+#   totalProfit:BigInt!
+#   totalTradeCount: BigInt!
+#   totalInvestCount: BigInt!
+#   totalDisinvestCount: BigInt!
+#   open: BigInt!
+#   high: BigInt!
+#   low:  BigInt!
+#   close: BigInt!
+# }
 
 type MarketData @entity {
   # hour:h+minute (60 rows)
