@@ -9,9 +9,9 @@ dataSources:
     name: MarketManager
     network: sepolia
     source:
-      address: "0xE576D59b921c60C96EBae7C459B0D6095FD782dC"
+      address: "0x696993125AFDB603D8afC33565AEA75fd27A3F46"
       abi: MarketManager
-      startBlock: 6535384
+      startBlock: 6550628
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -19,6 +19,7 @@ dataSources:
       file: ./src/marketmanage.ts
       entities:
         - Customer
+        - CustomerData
         - MarketState
         - GoodState
         - ParGoodState
@@ -67,3 +68,9 @@ dataSources:
           handler: handle_e_addreferer
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handle_e_Transfer
+        - event: e_collectcommission(uint256[],uint256[])
+          handler: handle_e_collectcommission
+        - event: e_goodWelfare(uint256,uint128)
+          handler: handle_e_goodWelfare
+        - event: e_changegoodowner(uint256,address)
+          handler: handle_e_changegoodowner

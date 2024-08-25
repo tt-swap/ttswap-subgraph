@@ -10,6 +10,28 @@ type Customer @entity {
   disinvestCount: BigInt!
   isBanlist:Boolean!
   customerno:BigInt!
+  totalprofitvalue:BigInt!
+  totalcommissionvalue:BigInt!
+  lastoptime:BigInt!
+  custdata:[CustomerData!]@derivedFrom(field: "customerid")
+}
+
+type CustomerData @entity {
+  # address
+  id:ID!
+  refer: String
+  tradeValue: BigInt!
+  investValue: BigInt!
+  disinvestValue: BigInt!
+  tradeCount: BigInt!
+  investCount: BigInt!
+  disinvestCount: BigInt!
+  isBanlist:Boolean!
+  customerno:BigInt!
+  totalprofitvalue:BigInt!
+  totalcommissionvalue:BigInt!
+  customerid:Customer!
+  create_time:BigInt!
 }
 
 type MarketState @entity {
