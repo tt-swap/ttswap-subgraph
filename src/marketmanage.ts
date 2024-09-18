@@ -7,6 +7,7 @@ import {
         ProofState,
         Transaction,
         Customer,
+        tts_env,
 } from "../generated/schema";
 
 import {
@@ -22,7 +23,6 @@ import {
         e_changeOwner,
         e_investGood,
         e_disinvestProof,
-        e_addreferal,
         e_addbanlist,
         e_removebanlist,
         Transfer,
@@ -40,24 +40,30 @@ import {
         fetchTokenDecimals,
 } from "./util/token";
 
-import { fetchMarketConfig, fetchMarketCreator } from "./util/market";
+import { fetchMarketConfig } from "./util/market";
 
 import { log_GoodData, fetchGoodConfig } from "./util/good";
-//import { //log_ParGoodData } from "./util/pargoodData";
+import { log_ParGoodData } from "./util/pargoodData";
 import { log_MarketData } from "./util/marketData";
 
 import { log_CustomerData } from "./util/customer";
-//ok;
+
+/**
+ * Handles the event of setting market configuration
+ * @param event The e_setMarketConfig event
+ */
 export function handle_e_setMarketConfig(event: e_setMarketConfig): void {
         let marketstate = MarketState.load(MARKET_ADDRESS);
         if (marketstate !== null) {
-                marketstate.marketCreator =
-                        event.transaction.from.toHexString();
                 marketstate.marketConfig = event.params._marketconfig;
                 marketstate.save();
         }
 }
 
+/**
+ * Handles the event of changing good owner
+ * @param event The e_changeOwner event
+ */
 export function handle_e_changeOwner(event: e_changeOwner): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good !== null) {
@@ -66,9 +72,14 @@ export function handle_e_changeOwner(event: e_changeOwner): void {
         }
 }
 
+/**
+ * Handles the event of updating good configuration
+ * @param event The e_updateGoodConfig event
+ */
 export function handle_e_updateGoodConfig(event: e_updateGoodConfig): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good !== null) {
+                // Check if it's a value good
                 if (
                         from_good.goodConfig.div(
                                 BigInt.fromString(
@@ -80,6 +91,7 @@ export function handle_e_updateGoodConfig(event: e_updateGoodConfig): void {
                 } else {
                         from_good.isvaluegood = false;
                 }
+                // Update good configuration
                 from_good.goodConfig = event.params._goodConfig.mod(
                         BigInt.fromString(
                                 "57896044618658097711785492504343953926634992332820282019728792003956564819968"
@@ -88,6 +100,11 @@ export function handle_e_updateGoodConfig(event: e_updateGoodConfig): void {
                 from_good.save();
         }
 }
+
+/**
+ * Handles the event of modifying good configuration
+ * @param event The e_modifyGoodConfig event
+ */
 export function handle_e_modifyGoodConfig(event: e_modifyGoodConfig): void {
         let from_good = GoodState.load(event.params._goodid.toString());
         if (from_good !== null) {
@@ -107,14 +124,21 @@ export function handle_e_modifyGoodConfig(event: e_modifyGoodConfig): void {
         }
 }
 
+/**
+ * Handles the event of initializing a meta good
+ * @param event The e_initMetaGood event
+ */
 export function handle_e_initMetaGood(event: e_initMetaGood): void {
         let address_erc20 = event.params._erc20address;
         let erc20address = address_erc20.toHexString();
         let metaowner = event.transaction.from.toHexString();
-        let metaid = event.params._goodNo.toString();
+        let metaid = event.params._extendinfo.div(BI_128).toString();
+        let stakecontruct = event.params._extendinfo.mod(BI_128);
         let modifiedTime = event.block.timestamp;
         let trade_value = event.params._initial.div(BI_128);
         let trade_quantity = event.params._initial.mod(BI_128);
+
+        // Initialize new customer
         let newcustomer = new Customer(metaowner);
         newcustomer.refer = "#";
         newcustomer.tradeValue = ZERO_BI;
@@ -128,9 +152,43 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         newcustomer.totalprofitvalue = ZERO_BI;
         newcustomer.totalcommissionvalue = ZERO_BI;
         newcustomer.lastoptime = modifiedTime;
+        newcustomer.referralnum = ZERO_BI;
+        newcustomer.getfromstake = ZERO_BI;
+        newcustomer.stakettsvalue = ZERO_BI;
+        newcustomer.stakettsvalue = newcustomer.stakettsvalue.plus(trade_value);
+        newcustomer.stakettscontruct = stakecontruct;
         newcustomer.save();
+
         log_CustomerData(newcustomer, modifiedTime);
 
+        // Initialize or update tts_env
+        let ttsenv = tts_env.load("1");
+        if (ttsenv === null) {
+                ttsenv = new tts_env("1");
+                ttsenv.poolvalue = ZERO_BI;
+                ttsenv.poolasset = ZERO_BI;
+                ttsenv.poolcontruct = ZERO_BI;
+                ttsenv.normalgoodid = ZERO_BI;
+                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.dao_admin = "#";
+                ttsenv.marketcontract = "#";
+                ttsenv.usdtcontract = "#";
+                ttsenv.publicsell = ZERO_BI;
+                ttsenv.lsttime = ZERO_BI;
+                ttsenv.actual_amount = ZERO_BI;
+                ttsenv.shares_index = ZERO_BI;
+                ttsenv.left_share = ZERO_BI;
+                ttsenv.usdt_amount = ZERO_BI;
+                ttsenv.lasttime = ZERO_BI;
+        }
+
+        ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+        ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
+        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
+        ttsenv.save();
+
+        // Initialize or update market state
         let marketstate = MarketState.load(MARKET_ADDRESS);
         if (marketstate === null) {
                 marketstate = new MarketState(MARKET_ADDRESS);
@@ -145,12 +203,8 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
                 marketstate.totalDisinvestCount = ZERO_BI;
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
-                marketstate.marketCreator = "#";
         }
 
-        marketstate.marketCreator = fetchMarketCreator(
-                Address.fromString(MARKET_ADDRESS)
-        );
         marketstate.marketConfig = fetchMarketConfig(
                 Address.fromString(MARKET_ADDRESS)
         );
@@ -318,31 +372,32 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         tx.save();
 
         log_GoodData(meta_good, modifiedTime);
-        //log_ParGoodData(meta_pargood, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
         log_MarketData(marketstate, modifiedTime);
         // day
         modifiedTime = modifiedTime.minus(BigInt.fromString("86400"));
         log_GoodData(meta_good, modifiedTime);
-        //log_ParGoodData(meta_pargood, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
         // week
         modifiedTime = modifiedTime.minus(BigInt.fromString("604800"));
         log_GoodData(meta_good, modifiedTime);
-        //log_ParGoodData(meta_pargood, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
         // month
         modifiedTime = modifiedTime.minus(BigInt.fromString("2073600"));
         log_GoodData(meta_good, modifiedTime);
-        //log_ParGoodData(meta_pargood, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
         // year
         modifiedTime = modifiedTime.minus(BigInt.fromString("29376000"));
         log_GoodData(meta_good, modifiedTime);
-        //log_ParGoodData(meta_pargood, modifiedTime);
+        log_ParGoodData(meta_pargood, modifiedTime);
 }
 export function handle_e_initGood(event: e_initGood): void {
         let addresserc = event.params._erc20address;
         let erc20address = addresserc.toHexString();
 
         let valuegoodid = event.params._valuegoodNo.toString();
-        let normalgoodid = event.params._normalgoodNo.toString();
+        let normalgoodid = event.params._extendinfo.div(BI_128).toString();
+        let stakecontruct = event.params._extendinfo.mod(BI_128);
         let proofid_BG = event.params._proofNo;
         let marketmanage = MarketManager.bind(
                 Address.fromString(MARKET_ADDRESS)
@@ -385,7 +440,6 @@ export function handle_e_initGood(event: e_initGood): void {
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalInvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
-                marketstate.marketCreator = "#";
         }
 
         let newcustomer = Customer.load(event.transaction.from.toHexString());
@@ -405,15 +459,48 @@ export function handle_e_initGood(event: e_initGood): void {
                 newcustomer.customerno = marketstate.userCount;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
+                newcustomer.referralnum = ZERO_BI;
+                newcustomer.getfromstake = ZERO_BI;
+                newcustomer.stakettsvalue = ZERO_BI;
+                newcustomer.stakettscontruct = ZERO_BI;
         }
         newcustomer.investValue = newcustomer.investValue.plus(trade_value);
         newcustomer.investValue = newcustomer.investValue.plus(trade_value);
         newcustomer.investCount = newcustomer.investCount.plus(ONE_BI);
-
+        newcustomer.stakettsvalue = newcustomer.stakettsvalue.plus(trade_value);
+        newcustomer.stakettsvalue = newcustomer.stakettsvalue.plus(trade_value);
+        newcustomer.stakettscontruct =
+                newcustomer.stakettscontruct.plus(stakecontruct);
         newcustomer.lastoptime = modifiedTime;
         newcustomer.save();
 
         log_CustomerData(newcustomer, modifiedTime);
+
+        let ttsenv = tts_env.load("1");
+        if (ttsenv === null) {
+                ttsenv = new tts_env("1");
+                ttsenv.poolvalue = ZERO_BI;
+                ttsenv.poolasset = ZERO_BI;
+                ttsenv.poolcontruct = ZERO_BI;
+                ttsenv.normalgoodid = ZERO_BI;
+                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.dao_admin = "#";
+                ttsenv.marketcontract = "#";
+                ttsenv.usdtcontract = "#";
+                ttsenv.publicsell = ZERO_BI;
+                ttsenv.lsttime = ZERO_BI;
+                ttsenv.actual_amount = ZERO_BI;
+                ttsenv.shares_index = ZERO_BI;
+                ttsenv.left_share = ZERO_BI;
+                ttsenv.usdt_amount = ZERO_BI;
+                ttsenv.lasttime = ZERO_BI;
+        }
+
+        ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+        ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
+        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
+        ttsenv.save();
         let normal_pargood = ParGoodState.load(erc20address);
         if (normal_pargood === null) {
                 normal_pargood = new ParGoodState(erc20address);
@@ -606,9 +693,9 @@ export function handle_e_initGood(event: e_initGood): void {
                 value_good.investQuantity =
                         goodcurrentstate.value.investState.mod(BI_128);
                 value_good.feeQuantity =
-                        goodcurrentstate.value.feeQunitityState.div(BI_128);
+                        goodcurrentstate.value.feeQuantityState.div(BI_128);
                 value_good.contructFee =
-                        goodcurrentstate.value.feeQunitityState.mod(BI_128);
+                        goodcurrentstate.value.feeQuantityState.mod(BI_128);
         }
 
         value_pargood.currentValue = value_pargood.currentValue.plus(
@@ -657,6 +744,7 @@ export function handle_e_initGood(event: e_initGood): void {
         proof.good2ContructFee = trade_valuegood_contruct;
         proof.good2Quantity = trade_valuegood_quantity;
         proof.createTime = modifiedTime;
+
         proof.save();
 
         marketstate.totalInvestValue =
@@ -702,30 +790,30 @@ export function handle_e_initGood(event: e_initGood): void {
         tx.save();
 
         log_GoodData(value_good, modifiedTime);
-        //log_ParGoodData(value_pargood, modifiedTime);
+        log_ParGoodData(value_pargood, modifiedTime);
         log_GoodData(normal_good, modifiedTime);
-        //log_ParGoodData(normal_pargood, modifiedTime);
+        log_ParGoodData(normal_pargood, modifiedTime);
         log_MarketData(marketstate, modifiedTime);
         //day
         modifiedTime = modifiedTime.minus(BigInt.fromString("86400"));
         log_GoodData(normal_good, modifiedTime);
-        //if (normal_pargood.goodCount === ONE_BI)
-        //log_ParGoodData(normal_pargood, modifiedTime);
+        if (normal_pargood.goodCount === ONE_BI)
+                log_ParGoodData(normal_pargood, modifiedTime);
         //week
         modifiedTime = modifiedTime.minus(BigInt.fromString("604800"));
         log_GoodData(normal_good, modifiedTime);
-        //if (normal_pargood.goodCount === ONE_BI)
-        //log_ParGoodData(normal_pargood, modifiedTime);
+        if (normal_pargood.goodCount === ONE_BI)
+                log_ParGoodData(normal_pargood, modifiedTime);
         //month
         modifiedTime = modifiedTime.minus(BigInt.fromString("2073600"));
         log_GoodData(normal_good, modifiedTime);
-        //if (normal_pargood.goodCount === ONE_BI)
-        //log_ParGoodData(normal_pargood, modifiedTime);
+        if (normal_pargood.goodCount === ONE_BI)
+                log_ParGoodData(normal_pargood, modifiedTime);
         //year
         modifiedTime = modifiedTime.minus(BigInt.fromString("29376000"));
         log_GoodData(normal_good, modifiedTime);
-        //if (normal_pargood.goodCount === ONE_BI)
-        //log_ParGoodData(normal_pargood, modifiedTime);
+        if (normal_pargood.goodCount === ONE_BI)
+                log_ParGoodData(normal_pargood, modifiedTime);
 }
 
 export function handle_e_buyGood(event: e_buyGood): void {
@@ -751,7 +839,6 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalInvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
-                marketstate.marketCreator = "#";
         }
         let from_good = GoodState.load(fromgood.toString());
         if (from_good === null) {
@@ -827,7 +914,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 from_good.currentQuantity =
                         goodcurrentstate.value.currentState.mod(BI_128);
                 from_good.feeQuantity =
-                        goodcurrentstate.value.feeQunitityState.div(BI_128);
+                        goodcurrentstate.value.feeQuantityState.div(BI_128);
         }
 
         from_good.totalTradeCount = from_good.totalTradeCount.plus(ONE_BI);
@@ -932,7 +1019,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                         togoodcurrentstate.value.currentState.mod(BI_128);
 
                 to_good.feeQuantity =
-                        togoodcurrentstate.value.feeQunitityState.div(BI_128);
+                        togoodcurrentstate.value.feeQuantityState.div(BI_128);
         }
 
         to_good.totalTradeCount = to_good.totalTradeCount.plus(ONE_BI);
@@ -978,6 +1065,10 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 newcustomer.customerno = marketstate.userCount;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
+                newcustomer.referralnum = ZERO_BI;
+                newcustomer.getfromstake = ZERO_BI;
+                newcustomer.stakettsvalue = ZERO_BI;
+                newcustomer.stakettscontruct = ZERO_BI;
         }
 
         newcustomer.tradeValue = newcustomer.tradeValue.plus(
@@ -1031,10 +1122,10 @@ export function handle_e_buyGood(event: e_buyGood): void {
         tx.save();
 
         log_GoodData(from_good, event.block.timestamp);
-        //log_ParGoodData(from_pargood, event.block.timestamp);
+        log_ParGoodData(from_pargood, event.block.timestamp);
 
         log_GoodData(to_good, event.block.timestamp);
-        //log_ParGoodData(to_pargood, event.block.timestamp);
+        log_ParGoodData(to_pargood, event.block.timestamp);
         log_MarketData(marketstate, event.block.timestamp);
 }
 
@@ -1061,7 +1152,6 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalInvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
-                marketstate.marketCreator = "#";
         }
         let from_good = GoodState.load(fromgood.toString());
         if (from_good === null) {
@@ -1137,7 +1227,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 from_good.currentQuantity =
                         goodcurrentstate.value.currentState.mod(BI_128);
                 from_good.feeQuantity =
-                        goodcurrentstate.value.feeQunitityState.div(BI_128);
+                        goodcurrentstate.value.feeQuantityState.div(BI_128);
         }
 
         from_good.totalTradeCount = from_good.totalTradeCount.plus(ONE_BI);
@@ -1242,7 +1332,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                         togoodcurrentstate.value.currentState.mod(BI_128);
 
                 to_good.feeQuantity =
-                        togoodcurrentstate.value.feeQunitityState.div(BI_128);
+                        togoodcurrentstate.value.feeQuantityState.div(BI_128);
         }
 
         to_good.totalTradeCount = to_good.totalTradeCount.plus(ONE_BI);
@@ -1288,6 +1378,10 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 newcustomer.customerno = marketstate.userCount;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
+                newcustomer.referralnum = ZERO_BI;
+                newcustomer.getfromstake = ZERO_BI;
+                newcustomer.stakettsvalue = ZERO_BI;
+                newcustomer.stakettscontruct = ZERO_BI;
         }
 
         newcustomer.tradeValue = newcustomer.tradeValue.plus(
@@ -1341,9 +1435,9 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         tx.save();
 
         log_GoodData(from_good, event.block.timestamp);
-        //log_ParGoodData(from_pargood, event.block.timestamp);
+        log_ParGoodData(from_pargood, event.block.timestamp);
         log_GoodData(to_good, event.block.timestamp);
-        //log_ParGoodData(to_pargood, event.block.timestamp);
+        log_ParGoodData(to_pargood, event.block.timestamp);
         log_MarketData(marketstate, event.block.timestamp);
 }
 
@@ -1451,7 +1545,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
         ).try_getGoodState(event.params._normalGoodNo);
         if (!goodcurrentstate.reverted) {
                 normal_good.contructFee =
-                        goodcurrentstate.value.feeQunitityState.mod(BI_128);
+                        goodcurrentstate.value.feeQuantityState.mod(BI_128);
         }
         normal_good.totalProfit = normal_good.totalProfit.plus(normalprofit);
 
@@ -1532,7 +1626,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 ).try_getGoodState(event.params._valueGoodNo);
                 if (!goodcurrentstate2.reverted) {
                         value_good.contructFee =
-                                goodcurrentstate2.value.feeQunitityState.mod(
+                                goodcurrentstate2.value.feeQuantityState.mod(
                                         BI_128
                                 );
                 }
@@ -1565,7 +1659,6 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         marketstate.totalDisinvestCount = ZERO_BI;
                         marketstate.totalDisinvestValue = ZERO_BI;
                         marketstate.totalTradeValue = ZERO_BI;
-                        marketstate.marketCreator = "#";
                 }
                 marketstate.txCount = marketstate.txCount.plus(ONE_BI);
                 marketstate.save();
@@ -1617,6 +1710,10 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         newcustomer.customerno = marketstate.userCount;
                         newcustomer.totalprofitvalue = ZERO_BI;
                         newcustomer.totalcommissionvalue = ZERO_BI;
+                        newcustomer.referralnum = ZERO_BI;
+                        newcustomer.getfromstake = ZERO_BI;
+                        newcustomer.stakettsvalue = ZERO_BI;
+                        newcustomer.stakettscontruct = ZERO_BI;
                 }
 
                 newcustomer.totalprofitvalue.plus(
@@ -1636,9 +1733,9 @@ export function handle_e_collectProof(event: e_collectProof): void {
 
                 log_CustomerData(newcustomer, event.block.timestamp);
                 log_GoodData(value_good, event.block.timestamp);
-                //log_ParGoodData(value_pargood, event.block.timestamp);
+                log_ParGoodData(value_pargood, event.block.timestamp);
                 log_GoodData(normal_good, event.block.timestamp);
-                //log_ParGoodData(normal_pargood, event.block.timestamp);
+                log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         } else {
                 let marketstate = MarketState.load(MARKET_ADDRESS);
@@ -1655,7 +1752,6 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         marketstate.totalDisinvestCount = ZERO_BI;
                         marketstate.totalDisinvestValue = ZERO_BI;
                         marketstate.totalTradeValue = ZERO_BI;
-                        marketstate.marketCreator = "#";
                 }
                 marketstate.txCount = marketstate.txCount.plus(ONE_BI);
                 marketstate.save();
@@ -1705,6 +1801,10 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         newcustomer.customerno = marketstate.userCount;
                         newcustomer.totalprofitvalue = ZERO_BI;
                         newcustomer.totalcommissionvalue = ZERO_BI;
+                        newcustomer.referralnum = ZERO_BI;
+                        newcustomer.getfromstake = ZERO_BI;
+                        newcustomer.stakettsvalue = ZERO_BI;
+                        newcustomer.stakettscontruct = ZERO_BI;
                 }
 
                 newcustomer.totalprofitvalue.plus(
@@ -1718,13 +1818,14 @@ export function handle_e_collectProof(event: e_collectProof): void {
 
                 log_CustomerData(newcustomer, event.block.timestamp);
                 log_GoodData(normal_good, event.block.timestamp);
-                //log_ParGoodData(normal_pargood, event.block.timestamp);
+                log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         }
 }
 
 export function handle_e_investGood(event: e_investGood): void {
-        let normalgoodid = event.params._normalGoodNo.toString();
+        let normalgoodid = event.params._extendinfo.div(BI_128).toString();
+        let stakecontruct = event.params._extendinfo.mod(BI_128);
         let valuegoodid = event.params._valueGoodNo.toString();
         let proofNo = event.params._proofNo.toString();
         let marketmanage = MarketManager.bind(
@@ -1839,9 +1940,9 @@ export function handle_e_investGood(event: e_investGood): void {
                 normal_good.investQuantity =
                         normalcurrentstate.value.investState.mod(BI_128);
                 normal_good.feeQuantity =
-                        normalcurrentstate.value.feeQunitityState.div(BI_128);
+                        normalcurrentstate.value.feeQuantityState.div(BI_128);
                 normal_good.contructFee =
-                        normalcurrentstate.value.feeQunitityState.mod(BI_128);
+                        normalcurrentstate.value.feeQuantityState.mod(BI_128);
         } else {
                 normal_good.currentValue = normal_good.currentValue.minus(
                         proof.proofValue
@@ -1928,7 +2029,6 @@ export function handle_e_investGood(event: e_investGood): void {
                 marketstate.totalDisinvestCount = ZERO_BI;
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
-                marketstate.marketCreator = "#";
         }
         if (valuegoodid != "0") {
                 let newcustomer = Customer.load(
@@ -1951,6 +2051,10 @@ export function handle_e_investGood(event: e_investGood): void {
                         newcustomer.customerno = marketstate.userCount;
                         newcustomer.totalprofitvalue = ZERO_BI;
                         newcustomer.totalcommissionvalue = ZERO_BI;
+                        newcustomer.referralnum = ZERO_BI;
+                        newcustomer.getfromstake = ZERO_BI;
+                        newcustomer.stakettsvalue = ZERO_BI;
+                        newcustomer.stakettscontruct = ZERO_BI;
                 }
 
                 newcustomer.investValue = newcustomer.investValue.minus(
@@ -1966,8 +2070,40 @@ export function handle_e_investGood(event: e_investGood): void {
                 newcustomer.investCount = newcustomer.investCount.plus(ONE_BI);
 
                 newcustomer.lastoptime = event.block.timestamp;
+                newcustomer.stakettsvalue =
+                        newcustomer.stakettsvalue.plus(invest_value);
+                newcustomer.stakettsvalue =
+                        newcustomer.stakettsvalue.plus(invest_value);
+                newcustomer.stakettscontruct =
+                        newcustomer.stakettscontruct.plus(stakecontruct);
                 newcustomer.save();
                 log_CustomerData(newcustomer, event.block.timestamp);
+
+                let ttsenv = tts_env.load("1");
+                if (ttsenv === null) {
+                        ttsenv = new tts_env("1");
+                        ttsenv.poolvalue = ZERO_BI;
+                        ttsenv.poolasset = ZERO_BI;
+                        ttsenv.poolcontruct = ZERO_BI;
+                        ttsenv.normalgoodid = ZERO_BI;
+                        ttsenv.valuegoodid = ZERO_BI;
+                        ttsenv.dao_admin = "#";
+                        ttsenv.marketcontract = "#";
+                        ttsenv.usdtcontract = "#";
+                        ttsenv.publicsell = ZERO_BI;
+                        ttsenv.lsttime = ZERO_BI;
+                        ttsenv.actual_amount = ZERO_BI;
+                        ttsenv.shares_index = ZERO_BI;
+                        ttsenv.left_share = ZERO_BI;
+                        ttsenv.usdt_amount = ZERO_BI;
+                        ttsenv.lasttime = ZERO_BI;
+                }
+
+                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
+                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
+                ttsenv.save();
 
                 let value_good = GoodState.load(valuegoodid);
                 if (value_good === null) {
@@ -2063,11 +2199,11 @@ export function handle_e_investGood(event: e_investGood): void {
                         value_good.investQuantity =
                                 valuecurrentstate.value.investState.mod(BI_128);
                         value_good.feeQuantity =
-                                valuecurrentstate.value.feeQunitityState.div(
+                                valuecurrentstate.value.feeQuantityState.div(
                                         BI_128
                                 );
                         value_good.contructFee =
-                                valuecurrentstate.value.feeQunitityState.mod(
+                                valuecurrentstate.value.feeQuantityState.mod(
                                         BI_128
                                 );
                 } else {
@@ -2199,9 +2335,9 @@ export function handle_e_investGood(event: e_investGood): void {
                 proof.save();
 
                 log_GoodData(value_good, event.block.timestamp);
-                //log_ParGoodData(value_pargood, event.block.timestamp);
+                log_ParGoodData(value_pargood, event.block.timestamp);
                 log_GoodData(normal_good, event.block.timestamp);
-                //log_ParGoodData(normal_pargood, event.block.timestamp);
+                log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         } else {
                 let newcustomer = Customer.load(
@@ -2224,6 +2360,10 @@ export function handle_e_investGood(event: e_investGood): void {
                         newcustomer.customerno = marketstate.userCount;
                         newcustomer.totalprofitvalue = ZERO_BI;
                         newcustomer.totalcommissionvalue = ZERO_BI;
+                        newcustomer.referralnum = ZERO_BI;
+                        newcustomer.getfromstake = ZERO_BI;
+                        newcustomer.stakettsvalue = ZERO_BI;
+                        newcustomer.stakettscontruct = ZERO_BI;
                 }
 
                 newcustomer.investValue = newcustomer.investValue.minus(
@@ -2234,7 +2374,37 @@ export function handle_e_investGood(event: e_investGood): void {
                         newcustomer.investValue.plus(invest_value);
                 newcustomer.investCount = newcustomer.investCount.plus(ONE_BI);
                 newcustomer.lastoptime = event.block.timestamp;
+                newcustomer.stakettsvalue =
+                        newcustomer.stakettsvalue.plus(invest_value);
+                newcustomer.stakettscontruct =
+                        newcustomer.stakettscontruct.plus(stakecontruct);
                 newcustomer.save();
+
+                log_CustomerData(newcustomer, event.block.timestamp);
+                let ttsenv = tts_env.load("1");
+                if (ttsenv === null) {
+                        ttsenv = new tts_env("1");
+                        ttsenv.poolvalue = ZERO_BI;
+                        ttsenv.poolasset = ZERO_BI;
+                        ttsenv.poolcontruct = ZERO_BI;
+                        ttsenv.normalgoodid = ZERO_BI;
+                        ttsenv.valuegoodid = ZERO_BI;
+                        ttsenv.dao_admin = "#";
+                        ttsenv.marketcontract = "#";
+                        ttsenv.usdtcontract = "#";
+                        ttsenv.publicsell = ZERO_BI;
+                        ttsenv.lsttime = ZERO_BI;
+                        ttsenv.actual_amount = ZERO_BI;
+                        ttsenv.shares_index = ZERO_BI;
+                        ttsenv.left_share = ZERO_BI;
+                        ttsenv.usdt_amount = ZERO_BI;
+                        ttsenv.lasttime = ZERO_BI;
+                }
+
+                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
+                ttsenv.save();
 
                 log_CustomerData(newcustomer, event.block.timestamp);
                 marketstate.totalInvestValue =
@@ -2282,7 +2452,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 proof.save();
 
                 log_GoodData(normal_good, event.block.timestamp);
-                //log_ParGoodData(normal_pargood, event.block.timestamp);
+                log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         }
 }
@@ -2297,6 +2467,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
         let proofstate = marketmanage.try_getProofState(event.params._proofNo);
 
         let invest_value = proofstate.value.state.div(BI_128);
+        let tts_stakeproof = proofstate.value.state.mod(BI_128);
         let normal_contructFee = proofstate.value.invest.div(BI_128);
         let normal_Quantity = proofstate.value.invest.mod(BI_128);
         456;
@@ -2405,9 +2576,9 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 normal_good.investQuantity =
                         normalcurrentstate.value.investState.mod(BI_128);
                 normal_good.feeQuantity =
-                        normalcurrentstate.value.feeQunitityState.div(BI_128);
+                        normalcurrentstate.value.feeQuantityState.div(BI_128);
                 normal_good.contructFee =
-                        normalcurrentstate.value.feeQunitityState.mod(BI_128);
+                        normalcurrentstate.value.feeQuantityState.mod(BI_128);
         } else {
                 normal_good.currentValue = normal_good.currentValue.minus(
                         proof.proofValue
@@ -2493,7 +2664,6 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 marketstate.totalDisinvestCount = ZERO_BI;
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
-                marketstate.marketCreator = "#";
         }
         if (valuegoodid != "0") {
                 let value_good = GoodState.load(valuegoodid);
@@ -2590,11 +2760,11 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         value_good.investQuantity =
                                 valuecurrentstate.value.investState.mod(BI_128);
                         value_good.feeQuantity =
-                                valuecurrentstate.value.feeQunitityState.div(
+                                valuecurrentstate.value.feeQuantityState.div(
                                         BI_128
                                 );
                         value_good.contructFee =
-                                valuecurrentstate.value.feeQunitityState.mod(
+                                valuecurrentstate.value.feeQuantityState.mod(
                                         BI_128
                                 );
                 } else {
@@ -2747,8 +2917,13 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.customerno = marketstate.userCount;
                         newcustomer.totalprofitvalue = ZERO_BI;
                         newcustomer.totalcommissionvalue = ZERO_BI;
+                        newcustomer.referralnum = ZERO_BI;
+                        newcustomer.getfromstake = ZERO_BI;
+                        newcustomer.stakettsvalue = ZERO_BI;
+                        newcustomer.stakettscontruct = ZERO_BI;
                 }
-
+                newcustomer.getfromstake =
+                        newcustomer.getfromstake.plus(tts_stakeproof);
                 newcustomer.disinvestValue = newcustomer.disinvestValue.plus(
                         proof.proofValue
                 );
@@ -2777,9 +2952,9 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 newcustomer.save();
                 log_CustomerData(newcustomer, event.block.timestamp);
                 log_GoodData(value_good, event.block.timestamp);
-                //log_ParGoodData(value_pargood, event.block.timestamp);
+                log_ParGoodData(value_pargood, event.block.timestamp);
                 log_GoodData(normal_good, event.block.timestamp);
-                //log_ParGoodData(normal_pargood, event.block.timestamp);
+                log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         } else {
                 let newcustomer = Customer.load(
@@ -2802,6 +2977,10 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.customerno = marketstate.userCount;
                         newcustomer.totalprofitvalue = ZERO_BI;
                         newcustomer.totalcommissionvalue = ZERO_BI;
+                        newcustomer.referralnum = ZERO_BI;
+                        newcustomer.getfromstake = ZERO_BI;
+                        newcustomer.stakettsvalue = ZERO_BI;
+                        newcustomer.stakettscontruct = ZERO_BI;
                 }
                 newcustomer.disinvestValue = newcustomer.disinvestValue.plus(
                         proof.proofValue
@@ -2861,7 +3040,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 proof.good1Quantity = normal_Quantity;
                 proof.save();
                 log_GoodData(normal_good, event.block.timestamp);
-                //log_ParGoodData(normal_pargood, event.block.timestamp);
+                log_ParGoodData(normal_pargood, event.block.timestamp);
                 log_MarketData(marketstate, event.block.timestamp);
         }
 }
@@ -2882,6 +3061,10 @@ export function handle_e_addbanlist(event: e_addbanlist): void {
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
+                newcustomer.referralnum = ZERO_BI;
+                newcustomer.getfromstake = ZERO_BI;
+                newcustomer.stakettsvalue = ZERO_BI;
+                newcustomer.stakettscontruct = ZERO_BI;
         }
         newcustomer.isBanlist = true;
 
@@ -2905,39 +3088,15 @@ export function handle_e_removebanlist(event: e_removebanlist): void {
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
+                newcustomer.referralnum = ZERO_BI;
+                newcustomer.getfromstake = ZERO_BI;
+                newcustomer.stakettsvalue = ZERO_BI;
+                newcustomer.stakettscontruct = ZERO_BI;
         }
         newcustomer.isBanlist = true;
-
         newcustomer.lastoptime = event.block.timestamp;
         newcustomer.save();
         log_CustomerData(newcustomer, event.block.timestamp);
-}
-
-export function handle_e_addreferer(event: e_addreferal): void {
-        let newcustomer = Customer.load(event.transaction.from.toHexString());
-        if (newcustomer === null) {
-                newcustomer = new Customer(
-                        event.transaction.from.toHexString()
-                );
-                newcustomer.tradeValue = ZERO_BI;
-                newcustomer.investValue = ZERO_BI;
-                newcustomer.disinvestValue = ZERO_BI;
-                newcustomer.tradeCount = ZERO_BI;
-                newcustomer.investCount = ZERO_BI;
-                newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
-                newcustomer.refer = "#";
-                newcustomer.customerno = ZERO_BI;
-                newcustomer.totalprofitvalue = ZERO_BI;
-                newcustomer.totalcommissionvalue = ZERO_BI;
-        }
-        if ((newcustomer.refer = "#")) {
-                newcustomer.refer = event.transaction.from.toHexString();
-
-                newcustomer.lastoptime = event.block.timestamp;
-                newcustomer.save();
-                log_CustomerData(newcustomer, event.block.timestamp);
-        }
 }
 
 export function handle_e_Transfer(event: Transfer): void {
@@ -2978,6 +3137,10 @@ export function handle_e_collectcommission(event: e_collectcommission): void {
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
+                newcustomer.referralnum = ZERO_BI;
+                newcustomer.getfromstake = ZERO_BI;
+                newcustomer.stakettsvalue = ZERO_BI;
+                newcustomer.stakettscontruct = ZERO_BI;
         }
         let goodidarrary = event.params._gooid;
         let commissionarray = event.params._commisionamount;

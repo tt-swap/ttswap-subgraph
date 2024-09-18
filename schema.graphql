@@ -13,6 +13,10 @@ type Customer @entity {
   totalprofitvalue:BigInt!
   totalcommissionvalue:BigInt!
   lastoptime:BigInt!
+  referralnum:BigInt!
+  getfromstake:BigInt!
+  stakettsvalue:BigInt!
+  stakettscontruct:BigInt!
   custdata:[CustomerData!]@derivedFrom(field: "customerid")
 }
 
@@ -31,6 +35,10 @@ type CustomerData @entity {
   totalprofitvalue:BigInt!
   totalcommissionvalue:BigInt!
   customerid:Customer!
+  referralnum:BigInt!
+  getfromstake:BigInt!
+  stakettsvalue:BigInt!
+  stakettscontruct:BigInt!
   create_time:BigInt!
 }
 
@@ -49,7 +57,6 @@ type MarketState @entity {
   totalTradeCount: BigInt!
   totalInvestCount: BigInt!
   totalDisinvestCount: BigInt!
-  marketCreator: String! # address
 }
 
 type GoodState @entity {
@@ -122,7 +129,6 @@ type ProofState @entity {
   good2ContructFee: BigInt!
   good2Quantity:BigInt!
   createTime: BigInt!
-  
 }
 
 type Transaction @entity {
@@ -179,35 +185,35 @@ type GoodData @entity {
 
 
 
-# type ParGoodData @entity {
-#   # hour:GoodId+h+minute (60 rows)
-#   # day: GoodId+d+20minute (72 rows)
-#   # week:GoodId+w+3hour  (56 rows)
-#   # month:GoodId+m+12hour (62 rows)
-#   # year: GoodId+y+5day (73)
-#   id: ID!
-#   pargood: ParGoodState!
-#   timetype:String!
-#   modifiedTime: BigInt!
-#   decimals: BigInt!
-#   currentValue:BigInt!
-#   currentQuantity:BigInt!
-#   investValue:BigInt!
-#   investQuantity:BigInt!
-#   feeQuantity:BigInt!
-#   contructFee:BigInt!
-#   totalTradeQuantity:BigInt!
-#   totalInvestQuantity:BigInt!
-#   totalDisinvestQuantity:BigInt!
-#   totalProfit:BigInt!
-#   totalTradeCount: BigInt!
-#   totalInvestCount: BigInt!
-#   totalDisinvestCount: BigInt!
-#   open: BigInt!
-#   high: BigInt!
-#   low:  BigInt!
-#   close: BigInt!
-# }
+type ParGoodData @entity {
+  # hour:GoodId+h+minute (60 rows)
+  # day: GoodId+d+20minute (72 rows)
+  # week:GoodId+w+3hour  (56 rows)
+  # month:GoodId+m+12hour (62 rows)
+  # year: GoodId+y+5day (73)
+  id: ID!
+  pargood: ParGoodState!
+  timetype:String!
+  modifiedTime: BigInt!
+  decimals: BigInt!
+  currentValue:BigInt!
+  currentQuantity:BigInt!
+  investValue:BigInt!
+  investQuantity:BigInt!
+  feeQuantity:BigInt!
+  contructFee:BigInt!
+  totalTradeQuantity:BigInt!
+  totalInvestQuantity:BigInt!
+  totalDisinvestQuantity:BigInt!
+  totalProfit:BigInt!
+  totalTradeCount: BigInt!
+  totalInvestCount: BigInt!
+  totalDisinvestCount: BigInt!
+  open: BigInt!
+  high: BigInt!
+  low:  BigInt!
+  close: BigInt!
+}
 
 type MarketData @entity {
   # hour:h+minute (60 rows)
@@ -230,4 +236,48 @@ type MarketData @entity {
   totalInvestCount: BigInt!
   totalDisinvestCount: BigInt!
   modifiedTime: BigInt!
+}
+
+
+type tts_env  @entity {
+  id:ID!
+  poolvalue:BigInt!
+  poolasset:BigInt!
+  poolcontruct:BigInt!
+  normalgoodid:BigInt!
+  valuegoodid:BigInt!
+  dao_admin:String!
+  marketcontract:String!
+  usdtcontract:String!
+  publicsell:BigInt!
+  lsttime:BigInt!
+  actual_amount:BigInt!
+  shares_index:BigInt!
+  left_share:BigInt!
+  usdt_amount:BigInt!
+  lasttime:BigInt!
+}
+
+
+
+type tts_share @entity{
+  id:ID!
+  share_owner:String!
+  share_leftamount:BigInt!
+  share_metric:BigInt!
+  share_chips:BigInt!
+}
+
+type tts_auth @entity{
+  id:ID! #user
+  priv:BigInt!
+}
+
+
+type tts_chainstake @entity{
+  id:ID! #chainid
+  chainvalue:BigInt!
+  chaincontruct:BigInt!
+  poolasset:BigInt!
+  totalasset:BigInt!
 }
