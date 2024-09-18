@@ -16,14 +16,14 @@ export function fetchMarketConfig(tokenAddress: Address): BigInt {
         return MarketConfig;
 }
 
-export function fetchMarketCreator(tokenAddress: Address): string {
-        let contract = MarketManager.bind(tokenAddress);
-        let MarketCreator = "0";
-        let MarketCreatorResult = contract.try_marketcreator();
-        if (!MarketCreatorResult.reverted) {
-                MarketCreator = MarketCreatorResult.value.toHexString();
-        } else {
-                MarketCreator = MarketCreator = "0";
-        }
-        return MarketCreator;
-}
+// export function fetchMarketCreator(tokenAddress: Address): string {
+//         let contract = MarketManager.bind(tokenAddress);
+//         let MarketCreator = "0";
+//         let MarketCreatorResult = contract.try_marketcreator();
+//         if (!MarketCreatorResult.reverted) {
+//                 MarketCreator = MarketCreatorResult.value.toHexString();
+//         } else {
+//                 MarketCreator = MarketCreator = "0";
+//         }
+//         return MarketCreator;
+// }

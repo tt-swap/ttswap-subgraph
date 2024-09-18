@@ -28,6 +28,10 @@ export function log_CustomerData(
                         customer.totalcommissionvalue;
                 customerData_week.customerid = customer.id;
                 customerData_week.create_time = modifiedTime;
+                customerData_week.referralnum = customer.referralnum;
+                customerData_week.getfromstake = customer.getfromstake;
+                customerData_week.stakettsvalue = customer.stakettsvalue;
+                customerData_week.stakettscontruct = customer.stakettscontruct;
                 customerData_week.save();
         }
 }
