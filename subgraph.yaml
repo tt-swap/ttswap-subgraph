@@ -9,9 +9,9 @@ dataSources:
     name: MarketManager
     network: sepolia
     source:
-      address: "0xD21CcAC67Ad3c511CB1e21B380041D260e5859FE"
+      address: "0xEe9ed5DE09d5E97b64f66741A325EF44053DaF30"
       abi: MarketManager
-      startBlock: 6715730
+      startBlock: 6721581
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -39,9 +39,9 @@ dataSources:
         - name: ERC20SymbolBytes
           file: ./abis/ERC20SymbolBytes.json
       eventHandlers:
-        - event: e_initMetaGood(uint256,uint256,address,uint256,uint256)
+        - event: e_initMetaGood(uint256,uint256,uint256,address,uint256,uint256)
           handler: handle_e_initMetaGood
-        - event: e_initGood(uint256,uint256,uint256,address,uint256,uint256,uint256)
+        - event: e_initGood(uint256,uint256,uint256,address,uint256,uint256,uint256,uint256)
           handler: handle_e_initGood
         - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
           handler: handle_e_buyGood
