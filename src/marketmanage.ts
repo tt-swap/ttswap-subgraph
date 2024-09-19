@@ -132,8 +132,8 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         let address_erc20 = event.params._erc20address;
         let erc20address = address_erc20.toHexString();
         let metaowner = event.transaction.from.toHexString();
-        let metaid = event.params._extendinfo.div(BI_128).toString();
-        let stakecontruct = event.params._extendinfo.mod(BI_128);
+        let metaid = event.params._goodid.toString();
+        let stakecontruct = event.params._construct.mod(BI_128);
         let modifiedTime = event.block.timestamp;
         let trade_value = event.params._initial.div(BI_128);
         let trade_quantity = event.params._initial.mod(BI_128);
@@ -165,9 +165,9 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         let ttsenv = tts_env.load("1");
         if (ttsenv === null) {
                 ttsenv = new tts_env("1");
-                ttsenv.poolvalue = ZERO_BI;
-                ttsenv.poolasset = ZERO_BI;
-                ttsenv.poolcontruct = ZERO_BI;
+                ttsenv.poolvalue = trade_value;
+                ttsenv.poolasset = stakecontruct;
+                ttsenv.poolcontruct = stakecontruct;
                 ttsenv.normalgoodid = ZERO_BI;
                 ttsenv.valuegoodid = ZERO_BI;
                 ttsenv.dao_admin = "#";
@@ -180,12 +180,11 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
                 ttsenv.left_share = ZERO_BI;
                 ttsenv.usdt_amount = ZERO_BI;
                 ttsenv.lasttime = ZERO_BI;
+        } else {
+                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+                ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
         }
-
-        ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
-        ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
-        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
-        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
         ttsenv.save();
 
         // Initialize or update market state
@@ -396,8 +395,9 @@ export function handle_e_initGood(event: e_initGood): void {
         let erc20address = addresserc.toHexString();
 
         let valuegoodid = event.params._valuegoodNo.toString();
-        let normalgoodid = event.params._extendinfo.div(BI_128).toString();
-        let stakecontruct = event.params._extendinfo.mod(BI_128);
+
+        let normalgoodid = event.params._goodid.toString();
+        let stakecontruct = event.params._construct.mod(BI_128);
         let proofid_BG = event.params._proofNo;
         let marketmanage = MarketManager.bind(
                 Address.fromString(MARKET_ADDRESS)
@@ -1824,8 +1824,8 @@ export function handle_e_collectProof(event: e_collectProof): void {
 }
 
 export function handle_e_investGood(event: e_investGood): void {
-        let normalgoodid = event.params._extendinfo.div(BI_128).toString();
-        let stakecontruct = event.params._extendinfo.mod(BI_128);
+        let normalgoodid = event.params._normalgoodid.toString();
+        let stakecontruct = event.params._value.mod(BI_128);
         let valuegoodid = event.params._valueGoodNo.toString();
         let proofNo = event.params._proofNo.toString();
         let marketmanage = MarketManager.bind(
