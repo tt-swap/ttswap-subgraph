@@ -9,9 +9,9 @@ dataSources:
     name: MarketManager
     network: sepolia
     source:
-      address: "0xEe9ed5DE09d5E97b64f66741A325EF44053DaF30"
+      address: "0x3c4f40f24a23528bf7ad8516f5eef5aa1f399ec8"
       abi: MarketManager
-      startBlock: 6721581
+      startBlock: 6724416
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -78,9 +78,9 @@ dataSources:
     name: TTSwap_Token
     network: sepolia
     source:
-      address: "0x8422A9BB43dd639D828Ac9096A0025197cb0d970"
+      address: "0x978fBCc01E239d7505005162bb0F8Edb33c90a17"
       abi: TTSwap_Token
-      startBlock: 6715706
+      startBlock: 6724409
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
