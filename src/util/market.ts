@@ -1,9 +1,9 @@
 /* eslint-disable prefer-const */
-import { MarketManager } from "../../generated/MarketManager/MarketManager";
+import { TTSwap_Market } from "../../generated/TTSwap_Market/TTSwap_Market";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 
 export function fetchMarketConfig(tokenAddress: Address): BigInt {
-        let contract = MarketManager.bind(tokenAddress);
+        let contract = TTSwap_Market.bind(tokenAddress);
         let MarketConfig = BigInt.fromU64(0);
         let MarketConfigResult = contract.try_marketconfig();
         if (!MarketConfigResult.reverted) {

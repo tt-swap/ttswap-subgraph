@@ -6,17 +6,17 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: MarketManager
+    name: TTSwap_Market
     network: sepolia
     source:
       address: "0x3c4f40f24a23528bf7ad8516f5eef5aa1f399ec8"
-      abi: MarketManager
+      abi: TTSwap_Market
       startBlock: 6724416
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
-      file: ./src/marketmanage.ts
+      file: ./src/ttswap_market.ts
       entities:
         - Customer
         - CustomerData
@@ -30,8 +30,8 @@ dataSources:
         - MarketData
         - tts_env
       abis:
-        - name: MarketManager
-          file: ./abis/MarketManager.json
+        - name: TTSwap_Market
+          file: ./abis/TTSwap_Market.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20NameBytes
@@ -66,8 +66,6 @@ dataSources:
           handler: handle_e_addbanlist
         - event: e_removebanlist(address)
           handler: handle_e_removebanlist
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handle_e_Transfer
         - event: e_collectcommission(uint256[],uint256[])
           handler: handle_e_collectcommission
         - event: e_goodWelfare(uint256,uint128)
@@ -120,5 +118,29 @@ dataSources:
           handler: handle_e_unstake
         - event: e_updatepool(uint256,uint256)
           handler: handle_e_updatepool
+  - kind: ethereum/contract
+    name: TTSwap_NFT
+    network: sepolia
+    source:
+      address: "0x978fBCc01E239d7505005162bb0F8Edb33c90a17"
+      abi: TTSwap_NFT
+      startBlock: 6724409
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ttswap_nft.ts
+      entities:
+        - Customer
+        - tts_env
+        - tts_restake
+        - tts_share
+        - tts_auth
+      abis:
+        - name: TTSwap_NFT
+          file: ./abis/TTSwap_NFT.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handle_e_Transfer
 
 

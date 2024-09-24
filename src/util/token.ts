@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
-import { ERC20 } from "../../generated/MarketManager/ERC20";
-import { ERC20SymbolBytes } from "../../generated/MarketManager/ERC20SymbolBytes";
-import { ERC20NameBytes } from "../../generated/MarketManager/ERC20NameBytes";
+import { ERC20 } from "../../generated/TTSwap_Market/ERC20";
+import { ERC20SymbolBytes } from "../../generated/TTSwap_Market/ERC20SymbolBytes";
+import { ERC20NameBytes } from "../../generated/TTSwap_Market/ERC20NameBytes";
 import { StaticTokenDefinition } from "./staticTokenDefinition";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { isNullEthValue } from ".";

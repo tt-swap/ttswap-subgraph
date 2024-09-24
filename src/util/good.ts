@@ -16,7 +16,7 @@ import {
         compareprice,
 } from "./constants";
 import { fetchTokenDecimals } from "./token";
-import { MarketManager } from "../../generated/MarketManager/MarketManager";
+import { TTSwap_Market } from "../../generated/TTSwap_Market/TTSwap_Market";
 
 export function log_GoodData(
         normal_good: GoodState,
@@ -412,7 +412,7 @@ export function fetchGoodDecimals(goodid: string): BigInt {
 }
 
 export function fetchGoodConfig(goodid: BigInt): BigInt {
-        let contract = MarketManager.bind(Address.fromString(MARKET_ADDRESS));
+        let contract = TTSwap_Market.bind(Address.fromString(MARKET_ADDRESS));
         // try types uint8 for decimals
         let decimalValue = BigInt.fromU32(0);
         let decimalResult = contract.try_getGoodState(goodid);
