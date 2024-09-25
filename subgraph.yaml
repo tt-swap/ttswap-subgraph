@@ -72,6 +72,8 @@ dataSources:
           handler: handle_e_goodWelfare
         - event: e_changegoodowner(uint256,address)
           handler: handle_e_changegoodowner
+        - event: e_transferdel(uint256,uint256)
+          handler: handle_e_transferdel
   - kind: ethereum/contract
     name: TTSwap_Token
     network: sepolia
@@ -131,11 +133,7 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/ttswap_nft.ts
       entities:
-        - Customer
-        - tts_env
-        - tts_restake
-        - tts_share
-        - tts_auth
+        - ProofState
       abis:
         - name: TTSwap_NFT
           file: ./abis/TTSwap_NFT.json

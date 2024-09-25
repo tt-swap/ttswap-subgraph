@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, store } from "@graphprotocol/graph-ts";
 
 import {
         MarketState,
@@ -28,6 +28,7 @@ import {
         e_collectcommission,
         e_goodWelfare,
         e_changegoodowner,
+        e_transferdel,
 } from "../generated/TTSwap_Market/TTSwap_Market";
 
 import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./util/constants";
@@ -3240,4 +3241,63 @@ export function handle_e_changegoodowner(event: e_changegoodowner): void {
         }
         normal_good.owner = event.params.to.toHexString();
         normal_good.save();
+}
+
+export function handle_e_transferdel(event: e_transferdel): void {
+        let fromproofid = event.params.delproofid.toString();
+        let existsproofid = event.params.existsproofid.toString();
+        let fromproof = ProofState.load(fromproofid.toString());
+        if (fromproof === null) {
+                fromproof = new ProofState(fromproofid.toString());
+                fromproof.owner = "#";
+                fromproof.good1 = "#";
+                fromproof.good2 = "#";
+                fromproof.proofValue = ZERO_BI;
+                fromproof.good1Quantity = ZERO_BI;
+                fromproof.good2Quantity = ZERO_BI;
+                fromproof.good1ContructFee = ZERO_BI;
+                fromproof.good2ContructFee = ZERO_BI;
+                fromproof.createTime = event.block.timestamp;
+        }
+
+        let existsproof = ProofState.load(existsproofid.toString());
+        if (existsproof === null) {
+                existsproof = new ProofState(existsproofid.toString());
+                existsproof.owner = "#";
+                existsproof.good1 = "#";
+                existsproof.good2 = "#";
+                existsproof.proofValue = ZERO_BI;
+                existsproof.good1Quantity = ZERO_BI;
+                existsproof.good2Quantity = ZERO_BI;
+                existsproof.good1ContructFee = ZERO_BI;
+                existsproof.good2ContructFee = ZERO_BI;
+                existsproof.createTime = event.block.timestamp;
+        }
+
+        existsproof.proofValue = existsproof.proofValue.plus(
+                existsproof.proofValue
+        );
+        existsproof.good1Quantity = existsproof.good1Quantity.plus(
+                existsproof.good1Quantity
+        );
+        existsproof.good2Quantity = existsproof.good2Quantity.plus(
+                existsproof.good2Quantity
+        );
+        existsproof.good1ContructFee = existsproof.good1ContructFee.plus(
+                existsproof.good1ContructFee
+        );
+        existsproof.good2ContructFee = existsproof.good2ContructFee.plus(
+                existsproof.good2ContructFee
+        );
+        existsproof.save();
+        fromproof.owner = "#";
+        fromproof.good1 = "#";
+        fromproof.good2 = "#";
+        fromproof.proofValue = ZERO_BI;
+        fromproof.good1Quantity = ZERO_BI;
+        fromproof.good2Quantity = ZERO_BI;
+        fromproof.good1ContructFee = ZERO_BI;
+        fromproof.good2ContructFee = ZERO_BI;
+        fromproof.createTime = event.block.timestamp;
+        fromproof.save();
 }
