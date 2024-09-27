@@ -3290,14 +3290,6 @@ export function handle_e_transferdel(event: e_transferdel): void {
                 existsproof.good2ContructFee
         );
         existsproof.save();
-        fromproof.owner = "#";
-        fromproof.good1 = "#";
-        fromproof.good2 = "#";
-        fromproof.proofValue = ZERO_BI;
-        fromproof.good1Quantity = ZERO_BI;
-        fromproof.good2Quantity = ZERO_BI;
-        fromproof.good1ContructFee = ZERO_BI;
-        fromproof.good2ContructFee = ZERO_BI;
-        fromproof.createTime = event.block.timestamp;
-        fromproof.save();
+
+        store.remove("ProofState", fromproofid.toString());
 }
