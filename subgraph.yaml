@@ -6,17 +6,17 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: MarketManager
+    name: TTSwap_Market
     network: sepolia
     source:
-      address: "0xEe9ed5DE09d5E97b64f66741A325EF44053DaF30"
-      abi: MarketManager
-      startBlock: 6721581
+      address: "0x3c4f40f24a23528bf7ad8516f5eef5aa1f399ec8"
+      abi: TTSwap_Market
+      startBlock: 6724416
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
-      file: ./src/marketmanage.ts
+      file: ./src/ttswap_market.ts
       entities:
         - Customer
         - CustomerData
@@ -30,8 +30,8 @@ dataSources:
         - MarketData
         - tts_env
       abis:
-        - name: MarketManager
-          file: ./abis/MarketManager.json
+        - name: TTSwap_Market
+          file: ./abis/TTSwap_Market.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20NameBytes
@@ -66,21 +66,21 @@ dataSources:
           handler: handle_e_addbanlist
         - event: e_removebanlist(address)
           handler: handle_e_removebanlist
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handle_e_Transfer
         - event: e_collectcommission(uint256[],uint256[])
           handler: handle_e_collectcommission
         - event: e_goodWelfare(uint256,uint128)
           handler: handle_e_goodWelfare
         - event: e_changegoodowner(uint256,address)
           handler: handle_e_changegoodowner
+        - event: e_transferdel(uint256,uint256)
+          handler: handle_e_transferdel
   - kind: ethereum/contract
     name: TTSwap_Token
     network: sepolia
     source:
-      address: "0x8422A9BB43dd639D828Ac9096A0025197cb0d970"
+      address: "0x978fBCc01E239d7505005162bb0F8Edb33c90a17"
       abi: TTSwap_Token
-      startBlock: 6715706
+      startBlock: 6724409
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -120,5 +120,25 @@ dataSources:
           handler: handle_e_unstake
         - event: e_updatepool(uint256,uint256)
           handler: handle_e_updatepool
+  - kind: ethereum/contract
+    name: TTSwap_NFT
+    network: sepolia
+    source:
+      address: "0x978fBCc01E239d7505005162bb0F8Edb33c90a17"
+      abi: TTSwap_NFT
+      startBlock: 6724409
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ttswap_nft.ts
+      entities:
+        - ProofState
+      abis:
+        - name: TTSwap_NFT
+          file: ./abis/TTSwap_NFT.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handle_e_Transfer
 
 

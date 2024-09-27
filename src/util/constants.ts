@@ -1,9 +1,9 @@
 /* eslint-disable prefer-const */
 import { BigInt, BigDecimal, Address } from "@graphprotocol/graph-ts";
-import { MarketManager as MarketContract } from "../../generated/MarketManager/MarketManager";
+import { TTSwap_Market as MarketContract } from "../../generated/TTSwap_Market/TTSwap_Market";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
-export const MARKET_ADDRESS = "0xEe9ed5DE09d5E97b64f66741A325EF44053DaF30";
+export const MARKET_ADDRESS = "0x3C4f40f24A23528Bf7Ad8516f5eef5AA1F399Ec8";
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);

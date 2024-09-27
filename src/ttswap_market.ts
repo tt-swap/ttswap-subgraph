@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, store } from "@graphprotocol/graph-ts";
 
 import {
         MarketState,
@@ -11,7 +11,7 @@ import {
 } from "../generated/schema";
 
 import {
-        MarketManager,
+        TTSwap_Market,
         e_collectProof,
         e_buyGood,
         e_buyGoodForPay,
@@ -25,11 +25,11 @@ import {
         e_disinvestProof,
         e_addbanlist,
         e_removebanlist,
-        Transfer,
         e_collectcommission,
         e_goodWelfare,
         e_changegoodowner,
-} from "../generated/MarketManager/MarketManager";
+        e_transferdel,
+} from "../generated/TTSwap_Market/TTSwap_Market";
 
 import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./util/constants";
 
@@ -399,7 +399,7 @@ export function handle_e_initGood(event: e_initGood): void {
         let normalgoodid = event.params._goodid.toString();
         let stakecontruct = event.params._construct.mod(BI_128);
         let proofid_BG = event.params._proofNo;
-        let marketmanage = MarketManager.bind(
+        let marketmanage = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         );
         let goodowner = event.transaction.from.toHex();
@@ -680,7 +680,7 @@ export function handle_e_initGood(event: e_initGood): void {
         value_pargood.contructFee = value_pargood.contructFee.minus(
                 value_good.contructFee
         );
-        let goodcurrentstate = MarketManager.bind(
+        let goodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(BigInt.fromString(valuegoodid));
         if (!goodcurrentstate.reverted) {
@@ -905,7 +905,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 from_good.feeQuantity
         );
 
-        let goodcurrentstate = MarketManager.bind(
+        let goodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(fromgood);
         if (!goodcurrentstate.reverted) {
@@ -1009,7 +1009,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 to_good.feeQuantity
         );
 
-        let togoodcurrentstate = MarketManager.bind(
+        let togoodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(togood);
         if (!togoodcurrentstate.reverted) {
@@ -1218,7 +1218,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 from_good.feeQuantity
         );
 
-        let goodcurrentstate = MarketManager.bind(
+        let goodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(fromgood);
         if (!goodcurrentstate.reverted) {
@@ -1322,7 +1322,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 to_good.feeQuantity
         );
 
-        let togoodcurrentstate = MarketManager.bind(
+        let togoodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(togood);
         if (!togoodcurrentstate.reverted) {
@@ -1465,7 +1465,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 proof.createTime = event.block.timestamp;
         }
 
-        let marketmanage = MarketManager.bind(
+        let marketmanage = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         );
         let proofstate = marketmanage.try_getProofState(event.params._proofNo);
@@ -1540,7 +1540,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
         normal_pargood.contructFee = normal_pargood.contructFee.minus(
                 normal_good.contructFee
         );
-        let goodcurrentstate = MarketManager.bind(
+        let goodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(event.params._normalGoodNo);
         if (!goodcurrentstate.reverted) {
@@ -1621,7 +1621,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 value_pargood.contructFee = value_pargood.contructFee.minus(
                         value_good.contructFee
                 );
-                let goodcurrentstate2 = MarketManager.bind(
+                let goodcurrentstate2 = TTSwap_Market.bind(
                         Address.fromString(MARKET_ADDRESS)
                 ).try_getGoodState(event.params._valueGoodNo);
                 if (!goodcurrentstate2.reverted) {
@@ -1828,7 +1828,7 @@ export function handle_e_investGood(event: e_investGood): void {
         let stakecontruct = event.params._value.mod(BI_128);
         let valuegoodid = event.params._valueGoodNo.toString();
         let proofNo = event.params._proofNo.toString();
-        let marketmanage = MarketManager.bind(
+        let marketmanage = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         );
         let proofstate = marketmanage.try_getProofState(event.params._proofNo);
@@ -1927,7 +1927,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 normal_good.contructFee
         );
 
-        let normalcurrentstate = MarketManager.bind(
+        let normalcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(BigInt.fromString(normalgoodid));
         if (!normalcurrentstate.reverted) {
@@ -2182,7 +2182,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 value_pargood.contructFee = value_pargood.contructFee.minus(
                         value_good.contructFee
                 );
-                let valuecurrentstate = MarketManager.bind(
+                let valuecurrentstate = TTSwap_Market.bind(
                         Address.fromString(MARKET_ADDRESS)
                 ).try_getGoodState(BigInt.fromString(valuegoodid));
                 if (!valuecurrentstate.reverted) {
@@ -2461,7 +2461,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
         let normalgoodid = event.params._normalGoodNo.toString();
         let valuegoodid = event.params._valueGoodNo.toString();
         let proofNo = event.params._proofNo.toString();
-        let marketmanage = MarketManager.bind(
+        let marketmanage = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         );
         let proofstate = marketmanage.try_getProofState(event.params._proofNo);
@@ -2563,7 +2563,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 normal_good.contructFee
         );
 
-        let normalcurrentstate = MarketManager.bind(
+        let normalcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         ).try_getGoodState(BigInt.fromString(normalgoodid));
         if (!normalcurrentstate.reverted) {
@@ -2743,7 +2743,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         value_good.contructFee
                 );
 
-                let valuecurrentstate = MarketManager.bind(
+                let valuecurrentstate = TTSwap_Market.bind(
                         Address.fromString(MARKET_ADDRESS)
                 ).try_getGoodState(BigInt.fromString(valuegoodid));
                 if (!valuecurrentstate.reverted) {
@@ -3099,27 +3099,6 @@ export function handle_e_removebanlist(event: e_removebanlist): void {
         log_CustomerData(newcustomer, event.block.timestamp);
 }
 
-export function handle_e_Transfer(event: Transfer): void {
-        let from = event.params.from.toHexString();
-        let to = event.params.to.toHexString();
-        let token = event.params.tokenId;
-        let proof = ProofState.load(token.toString());
-        if (proof === null) {
-                proof = new ProofState(token.toString());
-                proof.owner = to;
-                proof.good1 = "#";
-                proof.good2 = "#";
-                proof.proofValue = ZERO_BI;
-                proof.good1Quantity = ZERO_BI;
-                proof.good2Quantity = ZERO_BI;
-                proof.good1ContructFee = ZERO_BI;
-                proof.good2ContructFee = ZERO_BI;
-                proof.createTime = event.block.timestamp;
-        }
-        proof.owner = to;
-        proof.save();
-}
-
 export function handle_e_collectcommission(event: e_collectcommission): void {
         let newcustomer = Customer.load(event.transaction.from.toHexString());
         if (newcustomer === null) {
@@ -3262,4 +3241,55 @@ export function handle_e_changegoodowner(event: e_changegoodowner): void {
         }
         normal_good.owner = event.params.to.toHexString();
         normal_good.save();
+}
+
+export function handle_e_transferdel(event: e_transferdel): void {
+        let fromproofid = event.params.delproofid.toString();
+        let existsproofid = event.params.existsproofid.toString();
+        let fromproof = ProofState.load(fromproofid.toString());
+        if (fromproof === null) {
+                fromproof = new ProofState(fromproofid.toString());
+                fromproof.owner = "#";
+                fromproof.good1 = "#";
+                fromproof.good2 = "#";
+                fromproof.proofValue = ZERO_BI;
+                fromproof.good1Quantity = ZERO_BI;
+                fromproof.good2Quantity = ZERO_BI;
+                fromproof.good1ContructFee = ZERO_BI;
+                fromproof.good2ContructFee = ZERO_BI;
+                fromproof.createTime = event.block.timestamp;
+        }
+
+        let existsproof = ProofState.load(existsproofid.toString());
+        if (existsproof === null) {
+                existsproof = new ProofState(existsproofid.toString());
+                existsproof.owner = "#";
+                existsproof.good1 = "#";
+                existsproof.good2 = "#";
+                existsproof.proofValue = ZERO_BI;
+                existsproof.good1Quantity = ZERO_BI;
+                existsproof.good2Quantity = ZERO_BI;
+                existsproof.good1ContructFee = ZERO_BI;
+                existsproof.good2ContructFee = ZERO_BI;
+                existsproof.createTime = event.block.timestamp;
+        }
+
+        existsproof.proofValue = existsproof.proofValue.plus(
+                existsproof.proofValue
+        );
+        existsproof.good1Quantity = existsproof.good1Quantity.plus(
+                existsproof.good1Quantity
+        );
+        existsproof.good2Quantity = existsproof.good2Quantity.plus(
+                existsproof.good2Quantity
+        );
+        existsproof.good1ContructFee = existsproof.good1ContructFee.plus(
+                existsproof.good1ContructFee
+        );
+        existsproof.good2ContructFee = existsproof.good2ContructFee.plus(
+                existsproof.good2ContructFee
+        );
+        existsproof.save();
+
+        store.remove("ProofState", fromproofid.toString());
 }

@@ -223,34 +223,32 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 newcustomer.stakettscontruct = ZERO_BI;
                 newcustomer.getfromstake = ZERO_BI;
         }
-        if ((newcustomer.refer = "#")) {
-                newcustomer.refer = event.params.referral.toHexString();
-                newcustomer.lastoptime = event.block.timestamp;
-                newcustomer.save();
-                log_CustomerData(newcustomer, event.block.timestamp);
-                let referralcus = Customer.load(
-                        event.params.referral.toHexString()
-                );
-                if (referralcus === null) {
-                        referralcus = new Customer(
-                                event.params.users.toHexString()
-                        );
-                        referralcus.tradeValue = ZERO_BI;
-                        referralcus.investValue = ZERO_BI;
-                        referralcus.disinvestValue = ZERO_BI;
-                        referralcus.tradeCount = ZERO_BI;
-                        referralcus.investCount = ZERO_BI;
-                        referralcus.disinvestCount = ZERO_BI;
-                        referralcus.isBanlist = false;
-                        referralcus.refer = "#";
-                        referralcus.customerno = ZERO_BI;
-                        referralcus.totalprofitvalue = ZERO_BI;
-                        referralcus.totalcommissionvalue = ZERO_BI;
-                        referralcus.referralnum = ZERO_BI;
-                }
-                referralcus.referralnum = referralcus.referralnum.plus(ONE_BI);
-                referralcus.save();
+
+        newcustomer.refer = event.params.referral.toHexString();
+        newcustomer.lastoptime = event.block.timestamp;
+        newcustomer.save();
+        log_CustomerData(newcustomer, event.block.timestamp);
+        let referralcus = Customer.load(event.params.referral.toHexString());
+        if (referralcus === null) {
+                referralcus = new Customer(event.params.users.toHexString());
+                referralcus.tradeValue = ZERO_BI;
+                referralcus.investValue = ZERO_BI;
+                referralcus.disinvestValue = ZERO_BI;
+                referralcus.tradeCount = ZERO_BI;
+                referralcus.investCount = ZERO_BI;
+                referralcus.disinvestCount = ZERO_BI;
+                referralcus.isBanlist = false;
+                referralcus.refer = "#";
+                referralcus.customerno = ZERO_BI;
+                referralcus.totalprofitvalue = ZERO_BI;
+                referralcus.totalcommissionvalue = ZERO_BI;
+                referralcus.referralnum = ZERO_BI;
+                referralcus.stakettsvalue = ZERO_BI;
+                referralcus.stakettscontruct = ZERO_BI;
+                referralcus.getfromstake = ZERO_BI;
         }
+        referralcus.referralnum = referralcus.referralnum.plus(ONE_BI);
+        referralcus.save();
 }
 
 export function handle_e_publicsell(event: e_publicsell): void {
