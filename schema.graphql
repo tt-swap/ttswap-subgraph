@@ -87,6 +87,8 @@ type GoodState @entity {
   modifiedTime: BigInt!
   txCount:BigInt!
   create_time: BigInt!
+  name_lower:String!
+  symbol_lower:String!
   normalProof_v: [ProofState!] @derivedFrom(field: "good2")
   normalProof_n: [ProofState!] @derivedFrom(field: "good1")
   goodData: [GoodData!] @derivedFrom(field: "good")
@@ -114,6 +116,8 @@ type ParGoodState @entity {
   totalDisinvestCount: BigInt!
   goodCount:BigInt!  
   txCount:BigInt!
+  name_lower:String!
+  symbol_lower:String!
   Goodlist:[GoodState!] @derivedFrom(field: "pargood")
   # parGooddata:[ParGoodData!] @derivedFrom(field: "pargood")
 }
