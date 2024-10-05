@@ -280,7 +280,7 @@ export function handle_e_publicsell(event: e_publicsell): void {
 }
 
 export function handle_e_unstake(event: e_unstake): void {
-        let newcustomer = Customer.load(event.params.recipient.toString());
+        let newcustomer = Customer.load(event.params.recipient.toHexString());
         if (newcustomer === null) {
                 newcustomer = new Customer(
                         event.params.recipient.toHexString()
@@ -292,7 +292,7 @@ export function handle_e_unstake(event: e_unstake): void {
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.isBanlist = false;
-                newcustomer.refer = "#";
+                newcustomer.refer = "#1";
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
@@ -305,7 +305,7 @@ export function handle_e_unstake(event: e_unstake): void {
         let contrct = event.params.unstakestate.div(BI_128);
         let profit = event.params.unstakestate.mod(BI_128);
         let stakevalue = event.params.stakestate.div(BI_128);
-        let stakecontruct = event.params.stakestate.div(BI_128);
+        let stakecontruct = event.params.stakestate.mod(BI_128);
         newcustomer.getfromstake = newcustomer.getfromstake.plus(profit);
         newcustomer.stakettsvalue = stakevalue;
         newcustomer.stakettscontruct = stakecontruct;
@@ -333,7 +333,7 @@ export function handle_e_unstake(event: e_unstake): void {
         ttsenv.actual_amount = ttsenv.actual_amount.plus(profit);
         ttsenv.poolcontruct = ttsenv.poolcontruct.minus(contrct);
         ttsenv.poolvalue = ttsenv.poolvalue.minus(proofvalue);
-        ttsenv.poolasset = ttsenv.poolvalue.minus(profit).minus(contrct);
+        ttsenv.poolasset = ttsenv.poolasset.minus(profit).minus(contrct);
         ttsenv.save();
 }
 export function handle_e_updatepool(event: e_updatepool): void {
