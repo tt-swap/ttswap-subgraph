@@ -238,6 +238,8 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         meta_pargood.totalDisinvestCount = ZERO_BI;
         meta_pargood.goodCount = BigInt.fromU32(1);
         meta_pargood.txCount = ONE_BI;
+        meta_pargood.name_lower = meta_pargood.tokenname.toLowerCase();
+        meta_pargood.symbol_lower = meta_pargood.tokensymbol.toLowerCase();
         meta_pargood.save();
 
         let null_pargood = new ParGoodState("0");
@@ -262,6 +264,8 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         null_pargood.totalDisinvestCount = ZERO_BI;
         null_pargood.goodCount = BigInt.fromU32(1);
         null_pargood.txCount = ONE_BI;
+        null_pargood.name_lower = "#";
+        null_pargood.symbol_lower = "#";
         null_pargood.save();
 
         let meta_good = new GoodState(metaid);
@@ -292,6 +296,8 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         meta_good.modifiedTime = modifiedTime;
         meta_good.txCount = ONE_BI;
         meta_good.create_time = modifiedTime;
+        meta_good.name_lower = meta_good.tokenname.toLowerCase();
+        meta_good.symbol_lower = meta_good.tokensymbol.toLowerCase();
         meta_good.save();
 
         let null_good = new GoodState("0");
@@ -322,6 +328,8 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         null_good.modifiedTime = modifiedTime;
         null_good.txCount = ZERO_BI;
         null_good.create_time = modifiedTime;
+        null_good.name_lower = null_good.tokenname.toLowerCase();
+        null_good.symbol_lower = null_good.tokensymbol.toLowerCase();
         null_good.save();
 
         let proof = new ProofState(event.params._proofNo.toString());
@@ -525,6 +533,11 @@ export function handle_e_initGood(event: e_initGood): void {
                 normal_pargood.totalDisinvestCount = ZERO_BI;
                 normal_pargood.goodCount = ZERO_BI;
                 normal_pargood.txCount = ZERO_BI;
+
+                normal_pargood.name_lower =
+                        normal_pargood.tokenname.toLowerCase();
+                normal_pargood.symbol_lower =
+                        normal_pargood.tokensymbol.toLowerCase();
                 marketstate.pargoodCount =
                         marketstate.pargoodCount.plus(ONE_BI);
         }
@@ -576,6 +589,9 @@ export function handle_e_initGood(event: e_initGood): void {
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
                 normal_good.create_time = modifiedTime;
+                normal_good.name_lower = normal_good.tokenname.toLowerCase();
+                normal_good.symbol_lower =
+                        normal_good.tokensymbol.toLowerCase();
         }
         normal_good.erc20Address = erc20address;
         normal_good.goodConfig = goodConfig;
@@ -635,6 +651,8 @@ export function handle_e_initGood(event: e_initGood): void {
                 value_good.modifiedTime = ZERO_BI;
                 value_good.txCount = ZERO_BI;
                 value_good.create_time = ZERO_BI;
+                value_good.name_lower = value_good.tokenname.toLowerCase();
+                value_good.symbol_lower = value_good.tokensymbol.toLowerCase();
         }
         let value_pargood = ParGoodState.load(value_good.erc20Address);
         if (value_pargood === null) {
@@ -660,6 +678,10 @@ export function handle_e_initGood(event: e_initGood): void {
                 value_pargood.totalDisinvestCount = ZERO_BI;
                 value_pargood.goodCount = ZERO_BI;
                 value_pargood.txCount = ZERO_BI;
+                value_pargood.name_lower =
+                        value_pargood.tokenname.toLowerCase();
+                value_pargood.symbol_lower =
+                        value_pargood.tokensymbol.toLowerCase();
         }
 
         value_pargood.currentValue = value_pargood.currentValue.minus(
@@ -869,6 +891,8 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
                 from_good.create_time = ZERO_BI;
+                from_good.name_lower = "#";
+                from_good.symbol_lower = "#";
         }
         let from_pargood = ParGoodState.load(from_good.erc20Address);
         if (from_pargood === null) {
@@ -893,6 +917,8 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 from_pargood.totalDisinvestCount = ZERO_BI;
                 from_pargood.goodCount = ZERO_BI;
                 from_pargood.txCount = ZERO_BI;
+                from_pargood.name_lower = "#";
+                from_pargood.symbol_lower = "#";
         }
         from_pargood.currentValue = from_pargood.currentValue.minus(
                 from_good.currentValue
@@ -973,6 +999,8 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 to_good.modifiedTime = ZERO_BI;
                 to_good.txCount = ZERO_BI;
                 to_good.create_time = ZERO_BI;
+                to_good.name_lower = "#";
+                to_good.symbol_lower = "#";
         }
         let to_pargood = ParGoodState.load(to_good.erc20Address);
         if (to_pargood === null) {
@@ -997,6 +1025,8 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 to_pargood.totalDisinvestCount = ZERO_BI;
                 to_pargood.goodCount = ZERO_BI;
                 to_pargood.txCount = ZERO_BI;
+                to_pargood.name_lower = "#";
+                to_pargood.symbol_lower = "#";
         }
         to_pargood.currentValue = to_pargood.currentValue.minus(
                 to_good.currentValue
@@ -1182,6 +1212,8 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 from_good.modifiedTime = ZERO_BI;
                 from_good.txCount = ZERO_BI;
                 from_good.create_time = ZERO_BI;
+                from_good.name_lower = "#";
+                from_good.symbol_lower = "#";
         }
         let from_pargood = ParGoodState.load(from_good.erc20Address);
         if (from_pargood === null) {
@@ -1206,6 +1238,8 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 from_pargood.totalDisinvestCount = ZERO_BI;
                 from_pargood.goodCount = ZERO_BI;
                 from_pargood.txCount = ZERO_BI;
+                from_pargood.name_lower = "#";
+                from_pargood.symbol_lower = "#";
         }
         from_pargood.currentValue = from_pargood.currentValue.minus(
                 from_good.currentValue
@@ -1286,6 +1320,8 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 to_good.modifiedTime = ZERO_BI;
                 to_good.txCount = ZERO_BI;
                 to_good.create_time = ZERO_BI;
+                to_good.name_lower = "#";
+                to_good.symbol_lower = "#";
         }
         let to_pargood = ParGoodState.load(to_good.erc20Address);
         if (to_pargood === null) {
@@ -1310,6 +1346,8 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 to_pargood.totalDisinvestCount = ZERO_BI;
                 to_pargood.goodCount = ZERO_BI;
                 to_pargood.txCount = ZERO_BI;
+                to_pargood.name_lower = "#";
+                to_pargood.symbol_lower = "#";
         }
         to_pargood.currentValue = to_pargood.currentValue.minus(
                 to_good.currentValue
@@ -1511,6 +1549,8 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
                 normal_good.create_time = ZERO_BI;
+                normal_good.name_lower = "#";
+                normal_good.symbol_lower = "#";
         }
 
         let normal_pargood = ParGoodState.load(normal_good.erc20Address);
@@ -1535,6 +1575,8 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 normal_pargood.totalInvestCount = ZERO_BI;
                 normal_pargood.totalDisinvestCount = ZERO_BI;
                 normal_pargood.goodCount = ZERO_BI;
+                normal_pargood.name_lower = "#";
+                normal_pargood.symbol_lower = "#";
         }
 
         normal_pargood.contructFee = normal_pargood.contructFee.minus(
@@ -1590,6 +1632,8 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         value_good.modifiedTime = ZERO_BI;
                         value_good.txCount = ZERO_BI;
                         value_good.create_time = ZERO_BI;
+                        value_good.name_lower = "#";
+                        value_good.symbol_lower = "#";
                 }
 
                 let value_pargood = ParGoodState.load(value_good.erc20Address);
@@ -1616,6 +1660,8 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         value_pargood.totalInvestCount = ZERO_BI;
                         value_pargood.totalDisinvestCount = ZERO_BI;
                         value_pargood.goodCount = ZERO_BI;
+                        value_pargood.name_lower = "#";
+                        value_pargood.symbol_lower = "#";
                 }
 
                 value_pargood.contructFee = value_pargood.contructFee.minus(
@@ -1883,6 +1929,8 @@ export function handle_e_investGood(event: e_investGood): void {
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
                 normal_good.create_time = ZERO_BI;
+                normal_good.name_lower = "#";
+                normal_good.symbol_lower = "#";
         }
 
         let normal_pargood = ParGoodState.load(normal_good.erc20Address);
@@ -1907,6 +1955,8 @@ export function handle_e_investGood(event: e_investGood): void {
                 normal_pargood.totalInvestCount = ZERO_BI;
                 normal_pargood.totalDisinvestCount = ZERO_BI;
                 normal_pargood.goodCount = ZERO_BI;
+                normal_pargood.name_lower = "#";
+                normal_pargood.symbol_lower = "#";
         }
         normal_pargood.currentValue = normal_pargood.currentValue.minus(
                 normal_good.currentValue
@@ -2134,6 +2184,8 @@ export function handle_e_investGood(event: e_investGood): void {
                         value_good.modifiedTime = ZERO_BI;
                         value_good.txCount = ZERO_BI;
                         value_good.create_time = ZERO_BI;
+                        value_good.name_lower = "#";
+                        value_good.symbol_lower = "#";
                 }
 
                 let value_pargood = ParGoodState.load(value_good.erc20Address);
@@ -2160,6 +2212,8 @@ export function handle_e_investGood(event: e_investGood): void {
                         value_pargood.totalInvestCount = ZERO_BI;
                         value_pargood.totalDisinvestCount = ZERO_BI;
                         value_pargood.goodCount = ZERO_BI;
+                        value_pargood.name_lower = "#";
+                        value_pargood.symbol_lower = "#";
                 }
 
                 value_pargood.currentValue = value_pargood.currentValue.minus(
@@ -2519,6 +2573,8 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
                 normal_good.create_time = ZERO_BI;
+                normal_good.name_lower = "#";
+                normal_good.symbol_lower = "#";
         }
 
         let normal_pargood = ParGoodState.load(normal_good.erc20Address);
@@ -2543,6 +2599,8 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 normal_pargood.totalInvestCount = ZERO_BI;
                 normal_pargood.totalDisinvestCount = ZERO_BI;
                 normal_pargood.goodCount = ZERO_BI;
+                normal_pargood.name_lower = "#";
+                normal_pargood.symbol_lower = "#";
         }
         normal_pargood.currentValue = normal_pargood.currentValue.minus(
                 normal_good.currentValue
@@ -2695,6 +2753,8 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         value_good.modifiedTime = ZERO_BI;
                         value_good.txCount = ZERO_BI;
                         value_good.create_time = ZERO_BI;
+                        value_good.name_lower = "#";
+                        value_good.symbol_lower = "#";
                 }
 
                 let value_pargood = ParGoodState.load(value_good.erc20Address);
@@ -2721,6 +2781,8 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         value_pargood.totalInvestCount = ZERO_BI;
                         value_pargood.totalDisinvestCount = ZERO_BI;
                         value_pargood.goodCount = ZERO_BI;
+                        value_pargood.name_lower = "#";
+                        value_pargood.symbol_lower = "#";
                 }
                 value_pargood.currentValue = value_pargood.currentValue.minus(
                         value_good.currentValue
@@ -3171,6 +3233,8 @@ export function handle_e_goodWelfare(event: e_goodWelfare): void {
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
                 normal_good.create_time = ZERO_BI;
+                normal_good.name_lower = "#";
+                normal_good.symbol_lower = "#";
         }
 
         let normal_pargood = ParGoodState.load(normal_good.erc20Address);
@@ -3195,6 +3259,8 @@ export function handle_e_goodWelfare(event: e_goodWelfare): void {
                 normal_pargood.totalInvestCount = ZERO_BI;
                 normal_pargood.totalDisinvestCount = ZERO_BI;
                 normal_pargood.goodCount = ZERO_BI;
+                normal_pargood.name_lower = "#";
+                normal_pargood.symbol_lower = "#";
         }
         normal_pargood.feeQuantity = normal_pargood.feeQuantity.minus(
                 normal_good.feeQuantity
@@ -3238,6 +3304,8 @@ export function handle_e_changegoodowner(event: e_changegoodowner): void {
                 normal_good.modifiedTime = ZERO_BI;
                 normal_good.txCount = ZERO_BI;
                 normal_good.create_time = ZERO_BI;
+                normal_good.name_lower = "#";
+                normal_good.symbol_lower = "#";
         }
         normal_good.owner = event.params.to.toHexString();
         normal_good.save();
