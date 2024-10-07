@@ -3,7 +3,7 @@ import { BigInt, BigDecimal, Address } from "@graphprotocol/graph-ts";
 import { TTSwap_Market as MarketContract } from "../../generated/TTSwap_Market/TTSwap_Market";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
-export const MARKET_ADDRESS = "0xd2A9dcc51488f7b9c1C7a11D44F158babA543614";
+export const MARKET_ADDRESS = "0x1F686ccf99E5FdC3A6d605857b6288F25BdfDc02";
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);

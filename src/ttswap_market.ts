@@ -161,32 +161,6 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
 
         log_CustomerData(newcustomer, modifiedTime);
 
-        // Initialize or update tts_env
-        let ttsenv = tts_env.load("1");
-        if (ttsenv === null) {
-                ttsenv = new tts_env("1");
-                ttsenv.poolvalue = trade_value;
-                ttsenv.poolasset = stakecontruct;
-                ttsenv.poolcontruct = stakecontruct;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
-                ttsenv.dao_admin = "#";
-                ttsenv.marketcontract = "#";
-                ttsenv.usdtcontract = "#";
-                ttsenv.publicsell = ZERO_BI;
-                ttsenv.lsttime = ZERO_BI;
-                ttsenv.actual_amount = ZERO_BI;
-                ttsenv.shares_index = ZERO_BI;
-                ttsenv.left_share = ZERO_BI;
-                ttsenv.usdt_amount = ZERO_BI;
-                ttsenv.lasttime = ZERO_BI;
-        } else {
-                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
-                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
-                ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
-        }
-        ttsenv.save();
-
         // Initialize or update market state
         let marketstate = MarketState.load(MARKET_ADDRESS);
         if (marketstate === null) {
@@ -377,6 +351,30 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         tx.recipent = event.transaction.from.toHexString();
         tx.hash = event.transaction.hash.toHexString();
         tx.save();
+        let ttsenv = tts_env.load("1");
+        if (ttsenv === null) {
+                ttsenv = new tts_env("1");
+                ttsenv.poolvalue = ZERO_BI;
+                ttsenv.poolasset = ZERO_BI;
+                ttsenv.poolcontruct = ZERO_BI;
+                ttsenv.normalgoodid = ZERO_BI;
+                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.dao_admin = "#";
+                ttsenv.marketcontract = "#";
+                ttsenv.usdtcontract = "#";
+                ttsenv.publicsell = ZERO_BI;
+                ttsenv.lsttime = ZERO_BI;
+                ttsenv.actual_amount = ZERO_BI;
+                ttsenv.shares_index = ZERO_BI;
+                ttsenv.left_share = ZERO_BI;
+                ttsenv.usdt_amount = ZERO_BI;
+                ttsenv.lasttime = ZERO_BI;
+        }
+        ttsenv.lasttime = event.block.timestamp;
+        ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+        ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
+        ttsenv.save();
 
         log_GoodData(meta_good, modifiedTime);
         log_ParGoodData(meta_pargood, modifiedTime);
@@ -484,31 +482,6 @@ export function handle_e_initGood(event: e_initGood): void {
 
         log_CustomerData(newcustomer, modifiedTime);
 
-        let ttsenv = tts_env.load("1");
-        if (ttsenv === null) {
-                ttsenv = new tts_env("1");
-                ttsenv.poolvalue = ZERO_BI;
-                ttsenv.poolasset = ZERO_BI;
-                ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
-                ttsenv.dao_admin = "#";
-                ttsenv.marketcontract = "#";
-                ttsenv.usdtcontract = "#";
-                ttsenv.publicsell = ZERO_BI;
-                ttsenv.lsttime = ZERO_BI;
-                ttsenv.actual_amount = ZERO_BI;
-                ttsenv.shares_index = ZERO_BI;
-                ttsenv.left_share = ZERO_BI;
-                ttsenv.usdt_amount = ZERO_BI;
-                ttsenv.lasttime = ZERO_BI;
-        }
-
-        ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
-        ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
-        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
-        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
-        ttsenv.save();
         let normal_pargood = ParGoodState.load(erc20address);
         if (normal_pargood === null) {
                 normal_pargood = new ParGoodState(erc20address);
@@ -810,6 +783,32 @@ export function handle_e_initGood(event: e_initGood): void {
         tx.recipent = event.transaction.from.toHexString();
         tx.hash = event.transaction.hash.toHexString();
         tx.save();
+
+        let ttsenv = tts_env.load("1");
+        if (ttsenv === null) {
+                ttsenv = new tts_env("1");
+                ttsenv.poolvalue = ZERO_BI;
+                ttsenv.poolasset = ZERO_BI;
+                ttsenv.poolcontruct = ZERO_BI;
+                ttsenv.normalgoodid = ZERO_BI;
+                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.dao_admin = "#";
+                ttsenv.marketcontract = "#";
+                ttsenv.usdtcontract = "#";
+                ttsenv.publicsell = ZERO_BI;
+                ttsenv.lsttime = ZERO_BI;
+                ttsenv.actual_amount = ZERO_BI;
+                ttsenv.shares_index = ZERO_BI;
+                ttsenv.left_share = ZERO_BI;
+                ttsenv.usdt_amount = ZERO_BI;
+                ttsenv.lasttime = ZERO_BI;
+        }
+        ttsenv.lasttime = event.block.timestamp;
+        ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+        ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
+        ttsenv.poolvalue = ttsenv.poolvalue.plus(trade_value);
+        ttsenv.save();
 
         log_GoodData(value_good, modifiedTime);
         log_ParGoodData(value_pargood, modifiedTime);
@@ -2129,32 +2128,6 @@ export function handle_e_investGood(event: e_investGood): void {
                 newcustomer.save();
                 log_CustomerData(newcustomer, event.block.timestamp);
 
-                let ttsenv = tts_env.load("1");
-                if (ttsenv === null) {
-                        ttsenv = new tts_env("1");
-                        ttsenv.poolvalue = ZERO_BI;
-                        ttsenv.poolasset = ZERO_BI;
-                        ttsenv.poolcontruct = ZERO_BI;
-                        ttsenv.normalgoodid = ZERO_BI;
-                        ttsenv.valuegoodid = ZERO_BI;
-                        ttsenv.dao_admin = "#";
-                        ttsenv.marketcontract = "#";
-                        ttsenv.usdtcontract = "#";
-                        ttsenv.publicsell = ZERO_BI;
-                        ttsenv.lsttime = ZERO_BI;
-                        ttsenv.actual_amount = ZERO_BI;
-                        ttsenv.shares_index = ZERO_BI;
-                        ttsenv.left_share = ZERO_BI;
-                        ttsenv.usdt_amount = ZERO_BI;
-                        ttsenv.lasttime = ZERO_BI;
-                }
-
-                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
-                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
-                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
-                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
-                ttsenv.save();
-
                 let value_good = GoodState.load(valuegoodid);
                 if (value_good === null) {
                         value_good = new GoodState(valuegoodid);
@@ -2387,6 +2360,31 @@ export function handle_e_investGood(event: e_investGood): void {
                 proof.good2ContructFee = value_contructFee;
                 proof.good2Quantity = value_Quantity;
                 proof.save();
+                let ttsenv = tts_env.load("1");
+                if (ttsenv === null) {
+                        ttsenv = new tts_env("1");
+                        ttsenv.poolvalue = ZERO_BI;
+                        ttsenv.poolasset = ZERO_BI;
+                        ttsenv.poolcontruct = ZERO_BI;
+                        ttsenv.normalgoodid = ZERO_BI;
+                        ttsenv.valuegoodid = ZERO_BI;
+                        ttsenv.dao_admin = "#";
+                        ttsenv.marketcontract = "#";
+                        ttsenv.usdtcontract = "#";
+                        ttsenv.publicsell = ZERO_BI;
+                        ttsenv.lsttime = ZERO_BI;
+                        ttsenv.actual_amount = ZERO_BI;
+                        ttsenv.shares_index = ZERO_BI;
+                        ttsenv.left_share = ZERO_BI;
+                        ttsenv.usdt_amount = ZERO_BI;
+                        ttsenv.lasttime = ZERO_BI;
+                }
+                ttsenv.lasttime = event.block.timestamp;
+                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
+                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
+                ttsenv.save();
 
                 log_GoodData(value_good, event.block.timestamp);
                 log_ParGoodData(value_pargood, event.block.timestamp);
@@ -2435,32 +2433,6 @@ export function handle_e_investGood(event: e_investGood): void {
                 newcustomer.save();
 
                 log_CustomerData(newcustomer, event.block.timestamp);
-                let ttsenv = tts_env.load("1");
-                if (ttsenv === null) {
-                        ttsenv = new tts_env("1");
-                        ttsenv.poolvalue = ZERO_BI;
-                        ttsenv.poolasset = ZERO_BI;
-                        ttsenv.poolcontruct = ZERO_BI;
-                        ttsenv.normalgoodid = ZERO_BI;
-                        ttsenv.valuegoodid = ZERO_BI;
-                        ttsenv.dao_admin = "#";
-                        ttsenv.marketcontract = "#";
-                        ttsenv.usdtcontract = "#";
-                        ttsenv.publicsell = ZERO_BI;
-                        ttsenv.lsttime = ZERO_BI;
-                        ttsenv.actual_amount = ZERO_BI;
-                        ttsenv.shares_index = ZERO_BI;
-                        ttsenv.left_share = ZERO_BI;
-                        ttsenv.usdt_amount = ZERO_BI;
-                        ttsenv.lasttime = ZERO_BI;
-                }
-
-                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
-                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
-                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
-                ttsenv.save();
-
-                log_CustomerData(newcustomer, event.block.timestamp);
                 marketstate.totalInvestValue =
                         marketstate.totalInvestValue.minus(proof.proofValue);
                 marketstate.totalInvestValue =
@@ -2504,6 +2476,30 @@ export function handle_e_investGood(event: e_investGood): void {
                 proof.good2ContructFee = ZERO_BI;
                 proof.good2Quantity = ZERO_BI;
                 proof.save();
+                let ttsenv = tts_env.load("1");
+                if (ttsenv === null) {
+                        ttsenv = new tts_env("1");
+                        ttsenv.poolvalue = ZERO_BI;
+                        ttsenv.poolasset = ZERO_BI;
+                        ttsenv.poolcontruct = ZERO_BI;
+                        ttsenv.normalgoodid = ZERO_BI;
+                        ttsenv.valuegoodid = ZERO_BI;
+                        ttsenv.dao_admin = "#";
+                        ttsenv.marketcontract = "#";
+                        ttsenv.usdtcontract = "#";
+                        ttsenv.publicsell = ZERO_BI;
+                        ttsenv.lsttime = ZERO_BI;
+                        ttsenv.actual_amount = ZERO_BI;
+                        ttsenv.shares_index = ZERO_BI;
+                        ttsenv.left_share = ZERO_BI;
+                        ttsenv.usdt_amount = ZERO_BI;
+                        ttsenv.lasttime = ZERO_BI;
+                }
+                ttsenv.lasttime = event.block.timestamp;
+                ttsenv.poolasset = ttsenv.poolasset.plus(stakecontruct);
+                ttsenv.poolcontruct = ttsenv.poolcontruct.plus(stakecontruct);
+                ttsenv.poolvalue = ttsenv.poolvalue.plus(invest_value);
+                ttsenv.save();
 
                 log_GoodData(normal_good, event.block.timestamp);
                 log_ParGoodData(normal_pargood, event.block.timestamp);
