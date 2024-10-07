@@ -331,9 +331,9 @@ export function handle_e_unstake(event: e_unstake): void {
                 ttsenv.lasttime = ZERO_BI;
         }
         ttsenv.actual_amount = ttsenv.actual_amount.plus(profit);
-        ttsenv.poolcontruct = ttsenv.poolcontruct.minus(contrct);
-        ttsenv.poolvalue = ttsenv.poolvalue.minus(proofvalue);
-        ttsenv.poolasset = ttsenv.poolasset.minus(profit).minus(contrct);
+        ttsenv.poolcontruct = event.params.poolstate.mod(BI_128);
+        ttsenv.poolvalue = event.params.proofvalue.mod(BI_128);
+        ttsenv.poolasset = event.params.poolstate.div(BI_128);
         ttsenv.save();
 }
 export function handle_e_updatepool(event: e_updatepool): void {
@@ -357,12 +357,11 @@ export function handle_e_updatepool(event: e_updatepool): void {
                 ttsenv.lasttime = ZERO_BI;
         }
         ttsenv.lasttime = event.block.timestamp;
-        ttsenv.poolasset = event.params.poolstate.div(BI_128);
-        ttsenv.poolcontruct = event.params.poolstate.mod(BI_128);
-        ttsenv.poolvalue = event.params.stakestate.mod(BI_128);
+        ttsenv.lsttime = event.params.poolstate.div(BI_128);
+        ttsenv.poolasset = event.params.poolstate.mod(BI_128);
         ttsenv.save();
 }
-//
+
 export function handle_e_syncChainStake(event: e_syncChainStake): void {
         let poolvalue = event.params.proofstate.div(BI_128);
         let construct = event.params.proofstate.mod(BI_128);
