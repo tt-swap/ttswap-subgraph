@@ -2520,7 +2520,6 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
         let tts_stakeproof = proofstate.value.state.mod(BI_128);
         let normal_contructFee = proofstate.value.invest.div(BI_128);
         let normal_Quantity = proofstate.value.invest.mod(BI_128);
-        456;
         let normal_fee = event.params._normalgood.div(BI_128);
         let value_contructFee = proofstate.value.valueinvest.div(BI_128);
         let value_Quantity = proofstate.value.valueinvest.mod(BI_128);
@@ -2934,7 +2933,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "divest";
-                tx.transvalue = event.params._value;
+                tx.transvalue = event.params._value.div(BI_128);
                 tx.fromgood = normal_good.id;
                 tx.togood = value_good.id;
                 tx.frompargood = normal_pargood.id;
