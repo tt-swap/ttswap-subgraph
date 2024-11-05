@@ -46,7 +46,6 @@ type MarketState @entity {
   #market address
   id: ID!
   marketConfig: BigInt!
-  pargoodCount: BigInt!
   goodCount: BigInt!
   proofCount: BigInt!
   userCount: BigInt!
@@ -62,7 +61,6 @@ type MarketState @entity {
 type GoodState @entity {
   id: ID!
   goodseq:BigInt!
-  pargood:ParGoodState!
   isvaluegood:Boolean!
   tokenname: String!
   tokensymbol: String!
@@ -94,34 +92,6 @@ type GoodState @entity {
   goodData: [GoodData!] @derivedFrom(field: "good")
 }
 
-type ParGoodState @entity {
-  id: ID!
-  tokenname: String!
-  tokensymbol: String!
-  tokentotalsuply: BigInt!
-  tokendecimals: BigInt!
-  erc20Address: String!
-  currentValue:BigInt!
-  currentQuantity:BigInt!
-  investValue:BigInt!
-  investQuantity:BigInt!
-  feeQuantity:BigInt!
-  contructFee: BigInt!
-  totalTradeQuantity:BigInt!
-  totalInvestQuantity:BigInt!
-  totalDisinvestQuantity:BigInt!
-  totalProfit: BigInt!
-  totalTradeCount: BigInt!
-  totalInvestCount: BigInt!
-  totalDisinvestCount: BigInt!
-  goodCount:BigInt!  
-  txCount:BigInt!
-  name_lower:String!
-  symbol_lower:String!
-  Goodlist:[GoodState!] @derivedFrom(field: "pargood")
-  # parGooddata:[ParGoodData!] @derivedFrom(field: "pargood")
-}
-
 type ProofState @entity {
   id: ID!
   owner: String!
@@ -143,8 +113,6 @@ type Transaction @entity {
   transvalue:BigInt!
   fromgood:GoodState!
   togood:GoodState!
-  frompargood:ParGoodState!
-  topargood:ParGoodState!
   fromgoodQuanity:BigInt!
   fromgoodfee:BigInt!
   togoodQuantity:BigInt!
@@ -189,36 +157,6 @@ type GoodData @entity {
 
 
 
-type ParGoodData @entity {
-  # hour:GoodId+h+minute (60 rows)
-  # day: GoodId+d+20minute (72 rows)
-  # week:GoodId+w+3hour  (56 rows)
-  # month:GoodId+m+12hour (62 rows)
-  # year: GoodId+y+5day (73)
-  id: ID!
-  pargood: ParGoodState!
-  timetype:String!
-  modifiedTime: BigInt!
-  decimals: BigInt!
-  currentValue:BigInt!
-  currentQuantity:BigInt!
-  investValue:BigInt!
-  investQuantity:BigInt!
-  feeQuantity:BigInt!
-  contructFee:BigInt!
-  totalTradeQuantity:BigInt!
-  totalInvestQuantity:BigInt!
-  totalDisinvestQuantity:BigInt!
-  totalProfit:BigInt!
-  totalTradeCount: BigInt!
-  totalInvestCount: BigInt!
-  totalDisinvestCount: BigInt!
-  open: BigInt!
-  high: BigInt!
-  low:  BigInt!
-  close: BigInt!
-}
-
 type MarketData @entity {
   # hour:h+minute (60 rows)
   # day: d+20minute (72 rows)
@@ -228,7 +166,6 @@ type MarketData @entity {
   id: ID!
   timetype:String!
   marketConfig: BigInt!
-  pargoodCount: BigInt!
   goodCount: BigInt!
   proofCount: BigInt!
   userCount: BigInt!
@@ -248,8 +185,8 @@ type tts_env  @entity {
   poolvalue:BigInt!
   poolasset:BigInt!
   poolcontruct:BigInt!
-  normalgoodid:BigInt!
-  valuegoodid:BigInt!
+  normalgoodid:String!
+  valuegoodid:String!
   dao_admin:String!
   marketcontract:String!
   usdtcontract:String!

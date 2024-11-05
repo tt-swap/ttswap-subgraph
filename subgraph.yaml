@@ -22,11 +22,9 @@ dataSources:
         - CustomerData
         - MarketState
         - GoodState
-        - ParGoodState
         - ProofState
         - Transaction
         - GoodData
-        - ParGoodData
         - MarketData
         - tts_env
       abis:
@@ -39,38 +37,35 @@ dataSources:
         - name: ERC20SymbolBytes
           file: ./abis/ERC20SymbolBytes.json
       eventHandlers:
-        - event: e_initMetaGood(uint256,uint256,uint256,address,uint256,uint256)
+        - event: e_initMetaGood(uint256,address,uint256,uint256,uint256)
           handler: handle_e_initMetaGood
-        - event: e_initGood(uint256,uint256,uint256,address,uint256,uint256,uint256,uint256)
+        - event: e_initGood(uint256,address,address,uint256,uint256,uint256,uint256)
           handler: handle_e_initGood
-        - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
+        - event: e_buyGood(indexed address,indexed address,address,uint128,uint256,uint256)
           handler: handle_e_buyGood
-        - event: e_buyGoodForPay(indexed uint256,indexed
-            uint256,address,address,uint128,uint256,uint256)
+        - event: e_buyGoodForPay(indexed address,indexed address,address,address,uint128,uint256,uint256)
           handler: handle_e_buyGoodForPay
-        - event: e_investGood(indexed uint256,uint256,uint256,uint256,uint256,uint256)
+        - event: e_investGood(indexed uint256,address,address,uint256,uint256,uint256)
           handler: handle_e_investGood
-        - event: e_disinvestProof(indexed uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+        - event: e_disinvestProof(indexed uint256,address,address,uint256,uint256,uint256,uint256)
           handler: handle_e_disinvestProof
-        - event: e_collectProof(indexed uint256,uint256,uint256,uint256)
+        - event: e_collectProof(indexed uint256,address,address,uint256)
           handler: handle_e_collectProof
         - event: e_setMarketConfig(uint256)
           handler: handle_e_setMarketConfig
-        - event: e_changeOwner(indexed uint256,address,address)
-          handler: handle_e_changeOwner
-        - event: e_updateGoodConfig(uint256,uint256)
+        - event: e_updateGoodConfig(address,uint256)
           handler: handle_e_updateGoodConfig
-        - event: e_modifyGoodConfig(uint256,uint256)
+        - event: e_modifyGoodConfig(address,uint256)
           handler: handle_e_modifyGoodConfig
         - event: e_addbanlist(address)
           handler: handle_e_addbanlist
         - event: e_removebanlist(address)
           handler: handle_e_removebanlist
-        - event: e_collectcommission(uint256[],uint256[])
+        - event: e_collectcommission(address[],uint256[])
           handler: handle_e_collectcommission
-        - event: e_goodWelfare(uint256,uint128)
+        - event: e_goodWelfare(address,uint128)
           handler: handle_e_goodWelfare
-        - event: e_changegoodowner(uint256,address)
+        - event: e_changegoodowner(address,address)
           handler: handle_e_changegoodowner
         - event: e_transferdel(uint256,uint256)
           handler: handle_e_transferdel
@@ -100,7 +95,7 @@ dataSources:
           handler: handle_e_addreferer
         - event: e_publicsell(uint256,uint256)
           handler: handle_e_publicsell
-        - event: e_setenv(uint256,uint256,address)
+        - event: e_setenv(address,address,address)
           handler: handle_e_setenv
         - event: e_setdaoadmin(address)
           handler: handle_e_setdaoadmin
