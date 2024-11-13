@@ -21,7 +21,7 @@ export function log_CustomerData(
                 customerData_week.tradeCount = customer.tradeCount;
                 customerData_week.investCount = customer.investCount;
                 customerData_week.disinvestCount = customer.disinvestCount;
-                customerData_week.isBanlist = customer.isBanlist;
+                customerData_week.userConfig = customer.userConfig;
                 customerData_week.customerno = customer.customerno;
                 customerData_week.totalprofitvalue = customer.totalprofitvalue;
                 customerData_week.totalcommissionvalue =

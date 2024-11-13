@@ -213,7 +213,7 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
+                newcustomer.userConfig = ZERO_BI;
                 newcustomer.refer = "#";
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
@@ -237,7 +237,7 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 referralcus.tradeCount = ZERO_BI;
                 referralcus.investCount = ZERO_BI;
                 referralcus.disinvestCount = ZERO_BI;
-                referralcus.isBanlist = false;
+                referralcus.userConfig = ZERO_BI;
                 referralcus.refer = "#";
                 referralcus.customerno = ZERO_BI;
                 referralcus.totalprofitvalue = ZERO_BI;
@@ -291,8 +291,8 @@ export function handle_e_unstake(event: e_unstake): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
-                newcustomer.refer = "#1";
+                newcustomer.userConfig = ZERO_BI;
+                newcustomer.refer = "#";
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
@@ -301,14 +301,13 @@ export function handle_e_unstake(event: e_unstake): void {
                 newcustomer.stakettscontruct = ZERO_BI;
                 newcustomer.getfromstake = ZERO_BI;
         }
-        let proofvalue = event.params.proofvalue;
-        let contrct = event.params.unstakestate.div(BI_128);
+        let proofvalue = event.params.proofvalue.div(BI_128);
+        let proofcontrunct = event.params.proofvalue.mod(BI_128);
+
         let profit = event.params.unstakestate.mod(BI_128);
-        let stakevalue = event.params.stakestate.div(BI_128);
-        let stakecontruct = event.params.stakestate.mod(BI_128);
         newcustomer.getfromstake = newcustomer.getfromstake.plus(profit);
-        newcustomer.stakettsvalue = stakevalue;
-        newcustomer.stakettscontruct = stakecontruct;
+        newcustomer.stakettsvalue = proofvalue;
+        newcustomer.stakettscontruct = proofcontrunct;
         newcustomer.save();
 
         let ttsenv = tts_env.load("1");
@@ -332,7 +331,7 @@ export function handle_e_unstake(event: e_unstake): void {
         }
         ttsenv.actual_amount = ttsenv.actual_amount.plus(profit);
         ttsenv.poolcontruct = event.params.poolstate.mod(BI_128);
-        ttsenv.poolvalue = event.params.proofvalue.mod(BI_128);
+        ttsenv.poolvalue = event.params.stakestate.mod(BI_128);
         ttsenv.poolasset = event.params.poolstate.div(BI_128);
         ttsenv.save();
 }

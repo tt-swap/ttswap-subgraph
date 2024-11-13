@@ -8,7 +8,7 @@ type Customer @entity {
   tradeCount: BigInt!
   investCount: BigInt!
   disinvestCount: BigInt!
-  isBanlist:Boolean!
+  userConfig:BigInt!
   customerno:BigInt!
   totalprofitvalue:BigInt!
   totalcommissionvalue:BigInt!
@@ -30,7 +30,7 @@ type CustomerData @entity {
   tradeCount: BigInt!
   investCount: BigInt!
   disinvestCount: BigInt!
-  isBanlist:Boolean!
+  userConfig:BigInt!
   customerno:BigInt!
   totalprofitvalue:BigInt!
   totalcommissionvalue:BigInt!
@@ -46,6 +46,7 @@ type MarketState @entity {
   #market address
   id: ID!
   marketConfig: BigInt!
+  marketCreator:String!
   goodCount: BigInt!
   proofCount: BigInt!
   userCount: BigInt!
@@ -214,7 +215,6 @@ type tts_auth @entity{
   priv:BigInt!
 }
 
-
 type tts_chainstake @entity{
   id:ID! #chainid
   chainvalue:BigInt!
@@ -222,3 +222,28 @@ type tts_chainstake @entity{
   poolasset:BigInt!
   totalasset:BigInt!
 }
+
+type LimitOrderEnv @entity{
+  id:ID! #chainid
+  marketcreator:String!
+  maxfreeremain:BigInt!
+  maxslot:BigInt!
+  orderpointer:BigInt!
+  createcount:BigInt!
+  successcount:BigInt!
+  cleancount:BigInt!
+  removecount:BigInt!
+  existscount:BigInt!
+}
+
+type LimitOrders @entity{
+  id:ID!
+  orderstatus:BigInt!
+  orderowner:String!
+  fromerc20:String!
+  toerc20:String!
+  fromQuantity:BigInt!
+  toQuantity:BigInt!
+  altertimestamp:BigInt!
+}
+

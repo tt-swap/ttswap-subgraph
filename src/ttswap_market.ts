@@ -11,6 +11,7 @@ import {
 
 import {
         TTSwap_Market,
+        e_changemarketcreator,
         e_collectProof,
         e_buyGood,
         e_buyGoodForPay,
@@ -19,14 +20,12 @@ import {
         e_setMarketConfig,
         e_updateGoodConfig,
         e_modifyGoodConfig,
-        e_changeOwner,
+        e_changegoodowner,
         e_investGood,
         e_disinvestProof,
-        e_addbanlist,
-        e_removebanlist,
+        e_modifiedUserConfig,
         e_collectcommission,
         e_goodWelfare,
-        e_changegoodowner,
         e_transferdel,
 } from "../generated/TTSwap_Market/TTSwap_Market";
 
@@ -59,14 +58,17 @@ export function handle_e_setMarketConfig(event: e_setMarketConfig): void {
 }
 
 /**
- * Handles the event of changing good owner
- * @param event The e_changeOwner event
+ * Handles the event of setting market configuration
+ * @param event The e_setMarketConfig event
  */
-export function handle_e_changeOwner(event: e_changeOwner): void {
-        let from_good = GoodState.load(event.params._goodid.toHexString());
-        if (from_good !== null) {
-                from_good.owner = event.params._to.toHexString();
-                from_good.save();
+export function handle_e_changemarketcreator(
+        event: e_changemarketcreator
+): void {
+        let marketstate = MarketState.load(MARKET_ADDRESS);
+        if (marketstate !== null) {
+                marketstate.marketCreator =
+                        event.params._newmarketor.toHexString();
+                marketstate.save();
         }
 }
 
@@ -145,7 +147,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         newcustomer.tradeCount = ZERO_BI;
         newcustomer.investCount = BigInt.fromU32(1);
         newcustomer.disinvestCount = ZERO_BI;
-        newcustomer.isBanlist = false;
+        newcustomer.userConfig = ZERO_BI;
         newcustomer.customerno = BigInt.fromU32(1);
         newcustomer.totalprofitvalue = ZERO_BI;
         newcustomer.totalcommissionvalue = ZERO_BI;
@@ -396,7 +398,7 @@ export function handle_e_initGood(event: e_initGood): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
+                newcustomer.userConfig = ZERO_BI;
                 marketstate.userCount = marketstate.userCount.plus(ONE_BI);
                 newcustomer.customerno = marketstate.userCount;
                 newcustomer.totalprofitvalue = ZERO_BI;
@@ -779,7 +781,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
+                newcustomer.userConfig = ZERO_BI;
                 marketstate.userCount = marketstate.userCount.plus(ONE_BI);
                 newcustomer.customerno = marketstate.userCount;
                 newcustomer.totalprofitvalue = ZERO_BI;
@@ -988,7 +990,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
+                newcustomer.userConfig = ZERO_BI;
                 marketstate.userCount = marketstate.userCount.plus(ONE_BI);
                 newcustomer.customerno = marketstate.userCount;
                 newcustomer.totalprofitvalue = ZERO_BI;
@@ -1244,7 +1246,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         newcustomer.tradeCount = ZERO_BI;
                         newcustomer.investCount = ZERO_BI;
                         newcustomer.disinvestCount = ZERO_BI;
-                        newcustomer.isBanlist = false;
+                        newcustomer.userConfig = ZERO_BI;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
                         newcustomer.customerno = marketstate.userCount;
@@ -1334,7 +1336,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         newcustomer.tradeCount = ZERO_BI;
                         newcustomer.investCount = ZERO_BI;
                         newcustomer.disinvestCount = ZERO_BI;
-                        newcustomer.isBanlist = false;
+                        newcustomer.userConfig = ZERO_BI;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
                         newcustomer.customerno = marketstate.userCount;
@@ -1516,7 +1518,7 @@ export function handle_e_investGood(event: e_investGood): void {
                         newcustomer.tradeCount = ZERO_BI;
                         newcustomer.investCount = ZERO_BI;
                         newcustomer.disinvestCount = ZERO_BI;
-                        newcustomer.isBanlist = false;
+                        newcustomer.userConfig = ZERO_BI;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
                         newcustomer.customerno = marketstate.userCount;
@@ -1745,7 +1747,7 @@ export function handle_e_investGood(event: e_investGood): void {
                         newcustomer.tradeCount = ZERO_BI;
                         newcustomer.investCount = ZERO_BI;
                         newcustomer.disinvestCount = ZERO_BI;
-                        newcustomer.isBanlist = false;
+                        newcustomer.userConfig = ZERO_BI;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
                         newcustomer.customerno = marketstate.userCount;
@@ -2148,7 +2150,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.tradeCount = ZERO_BI;
                         newcustomer.investCount = ZERO_BI;
                         newcustomer.disinvestCount = ZERO_BI;
-                        newcustomer.isBanlist = false;
+                        newcustomer.userConfig = ZERO_BI;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
                         newcustomer.customerno = marketstate.userCount;
@@ -2206,7 +2208,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.tradeCount = ZERO_BI;
                         newcustomer.investCount = ZERO_BI;
                         newcustomer.disinvestCount = ZERO_BI;
-                        newcustomer.isBanlist = false;
+                        newcustomer.userConfig = ZERO_BI;
                         marketstate.userCount =
                                 marketstate.userCount.plus(ONE_BI);
                         newcustomer.customerno = marketstate.userCount;
@@ -2277,8 +2279,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
         }
 }
 
-// // banlist ok
-export function handle_e_addbanlist(event: e_addbanlist): void {
+export function handle_e_modifiedUserConfig(event: e_modifiedUserConfig): void {
         let newcustomer = Customer.load(event.params._user.toHexString());
         if (newcustomer === null) {
                 newcustomer = new Customer(event.params._user.toHexString());
@@ -2289,7 +2290,7 @@ export function handle_e_addbanlist(event: e_addbanlist): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
+                newcustomer.userConfig = ZERO_BI;
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
@@ -2298,35 +2299,9 @@ export function handle_e_addbanlist(event: e_addbanlist): void {
                 newcustomer.stakettsvalue = ZERO_BI;
                 newcustomer.stakettscontruct = ZERO_BI;
         }
-        newcustomer.isBanlist = true;
-
         newcustomer.lastoptime = event.block.timestamp;
-        newcustomer.save();
-        log_CustomerData(newcustomer, event.block.timestamp);
-}
 
-export function handle_e_removebanlist(event: e_removebanlist): void {
-        let newcustomer = Customer.load(event.params._user.toHexString());
-        if (newcustomer === null) {
-                newcustomer = new Customer(event.params._user.toHexString());
-                newcustomer.refer = "#";
-                newcustomer.tradeValue = ZERO_BI;
-                newcustomer.investValue = ZERO_BI;
-                newcustomer.disinvestValue = ZERO_BI;
-                newcustomer.tradeCount = ZERO_BI;
-                newcustomer.investCount = ZERO_BI;
-                newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
-                newcustomer.customerno = ZERO_BI;
-                newcustomer.totalprofitvalue = ZERO_BI;
-                newcustomer.totalcommissionvalue = ZERO_BI;
-                newcustomer.referralnum = ZERO_BI;
-                newcustomer.getfromstake = ZERO_BI;
-                newcustomer.stakettsvalue = ZERO_BI;
-                newcustomer.stakettscontruct = ZERO_BI;
-        }
-        newcustomer.isBanlist = true;
-        newcustomer.lastoptime = event.block.timestamp;
+        newcustomer.userConfig = event.params.config;
         newcustomer.save();
         log_CustomerData(newcustomer, event.block.timestamp);
 }
@@ -2343,7 +2318,7 @@ export function handle_e_collectcommission(event: e_collectcommission): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
+                newcustomer.userConfig = ZERO_BI;
                 newcustomer.refer = "#";
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
