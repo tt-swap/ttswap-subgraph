@@ -177,6 +177,8 @@ dataSources:
           handler: handle_e_deploy
         - event:  e_addmaxslot(uint256)
           handler: handle_e_addmaxslot
+        - event: e_takeOrderChips(uint256,uint256)
+          handler: handle_e_takeOrderChips
 
 
 

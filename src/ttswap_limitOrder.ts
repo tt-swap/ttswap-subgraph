@@ -4,17 +4,16 @@ import { Customer, LimitOrderEnv, LimitOrders } from "../generated/schema";
 
 import {
         e_addLimitOrder,
-        e_addauths,
         e_changemarketcreator,
         e_cleandeadorder,
         e_cleandeadorders,
         e_removeLimitOrder,
-        e_removeauths,
         e_setmaxfreeremain,
         e_takeOrder,
         e_updateLimitOrder,
         e_deploy,
         e_addmaxslot,
+        e_takeOrderChips,
 } from "../generated/TTSwap_LimitOrder/TTSwap_LimitOrder";
 
 import { LIMITORDER_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./util/constants";
@@ -95,7 +94,6 @@ export function handle_e_addLimitOrder(event: e_addLimitOrder): void {
 export function handle_e_takeOrder(event: e_takeOrder): void {
         let order = LimitOrders.load(event.params._orderid.toString());
         if (order !== null) {
-                order = new LimitOrders(event.params._orderid.toString());
                 order.orderstatus = ZERO_BI;
                 order.save();
         }
@@ -226,6 +224,25 @@ export function handle_e_addmaxslot(event: e_addmaxslot): void {
         let limitorderenv = LimitOrderEnv.load(dataSource.address().toString());
         if (limitorderenv !== null) {
                 limitorderenv.maxslot = event.params.param0;
+                limitorderenv.save();
+        }
+}
+
+/**
+ * Handles the event of setting market configuration
+ * @param event The e_takeOrder event
+ */
+export function handle_e_takeOrderChips(event: e_takeOrderChips): void {
+        let order = LimitOrders.load(event.params._orderid.toString());
+        if (order !== null) {
+                order.fromQuantity = event.params.amount.div(BI_128);
+                order.toQuantity = event.params.amount.mod(BI_128);
+                order.save();
+        }
+        let limitorderenv = LimitOrderEnv.load(dataSource.address().toString());
+        if (limitorderenv !== null) {
+                limitorderenv.successcount =
+                        limitorderenv.successcount.plus(ONE_BI);
                 limitorderenv.save();
         }
 }
