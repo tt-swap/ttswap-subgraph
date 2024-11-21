@@ -166,6 +166,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         if (marketstate === null) {
                 marketstate = new MarketState(MARKET_ADDRESS);
                 marketstate.marketConfig = ZERO_BI;
+                marketstate.marketCreator = "#";
                 marketstate.goodCount = ZERO_BI;
                 marketstate.proofCount = ZERO_BI;
                 marketstate.userCount = ZERO_BI;
@@ -177,6 +178,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
                 marketstate.totalTradeValue = ZERO_BI;
         }
 
+        marketstate.marketCreator = event.transaction.from.toHexString();
         marketstate.marketConfig = fetchMarketConfig(
                 Address.fromString(MARKET_ADDRESS)
         );
@@ -373,7 +375,7 @@ export function handle_e_initGood(event: e_initGood): void {
         if (marketstate === null) {
                 marketstate = new MarketState(MARKET_ADDRESS);
                 marketstate.marketConfig = ZERO_BI;
-
+                marketstate.marketCreator = "#";
                 marketstate.goodCount = ZERO_BI;
                 marketstate.proofCount = ZERO_BI;
                 marketstate.userCount = ZERO_BI;
@@ -651,6 +653,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 marketstate = new MarketState(MARKET_ADDRESS);
                 marketstate.marketConfig = ZERO_BI;
 
+                marketstate.marketCreator = "#";
                 marketstate.goodCount = ZERO_BI;
                 marketstate.proofCount = ZERO_BI;
                 marketstate.userCount = ZERO_BI;
@@ -860,6 +863,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 marketstate = new MarketState(MARKET_ADDRESS);
                 marketstate.marketConfig = ZERO_BI;
 
+                marketstate.marketCreator = "#";
                 marketstate.goodCount = ZERO_BI;
                 marketstate.proofCount = ZERO_BI;
                 marketstate.userCount = ZERO_BI;
@@ -1192,7 +1196,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 if (marketstate === null) {
                         marketstate = new MarketState(MARKET_ADDRESS);
                         marketstate.marketConfig = ZERO_BI;
-
+                        marketstate.marketCreator = "#";
                         marketstate.goodCount = ZERO_BI;
                         marketstate.proofCount = ZERO_BI;
                         marketstate.userCount = ZERO_BI;
@@ -1285,6 +1289,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         marketstate = new MarketState(MARKET_ADDRESS);
                         marketstate.marketConfig = ZERO_BI;
 
+                        marketstate.marketCreator = "#";
                         marketstate.goodCount = ZERO_BI;
                         marketstate.proofCount = ZERO_BI;
                         marketstate.userCount = ZERO_BI;
@@ -1493,6 +1498,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 marketstate = new MarketState(MARKET_ADDRESS);
                 marketstate.marketConfig = ZERO_BI;
 
+                marketstate.marketCreator = "#";
                 marketstate.goodCount = ZERO_BI;
                 marketstate.proofCount = ZERO_BI;
                 marketstate.userCount = ZERO_BI;
@@ -1973,6 +1979,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 marketstate = new MarketState(MARKET_ADDRESS);
                 marketstate.marketConfig = ZERO_BI;
 
+                marketstate.marketCreator = "#";
                 marketstate.goodCount = ZERO_BI;
                 marketstate.proofCount = ZERO_BI;
                 marketstate.userCount = ZERO_BI;
