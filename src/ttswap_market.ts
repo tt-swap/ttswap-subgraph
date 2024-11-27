@@ -341,14 +341,14 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
 export function handle_e_initGood(event: e_initGood): void {
         let addresserc = event.params._goodid;
         let erc20address = addresserc.toHexString();
-        let valuegoodid = event.params._valuegoodNo.toString();
+        let valuegoodid = event.params._valuegoodNo.toHexString();
         let normalgoodid = event.params._goodid.toHexString();
         let stakecontruct = event.params._construct.mod(BI_128);
         let proofid_BG = event.params._proofNo;
         let marketmanage = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
         );
-        let goodowner = event.transaction.from.toHex();
+        let goodowner = event.transaction.from.toHexString();
         let proofstate = marketmanage.try_getProofState(proofid_BG);
 
         let trade_value = event.params._normalinitial.mod(BI_128);
@@ -519,7 +519,7 @@ export function handle_e_initGood(event: e_initGood): void {
 
         let goodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
-        ).try_getGoodState(Address.fromString(valuegoodid));
+        ).try_getGoodState(Address.fromString(valuegoodid.toString()));
         if (!goodcurrentstate.reverted) {
                 value_good.currentValue =
                         goodcurrentstate.value.currentState.div(BI_128);
@@ -641,8 +641,8 @@ export function handle_e_initGood(event: e_initGood): void {
 }
 
 export function handle_e_buyGood(event: e_buyGood): void {
-        let fromgood = event.params.sellgood;
-        let togood = event.params.forgood;
+        let fromgood = event.params.sellgood.toHexString();
+        let togood = event.params.forgood.toHexString();
         let trade_value = event.params.swapvalue;
         let from_quantity = event.params.sellgoodstate.div(BI_128);
         let from_fee = event.params.sellgoodstate.mod(BI_128);
@@ -665,9 +665,9 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 marketstate.totalInvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
         }
-        let from_good = GoodState.load(fromgood.toString());
+        let from_good = GoodState.load(fromgood);
         if (from_good === null) {
-                from_good = new GoodState(fromgood.toString());
+                from_good = new GoodState(fromgood);
                 from_good.goodseq = ZERO_BI;
 
                 from_good.isvaluegood = false;
@@ -700,7 +700,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
 
         let goodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
-        ).try_getGoodState(fromgood);
+        ).try_getGoodState(Address.fromString(fromgood.toString()));
         if (!goodcurrentstate.reverted) {
                 from_good.currentValue =
                         goodcurrentstate.value.currentState.div(BI_128);
@@ -718,9 +718,9 @@ export function handle_e_buyGood(event: e_buyGood): void {
         from_good.modifiedTime = event.block.timestamp;
         from_good.save();
 
-        let to_good = GoodState.load(togood.toString());
+        let to_good = GoodState.load(togood);
         if (to_good === null) {
-                to_good = new GoodState(togood.toString());
+                to_good = new GoodState(togood);
                 to_good.goodseq = ZERO_BI;
 
                 to_good.isvaluegood = false;
@@ -753,7 +753,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
 
         let togoodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
-        ).try_getGoodState(togood);
+        ).try_getGoodState(Address.fromString(togood.toString()));
         if (!togoodcurrentstate.reverted) {
                 to_good.currentValue =
                         togoodcurrentstate.value.currentState.div(BI_128);
@@ -851,8 +851,8 @@ export function handle_e_buyGood(event: e_buyGood): void {
 }
 
 export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
-        let fromgood = event.params.usegood;
-        let togood = event.params.buygood;
+        let fromgood = event.params.usegood.toHexString();
+        let togood = event.params.buygood.toHexString();
         let trade_value = event.params.swapvalue;
         let from_quantity = event.params.buygoodstate.div(BI_128);
         let from_fee = event.params.buygoodstate.mod(BI_128);
@@ -875,9 +875,9 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
                 marketstate.totalInvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
         }
-        let from_good = GoodState.load(fromgood.toString());
+        let from_good = GoodState.load(fromgood);
         if (from_good === null) {
-                from_good = new GoodState(fromgood.toString());
+                from_good = new GoodState(fromgood);
                 from_good.goodseq = ZERO_BI;
 
                 from_good.isvaluegood = false;
@@ -910,7 +910,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
 
         let goodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
-        ).try_getGoodState(fromgood);
+        ).try_getGoodState(Address.fromString(fromgood.toString()));
         if (!goodcurrentstate.reverted) {
                 from_good.currentValue =
                         goodcurrentstate.value.currentState.div(BI_128);
@@ -928,9 +928,9 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
         from_good.modifiedTime = event.block.timestamp;
         from_good.save();
 
-        let to_good = GoodState.load(togood.toString());
+        let to_good = GoodState.load(togood);
         if (to_good === null) {
-                to_good = new GoodState(togood.toString());
+                to_good = new GoodState(togood);
                 to_good.goodseq = ZERO_BI;
 
                 to_good.isvaluegood = false;
@@ -963,7 +963,7 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
 
         let togoodcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
-        ).try_getGoodState(togood);
+        ).try_getGoodState(Address.fromString(togood.toString()));
         if (!togoodcurrentstate.reverted) {
                 to_good.currentValue =
                         togoodcurrentstate.value.currentState.div(BI_128);
@@ -1057,8 +1057,8 @@ export function handle_e_buyGoodForPay(event: e_buyGoodForPay): void {
 }
 
 export function handle_e_collectProof(event: e_collectProof): void {
-        let normalgoodid = event.params._normalGoodNo.toString();
-        let valuegoodid = event.params._valueGoodNo.toString();
+        let normalgoodid = event.params._normalGoodNo.toHexString();
+        let valuegoodid = event.params._valueGoodNo.toHexString();
         let proofNo = event.params._proofNo.toString();
         let normalprofit = event.params._profit
                 .div(BI_128)
@@ -1370,9 +1370,9 @@ export function handle_e_collectProof(event: e_collectProof): void {
 }
 
 export function handle_e_investGood(event: e_investGood): void {
-        let normalgoodid = event.params._normalgoodid.toString();
+        let normalgoodid = event.params._normalgoodid.toHexString();
         let stakecontruct = event.params._value.mod(BI_128);
-        let valuegoodid = event.params._valueGoodNo.toString();
+        let valuegoodid = event.params._valueGoodNo.toHexString();
         let proofNo = event.params._proofNo.toString();
         let marketmanage = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
@@ -1852,8 +1852,8 @@ export function handle_e_investGood(event: e_investGood): void {
 }
 
 export function handle_e_disinvestProof(event: e_disinvestProof): void {
-        let normalgoodid = event.params._normalGoodNo.toString();
-        let valuegoodid = event.params._valueGoodNo.toString();
+        let normalgoodid = event.params._normalGoodNo.toHexString();
+        let valuegoodid = event.params._valueGoodNo.toHexString();
         let proofNo = event.params._proofNo.toString();
         let marketmanage = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
@@ -1918,7 +1918,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
 
         let normalcurrentstate = TTSwap_Market.bind(
                 Address.fromString(MARKET_ADDRESS)
-        ).try_getGoodState(Address.fromString(normalgoodid));
+        ).try_getGoodState(Address.fromString(normalgoodid.toString()));
         if (!normalcurrentstate.reverted) {
                 normal_good.currentValue =
                         normalcurrentstate.value.currentState.div(BI_128);
@@ -2025,7 +2025,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
 
                 let valuecurrentstate = TTSwap_Market.bind(
                         Address.fromString(MARKET_ADDRESS)
-                ).try_getGoodState(Address.fromString(valuegoodid));
+                ).try_getGoodState(Address.fromString(valuegoodid.toString()));
                 if (!valuecurrentstate.reverted) {
                         value_good.currentValue =
                                 valuecurrentstate.value.currentState.div(
@@ -2339,7 +2339,7 @@ export function handle_e_collectcommission(event: e_collectcommission): void {
         let commissionarray = event.params._commisionamount;
 
         for (let aa = 0; aa < goodidarrary.length; aa++) {
-                let good = GoodState.load(goodidarrary[aa].toString());
+                let good = GoodState.load(goodidarrary[aa].toHexString());
                 if (good !== null) {
                         newcustomer.totalcommissionvalue =
                                 newcustomer.totalcommissionvalue.plus(
@@ -2354,7 +2354,7 @@ export function handle_e_collectcommission(event: e_collectcommission): void {
 }
 
 export function handle_e_goodWelfare(event: e_goodWelfare): void {
-        let normalgoodid = event.params.goodid.toString();
+        let normalgoodid = event.params.goodid.toHexString();
         let warefare = event.params.welfare;
         let normal_good = GoodState.load(normalgoodid);
         if (normal_good === null) {
@@ -2395,7 +2395,7 @@ export function handle_e_goodWelfare(event: e_goodWelfare): void {
 }
 
 export function handle_e_changegoodowner(event: e_changegoodowner): void {
-        let normalgoodid = event.params.goodid.toString();
+        let normalgoodid = event.params.goodid.toHexString();
         let normal_good = GoodState.load(normalgoodid);
         if (normal_good === null) {
                 normal_good = new GoodState(normalgoodid);
