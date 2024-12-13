@@ -29,7 +29,13 @@ import {
         e_transferdel,
 } from "../generated/TTSwap_Market/TTSwap_Market";
 
-import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./util/constants";
+import {
+        MARKET_ADDRESS,
+        BI_128,
+        ZERO_BI,
+        ONE_BI,
+        ADDRESS_ZERO,
+} from "./util/constants";
 
 import {
         fetchTokenSymbol,
@@ -222,7 +228,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
         meta_good.symbol_lower = meta_good.tokensymbol.toLowerCase();
         meta_good.save();
 
-        let null_good = new GoodState("0");
+        let null_good = new GoodState(ADDRESS_ZERO.toString());
 
         null_good.goodseq = ZERO_BI;
         null_good.isvaluegood = false;

@@ -5,11 +5,11 @@ import { ERC20NameBytes } from "../../generated/TTSwap_Market/ERC20NameBytes";
 import { StaticTokenDefinition } from "./staticTokenDefinition";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { isNullEthValue } from ".";
-import { ADDRESS_ZERO } from "./constants";
+import { ADDRESS_ONE } from "./constants";
 
 export function fetchTokenSymbol(tokenAddress: Address): string {
         let symbolValue = "unknown";
-        if (tokenAddress.toHexString() == ADDRESS_ZERO) {
+        if (tokenAddress.toHexString() == ADDRESS_ONE) {
                 symbolValue = "ETH";
         } else {
                 let contract = ERC20.bind(tokenAddress);
@@ -51,7 +51,7 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
 
 export function fetchTokenName(tokenAddress: Address): string {
         let nameValue = "unknown";
-        if (tokenAddress.toHexString() == ADDRESS_ZERO) {
+        if (tokenAddress.toHexString() == ADDRESS_ONE) {
                 nameValue = "ETH";
         } else {
                 let contract = ERC20.bind(tokenAddress);
@@ -91,7 +91,7 @@ export function fetchTokenName(tokenAddress: Address): string {
 
 export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
         let totalSupplyValue = BigInt.fromU64(0);
-        if (tokenAddress.toHexString() == ADDRESS_ZERO) {
+        if (tokenAddress.toHexString() == ADDRESS_ONE) {
                 totalSupplyValue = BigInt.fromString(
                         "117765776000000000000000000"
                 );
@@ -112,7 +112,7 @@ export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
         let decimalValue = BigInt.fromU64(0);
-        if (tokenAddress.toHexString() == ADDRESS_ZERO) {
+        if (tokenAddress.toHexString() == ADDRESS_ONE) {
                 decimalValue = BigInt.fromU64(18);
         } else {
                 let contract = ERC20.bind(tokenAddress);
