@@ -1,6 +1,5 @@
 import {
         MarketState,
-        ParGoodState,
         GoodState,
         ProofState,
         GoodData,
@@ -394,8 +393,8 @@ export function log_GoodData(
         }
 }
 
-export function fetchGoodDecimals(goodid: string): BigInt {
-        let goodState = GoodState.load(goodid);
+export function fetchGoodDecimals(goodid: Address): BigInt {
+        let goodState = GoodState.load(goodid.toHexString());
         let decimals = BigInt.fromString("0");
 
         if (goodState === null) {
@@ -403,15 +402,13 @@ export function fetchGoodDecimals(goodid: string): BigInt {
         } else {
                 decimals = goodState.tokendecimals;
                 if (decimals == BigInt.fromString("0")) {
-                        decimals = fetchTokenDecimals(
-                                Address.fromString(goodState.erc20Address)
-                        );
+                        decimals = fetchTokenDecimals(goodid);
                 }
         }
         return decimals;
 }
 
-export function fetchGoodConfig(goodid: BigInt): BigInt {
+export function fetchGoodConfig(goodid: Address): BigInt {
         let contract = TTSwap_Market.bind(Address.fromString(MARKET_ADDRESS));
         // try types uint8 for decimals
         let decimalValue = BigInt.fromU32(0);

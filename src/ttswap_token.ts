@@ -33,8 +33,8 @@ export function handle_e_setenv(event: e_setenv): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -46,8 +46,8 @@ export function handle_e_setenv(event: e_setenv): void {
                 ttsenv.usdt_amount = ZERO_BI;
                 ttsenv.lasttime = ZERO_BI;
         }
-        ttsenv.normalgoodid = event.params.normalgoodid;
-        ttsenv.valuegoodid = event.params.valuegoodid;
+        ttsenv.normalgoodid = event.params.normalgoodid.toHexString();
+        ttsenv.valuegoodid = event.params.valuegoodid.toHexString();
         ttsenv.marketcontract = event.params.marketcontract.toHexString();
         ttsenv.save();
 }
@@ -59,8 +59,8 @@ export function handle_e_setdaoadmin(event: e_setdaoadmin): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -101,8 +101,8 @@ export function handle_e_addShare(event: e_addShare): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -135,8 +135,8 @@ export function handle_e_shareMint(event: e_shareMint): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -172,8 +172,8 @@ export function handle_e_burnShare(event: e_burnShare): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -213,7 +213,7 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
+                newcustomer.userConfig = ZERO_BI;
                 newcustomer.refer = "#";
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
@@ -237,7 +237,7 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 referralcus.tradeCount = ZERO_BI;
                 referralcus.investCount = ZERO_BI;
                 referralcus.disinvestCount = ZERO_BI;
-                referralcus.isBanlist = false;
+                referralcus.userConfig = ZERO_BI;
                 referralcus.refer = "#";
                 referralcus.customerno = ZERO_BI;
                 referralcus.totalprofitvalue = ZERO_BI;
@@ -258,8 +258,8 @@ export function handle_e_publicsell(event: e_publicsell): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -291,8 +291,8 @@ export function handle_e_unstake(event: e_unstake): void {
                 newcustomer.tradeCount = ZERO_BI;
                 newcustomer.investCount = ZERO_BI;
                 newcustomer.disinvestCount = ZERO_BI;
-                newcustomer.isBanlist = false;
-                newcustomer.refer = "#1";
+                newcustomer.userConfig = ZERO_BI;
+                newcustomer.refer = "#";
                 newcustomer.customerno = ZERO_BI;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
@@ -301,14 +301,13 @@ export function handle_e_unstake(event: e_unstake): void {
                 newcustomer.stakettscontruct = ZERO_BI;
                 newcustomer.getfromstake = ZERO_BI;
         }
-        let proofvalue = event.params.proofvalue;
-        let contrct = event.params.unstakestate.div(BI_128);
+        let proofvalue = event.params.proofvalue.div(BI_128);
+        let proofcontrunct = event.params.proofvalue.mod(BI_128);
+
         let profit = event.params.unstakestate.mod(BI_128);
-        let stakevalue = event.params.stakestate.div(BI_128);
-        let stakecontruct = event.params.stakestate.mod(BI_128);
         newcustomer.getfromstake = newcustomer.getfromstake.plus(profit);
-        newcustomer.stakettsvalue = stakevalue;
-        newcustomer.stakettscontruct = stakecontruct;
+        newcustomer.stakettsvalue = proofvalue;
+        newcustomer.stakettscontruct = proofcontrunct;
         newcustomer.save();
 
         let ttsenv = tts_env.load("1");
@@ -317,8 +316,8 @@ export function handle_e_unstake(event: e_unstake): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -332,7 +331,7 @@ export function handle_e_unstake(event: e_unstake): void {
         }
         ttsenv.actual_amount = ttsenv.actual_amount.plus(profit);
         ttsenv.poolcontruct = event.params.poolstate.mod(BI_128);
-        ttsenv.poolvalue = event.params.proofvalue.mod(BI_128);
+        ttsenv.poolvalue = event.params.stakestate.mod(BI_128);
         ttsenv.poolasset = event.params.poolstate.div(BI_128);
         ttsenv.save();
 }
@@ -343,8 +342,8 @@ export function handle_e_updatepool(event: e_updatepool): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -371,8 +370,8 @@ export function handle_e_syncChainStake(event: e_syncChainStake): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = ZERO_BI;
-                ttsenv.valuegoodid = ZERO_BI;
+                ttsenv.normalgoodid = "#";
+                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";

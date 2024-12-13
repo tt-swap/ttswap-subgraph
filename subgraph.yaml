@@ -9,9 +9,9 @@ dataSources:
     name: TTSwap_Market
     network: sepolia
     source:
-      address: "0x1F686ccf99E5FdC3A6d605857b6288F25BdfDc02"
+      address: "0x5A834d9973E6E916374b83e6dac4Def5fD66695d"
       abi: TTSwap_Market
-      startBlock: 6832442
+      startBlock: 7265076
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -22,11 +22,9 @@ dataSources:
         - CustomerData
         - MarketState
         - GoodState
-        - ParGoodState
         - ProofState
         - Transaction
         - GoodData
-        - ParGoodData
         - MarketData
         - tts_env
       abis:
@@ -39,38 +37,35 @@ dataSources:
         - name: ERC20SymbolBytes
           file: ./abis/ERC20SymbolBytes.json
       eventHandlers:
-        - event: e_initMetaGood(uint256,uint256,uint256,address,uint256,uint256)
+        - event: e_changemarketcreator(address)
+          handler: handle_e_changemarketcreator
+        - event: e_initMetaGood(uint256,address,uint256,uint256,uint256)
           handler: handle_e_initMetaGood
-        - event: e_initGood(uint256,uint256,uint256,address,uint256,uint256,uint256,uint256)
+        - event: e_initGood(uint256,address,address,uint256,uint256,uint256,uint256)
           handler: handle_e_initGood
-        - event: e_buyGood(indexed uint256,indexed uint256,address,uint128,uint256,uint256)
+        - event: e_buyGood(indexed address,indexed address,address,uint128,uint256,uint256)
           handler: handle_e_buyGood
-        - event: e_buyGoodForPay(indexed uint256,indexed
-            uint256,address,address,uint128,uint256,uint256)
+        - event: e_buyGoodForPay(indexed address,indexed address,address,address,uint128,uint256,uint256)
           handler: handle_e_buyGoodForPay
-        - event: e_investGood(indexed uint256,uint256,uint256,uint256,uint256,uint256)
+        - event: e_investGood(indexed uint256,address,address,uint256,uint256,uint256)
           handler: handle_e_investGood
-        - event: e_disinvestProof(indexed uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+        - event: e_disinvestProof(indexed uint256,address,address,uint256,uint256,uint256,uint256)
           handler: handle_e_disinvestProof
-        - event: e_collectProof(indexed uint256,uint256,uint256,uint256)
+        - event: e_collectProof(indexed uint256,address,address,uint256)
           handler: handle_e_collectProof
         - event: e_setMarketConfig(uint256)
           handler: handle_e_setMarketConfig
-        - event: e_changeOwner(indexed uint256,address,address)
-          handler: handle_e_changeOwner
-        - event: e_updateGoodConfig(uint256,uint256)
+        - event: e_updateGoodConfig(address,uint256)
           handler: handle_e_updateGoodConfig
-        - event: e_modifyGoodConfig(uint256,uint256)
+        - event: e_modifyGoodConfig(address,uint256)
           handler: handle_e_modifyGoodConfig
-        - event: e_addbanlist(address)
-          handler: handle_e_addbanlist
-        - event: e_removebanlist(address)
-          handler: handle_e_removebanlist
-        - event: e_collectcommission(uint256[],uint256[])
+        - event: e_modifiedUserConfig(address,uint256)
+          handler: handle_e_modifiedUserConfig
+        - event: e_collectcommission(address[],uint256[])
           handler: handle_e_collectcommission
-        - event: e_goodWelfare(uint256,uint128)
+        - event: e_goodWelfare(address,uint128)
           handler: handle_e_goodWelfare
-        - event: e_changegoodowner(uint256,address)
+        - event: e_changegoodowner(address,address)
           handler: handle_e_changegoodowner
         - event: e_transferdel(uint256,uint256)
           handler: handle_e_transferdel
@@ -78,9 +73,9 @@ dataSources:
     name: TTSwap_Token
     network: sepolia
     source:
-      address: "0x60bCd40CcfDAB3c6B1A86c3c017919AF9B71120b"
+      address: "0xf407295AAec4FEe08cB41de7205df88a4b29c1B4"
       abi: TTSwap_Token
-      startBlock: 6832356
+      startBlock: 7265057
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -100,7 +95,7 @@ dataSources:
           handler: handle_e_addreferer
         - event: e_publicsell(uint256,uint256)
           handler: handle_e_publicsell
-        - event: e_setenv(uint256,uint256,address)
+        - event: e_setenv(address,address,address)
           handler: handle_e_setenv
         - event: e_setdaoadmin(address)
           handler: handle_e_setdaoadmin
@@ -124,9 +119,9 @@ dataSources:
     name: TTSwap_NFT
     network: sepolia
     source:
-      address: "0x022dCAfD59845E25524c794FBBfc57cfDC8739F7"
+      address: "0x9c80a747629251159433a8E517cD49250E9CcE39"
       abi: TTSwap_NFT
-      startBlock: 6832416
+      startBlock: 7265076
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -140,5 +135,50 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handle_e_Transfer
+  - kind: ethereum/contract
+    name: TTSwap_LimitOrder
+    network: sepolia
+    source:
+      address: "0xaD470bc0fD566E042663bc9BFcFeE7181121ffb4"
+      abi: TTSwap_LimitOrder
+      startBlock: 7115637
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ttswap_limitOrder.ts
+      entities:
+        - ProofState
+      abis:
+        - name: TTSwap_LimitOrder
+          file: ./abis/TTSwap_LimitOrder.json
+      eventHandlers:
+        - event: e_addLimitOrder(uint256,address,address,address,uint256)
+          handler: handle_e_addLimitOrder
+        # - event: e_addauths(address,uint256)
+        #   handler: handle_e_addauths
+        - event: e_changemarketcreator(address)
+          handler: handle_e_changemarketcreator
+        - event: e_cleandeadorder(uint256,uint256,address)
+          handler: handle_e_cleandeadorder
+        - event:  e_cleandeadorders(uint256[])
+          handler: handle_e_cleandeadorders
+        - event: e_removeLimitOrder(uint256)
+          handler: handle_e_removeLimitOrder
+        # - event: e_removeauths(address)
+        #   handler: handle_e_removeauths
+        - event: e_setmaxfreeremain(uint96)
+          handler: handle_e_setmaxfreeremain
+        - event: e_takeOrder(uint256)
+          handler: handle_e_takeOrder
+        - event: e_updateLimitOrder(uint256,address,address,uint256)
+          handler: handle_e_updateLimitOrder
+        - event: e_deploy(address,uint256,uint256)
+          handler: handle_e_deploy
+        - event:  e_addmaxslot(uint256)
+          handler: handle_e_addmaxslot
+        - event: e_takeOrderChips(uint256,uint256)
+          handler: handle_e_takeOrderChips
+
 
 
