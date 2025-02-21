@@ -881,7 +881,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
         if (!proofstate.reverted) {
                 proof.good1Quantity = proofstate.value.invest.mod(BI_128);
                 proof.good1ContructFee = proofstate.value.invest.div(BI_128);
-                if (valuegoodid != "0") {
+                if (valuegoodid != ADDRESS_ZERO) {
                         proof.good2Quantity =
                                 proofstate.value.valueinvest.mod(BI_128);
                         proof.good2ContructFee =
@@ -936,7 +936,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
 
         normal_good.save();
 
-        if (valuegoodid != "0") {
+        if (valuegoodid != ADDRESS_ZERO) {
                 let value_good = GoodState.load(valuegoodid);
                 if (value_good === null) {
                         value_good = new GoodState(valuegoodid);
@@ -1112,7 +1112,7 @@ export function handle_e_collectProof(event: e_collectProof): void {
                 tx.transtype = "collect";
                 tx.transvalue = BigInt.fromString("0");
                 tx.fromgood = normal_good.id;
-                tx.togood = "0";
+                tx.togood = ADDRESS_ZERO;
 
                 tx.fromgoodQuanity = event.params._profit.div(BI_128);
                 tx.fromgoodfee = ZERO_BI;
@@ -1300,7 +1300,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
         }
-        if (valuegoodid != "0") {
+        if (valuegoodid != ADDRESS_ZERO) {
                 let newcustomer = Customer.load(
                         event.transaction.from.toHexString()
                 );
@@ -1596,7 +1596,7 @@ export function handle_e_investGood(event: e_investGood): void {
                 tx.transtype = "invest";
                 tx.transvalue = event.params._value.div(BI_128);
                 tx.fromgood = normal_good.id;
-                tx.togood = "0";
+                tx.togood = ADDRESS_ZERO;
                 tx.fromgoodQuanity = event.params._invest.mod(BI_128);
                 tx.fromgoodfee = event.params._invest.div(BI_128);
                 tx.timestamp = event.block.timestamp;
@@ -1788,7 +1788,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
         }
-        if (valuegoodid != "0") {
+        if (valuegoodid != ADDRESS_ZERO) {
                 let value_good = GoodState.load(valuegoodid);
                 if (value_good === null) {
                         value_good = new GoodState(valuegoodid);
@@ -2066,7 +2066,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 tx.transtype = "divest";
                 tx.transvalue = event.params._value;
                 tx.fromgood = normal_good.id;
-                tx.togood = "0";
+                tx.togood = ADDRESS_ZERO;
                 tx.fromgoodQuanity = proof.good1Quantity;
                 tx.fromgoodQuanity = tx.fromgoodQuanity.minus(normal_Quantity);
                 tx.fromgoodfee = normal_fee;
