@@ -2,6 +2,7 @@ import { Address, BigInt } from "@graphprotocol/graph-ts";
 
 import {
         Customer,
+        MarketState,
         tts_env,
         tts_auth,
         tts_share,
@@ -23,7 +24,8 @@ import {
         e_shareMint,
 } from "../generated/TTSwap_Token/TTSwap_Token";
 
-import { BI_128, ZERO_BI, ONE_BI } from "./util/constants";
+import { MARKET_ADDRESS, BI_128, ZERO_BI, ONE_BI } from "./util/constants";
+
 import { log_CustomerData } from "./util/customer";
 
 export function handle_e_setenv(event: e_setenv): void {
@@ -204,6 +206,21 @@ export function handle_e_burnShare(event: e_burnShare): void {
 }
 
 export function handle_e_addreferer(event: e_addreferral): void {
+        let marketstate = MarketState.load(MARKET_ADDRESS);
+        if (marketstate === null) {
+                marketstate = new MarketState(MARKET_ADDRESS);
+                marketstate.marketConfig = ZERO_BI;
+                marketstate.marketCreator = "#";
+                marketstate.goodCount = ZERO_BI;
+                marketstate.proofCount = ZERO_BI;
+                marketstate.userCount = ZERO_BI;
+                marketstate.txCount = ZERO_BI;
+                marketstate.totalTradeCount = ZERO_BI;
+                marketstate.totalInvestCount = ZERO_BI;
+                marketstate.totalDisinvestCount = ZERO_BI;
+                marketstate.totalDisinvestValue = ZERO_BI;
+                marketstate.totalTradeValue = ZERO_BI;
+        }
         let newcustomer = Customer.load(event.params.users.toHexString());
         if (newcustomer === null) {
                 newcustomer = new Customer(event.params.users.toHexString());
@@ -215,7 +232,8 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 newcustomer.disinvestCount = ZERO_BI;
                 newcustomer.userConfig = ZERO_BI;
                 newcustomer.refer = "#";
-                newcustomer.customerno = ZERO_BI;
+                marketstate.userCount = marketstate.userCount.plus(ONE_BI);
+                newcustomer.customerno = marketstate.userCount;
                 newcustomer.totalprofitvalue = ZERO_BI;
                 newcustomer.totalcommissionvalue = ZERO_BI;
                 newcustomer.referralnum = ZERO_BI;
@@ -223,14 +241,13 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 newcustomer.stakettscontruct = ZERO_BI;
                 newcustomer.getfromstake = ZERO_BI;
         }
-
         newcustomer.refer = event.params.referral.toHexString();
         newcustomer.lastoptime = event.block.timestamp;
         newcustomer.save();
         log_CustomerData(newcustomer, event.block.timestamp);
         let referralcus = Customer.load(event.params.referral.toHexString());
         if (referralcus === null) {
-                referralcus = new Customer(event.params.users.toHexString());
+                referralcus = new Customer(event.params.referral.toHexString());
                 referralcus.tradeValue = ZERO_BI;
                 referralcus.investValue = ZERO_BI;
                 referralcus.disinvestValue = ZERO_BI;
@@ -239,16 +256,20 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 referralcus.disinvestCount = ZERO_BI;
                 referralcus.userConfig = ZERO_BI;
                 referralcus.refer = "#";
-                referralcus.customerno = ZERO_BI;
+                marketstate.userCount = marketstate.userCount.plus(ONE_BI);
+                referralcus.customerno = marketstate.userCount;
                 referralcus.totalprofitvalue = ZERO_BI;
                 referralcus.totalcommissionvalue = ZERO_BI;
                 referralcus.referralnum = ZERO_BI;
                 referralcus.stakettsvalue = ZERO_BI;
                 referralcus.stakettscontruct = ZERO_BI;
                 referralcus.getfromstake = ZERO_BI;
+                referralcus.lastoptime = event.block.timestamp;
         }
         referralcus.referralnum = referralcus.referralnum.plus(ONE_BI);
         referralcus.save();
+        log_CustomerData(referralcus, event.block.timestamp);
+        marketstate.save();
 }
 
 export function handle_e_publicsell(event: e_publicsell): void {
