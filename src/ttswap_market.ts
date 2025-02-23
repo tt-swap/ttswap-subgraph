@@ -1055,16 +1055,18 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         newcustomer.stakettscontruct = ZERO_BI;
                 }
 
-                newcustomer.totalprofitvalue.plus(
-                        normal_good.currentValue
-                                .times(event.params._profit.div(BI_128))
-                                .div(normal_good.currentQuantity)
-                );
-                newcustomer.totalprofitvalue.plus(
-                        value_good.currentValue
-                                .times(event.params._profit.mod(BI_128))
-                                .div(value_good.currentQuantity)
-                );
+                newcustomer.totalprofitvalue =
+                        newcustomer.totalprofitvalue.plus(
+                                normal_good.currentValue
+                                        .times(event.params._profit.div(BI_128))
+                                        .div(normal_good.currentQuantity)
+                        );
+                newcustomer.totalprofitvalue =
+                        newcustomer.totalprofitvalue.plus(
+                                value_good.currentValue
+                                        .times(event.params._profit.mod(BI_128))
+                                        .div(value_good.currentQuantity)
+                        );
 
                 newcustomer.lastoptime = event.block.timestamp;
 
@@ -1146,11 +1148,12 @@ export function handle_e_collectProof(event: e_collectProof): void {
                         newcustomer.stakettscontruct = ZERO_BI;
                 }
 
-                newcustomer.totalprofitvalue.plus(
-                        normal_good.currentValue
-                                .times(event.params._profit.div(BI_128))
-                                .div(normal_good.currentQuantity)
-                );
+                newcustomer.totalprofitvalue =
+                        newcustomer.totalprofitvalue.plus(
+                                normal_good.currentValue
+                                        .times(event.params._profit.div(BI_128))
+                                        .div(normal_good.currentQuantity)
+                        );
                 newcustomer.lastoptime = event.block.timestamp;
 
                 newcustomer.save();
@@ -1981,16 +1984,18 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.disinvestValue.minus(invest_value);
                 newcustomer.disinvestCount =
                         newcustomer.disinvestCount.plus(ONE_BI);
-                newcustomer.totalprofitvalue.plus(
-                        normal_good.currentValue
-                                .times(event.params._profit.div(BI_128))
-                                .div(normal_good.currentQuantity)
-                );
-                newcustomer.totalprofitvalue.plus(
-                        value_good.currentValue
-                                .times(event.params._profit.mod(BI_128))
-                                .div(value_good.currentQuantity)
-                );
+                newcustomer.totalprofitvalue =
+                        newcustomer.totalprofitvalue.plus(
+                                normal_good.currentValue
+                                        .times(event.params._profit.div(BI_128))
+                                        .div(normal_good.currentQuantity)
+                        );
+                newcustomer.totalprofitvalue =
+                        newcustomer.totalprofitvalue.plus(
+                                value_good.currentValue
+                                        .times(event.params._profit.mod(BI_128))
+                                        .div(value_good.currentQuantity)
+                        );
 
                 newcustomer.lastoptime = event.block.timestamp;
                 newcustomer.save();
@@ -2031,11 +2036,12 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                         newcustomer.disinvestValue.minus(invest_value);
                 newcustomer.disinvestCount =
                         newcustomer.disinvestCount.plus(ONE_BI);
-                newcustomer.totalprofitvalue.plus(
-                        normal_good.currentValue
-                                .times(event.params._profit.div(BI_128))
-                                .div(normal_good.currentQuantity)
-                );
+                newcustomer.totalprofitvalue =
+                        newcustomer.totalprofitvalue.plus(
+                                normal_good.currentValue
+                                        .times(event.params._profit.div(BI_128))
+                                        .div(normal_good.currentQuantity)
+                        );
 
                 newcustomer.lastoptime = event.block.timestamp;
                 newcustomer.save();
@@ -2064,7 +2070,7 @@ export function handle_e_disinvestProof(event: e_disinvestProof): void {
                 }
                 tx.blockNumber = event.block.number;
                 tx.transtype = "divest";
-                tx.transvalue = event.params._value;
+                tx.transvalue = event.params._value.div(BI_128);
                 tx.fromgood = normal_good.id;
                 tx.togood = ADDRESS_ZERO;
                 tx.fromgoodQuanity = proof.good1Quantity;
