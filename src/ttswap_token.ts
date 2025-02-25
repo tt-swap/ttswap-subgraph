@@ -18,7 +18,7 @@ import {
         e_rmauths,
         e_addShare,
         e_syncChainStake,
-        e_unstake,
+        e_stakeinfo,
         e_updatepool,
         e_burnShare,
         e_shareMint,
@@ -300,7 +300,7 @@ export function handle_e_publicsell(event: e_publicsell): void {
         ttsenv.save();
 }
 
-export function handle_e_unstake(event: e_unstake): void {
+export function handle_e_stakeinfo(event: e_stakeinfo): void {
         let newcustomer = Customer.load(event.params.recipient.toHexString());
         if (newcustomer === null) {
                 newcustomer = new Customer(
@@ -329,6 +329,7 @@ export function handle_e_unstake(event: e_unstake): void {
         newcustomer.getfromstake = newcustomer.getfromstake.plus(profit);
         newcustomer.stakettsvalue = proofvalue;
         newcustomer.stakettscontruct = proofcontrunct;
+        newcustomer.lastoptime = event.block.timestamp;
         newcustomer.save();
 
         let ttsenv = tts_env.load("1");
