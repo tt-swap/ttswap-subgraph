@@ -9,9 +9,9 @@ dataSources:
     name: TTSwap_Market
     network: sepolia
     source:
-      address: "0x424090d163C7Cfb0bB86581d942ec55738DD620d"
+      address: "0x5ff77c283f06b688a6d2855a8e8535a2b714f903"
       abi: TTSwap_Market
-      startBlock: 7786751
+      startBlock: 7789928
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -71,9 +71,9 @@ dataSources:
     name: TTSwap_Token
     network: sepolia
     source:
-      address: "0xdb677327a924EC9360E054F90F645cACd4c67AfC"
+      address: "0x53f0aefcceaed5d923d1d66cc58134827ad31803"
       abi: TTSwap_Token
-      startBlock: 7782001
+      startBlock: 7789926
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -93,7 +93,7 @@ dataSources:
           handler: handle_e_addreferer
         - event: e_publicsell(uint256,uint256)
           handler: handle_e_publicsell
-        - event: e_setenv(address,address,address)
+        - event: e_setenv(address)
           handler: handle_e_setenv
         - event: e_setdaoadmin(address)
           handler: handle_e_setdaoadmin
@@ -107,8 +107,6 @@ dataSources:
           handler: handle_e_burnShare
         - event: e_shareMint(uint128,uint32)
           handler: handle_e_shareMint
-        - event: e_syncChainStake(uint32,uint128,uint256)
-          handler: handle_e_syncChainStake
         - event: e_stakeinfo(address,uint256,uint256,uint256,uint256)
           handler: handle_e_stakeinfo
         - event: e_updatepool(uint256)
