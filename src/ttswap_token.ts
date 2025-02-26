@@ -220,6 +220,7 @@ export function handle_e_addreferer(event: e_addreferral): void {
                 marketstate.totalDisinvestCount = ZERO_BI;
                 marketstate.totalDisinvestValue = ZERO_BI;
                 marketstate.totalTradeValue = ZERO_BI;
+                marketstate.totalInvestValue = ZERO_BI;
         }
         let newcustomer = Customer.load(event.params.users.toHexString());
         if (newcustomer === null) {
