@@ -186,8 +186,6 @@ type tts_env  @entity {
   poolvalue:BigInt!
   poolasset:BigInt!
   poolcontruct:BigInt!
-  normalgoodid:String!
-  valuegoodid:String!
   dao_admin:String!
   marketcontract:String!
   usdtcontract:String!
@@ -215,12 +213,5 @@ type tts_auth @entity{
   priv:BigInt!
 }
 
-type tts_chainstake @entity{
-  id:ID! #chainid
-  chainvalue:BigInt!
-  chaincontruct:BigInt!
-  poolasset:BigInt!
-  totalasset:BigInt!
-}
 
 

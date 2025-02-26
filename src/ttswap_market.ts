@@ -303,8 +303,7 @@ export function handle_e_initMetaGood(event: e_initMetaGood): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -601,8 +600,7 @@ export function handle_e_initGood(event: e_initGood): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -1509,8 +1507,7 @@ export function handle_e_investGood(event: e_investGood): void {
                         ttsenv.poolvalue = ZERO_BI;
                         ttsenv.poolasset = ZERO_BI;
                         ttsenv.poolcontruct = ZERO_BI;
-                        ttsenv.normalgoodid = "#";
-                        ttsenv.valuegoodid = "#";
+
                         ttsenv.dao_admin = "#";
                         ttsenv.marketcontract = "#";
                         ttsenv.usdtcontract = "#";
@@ -1621,8 +1618,7 @@ export function handle_e_investGood(event: e_investGood): void {
                         ttsenv.poolvalue = ZERO_BI;
                         ttsenv.poolasset = ZERO_BI;
                         ttsenv.poolcontruct = ZERO_BI;
-                        ttsenv.normalgoodid = "#";
-                        ttsenv.valuegoodid = "#";
+
                         ttsenv.dao_admin = "#";
                         ttsenv.marketcontract = "#";
                         ttsenv.usdtcontract = "#";

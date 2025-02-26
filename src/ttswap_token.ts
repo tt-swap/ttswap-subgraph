@@ -6,7 +6,6 @@ import {
         tts_env,
         tts_auth,
         tts_share,
-        tts_chainstake,
 } from "../generated/schema";
 
 import {
@@ -17,7 +16,6 @@ import {
         e_addauths,
         e_rmauths,
         e_addShare,
-        e_syncChainStake,
         e_stakeinfo,
         e_updatepool,
         e_burnShare,
@@ -35,8 +33,7 @@ export function handle_e_setenv(event: e_setenv): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -48,8 +45,7 @@ export function handle_e_setenv(event: e_setenv): void {
                 ttsenv.usdt_amount = ZERO_BI;
                 ttsenv.lasttime = ZERO_BI;
         }
-        ttsenv.normalgoodid = event.params.normalgoodid.toHexString();
-        ttsenv.valuegoodid = event.params.valuegoodid.toHexString();
+
         ttsenv.marketcontract = event.params.marketcontract.toHexString();
         ttsenv.save();
 }
@@ -61,8 +57,7 @@ export function handle_e_setdaoadmin(event: e_setdaoadmin): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -103,8 +98,7 @@ export function handle_e_addShare(event: e_addShare): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -137,8 +131,7 @@ export function handle_e_shareMint(event: e_shareMint): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -174,8 +167,6 @@ export function handle_e_burnShare(event: e_burnShare): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -280,8 +271,7 @@ export function handle_e_publicsell(event: e_publicsell): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -339,8 +329,7 @@ export function handle_e_stakeinfo(event: e_stakeinfo): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -365,8 +354,7 @@ export function handle_e_updatepool(event: e_updatepool): void {
                 ttsenv.poolvalue = ZERO_BI;
                 ttsenv.poolasset = ZERO_BI;
                 ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
+
                 ttsenv.dao_admin = "#";
                 ttsenv.marketcontract = "#";
                 ttsenv.usdtcontract = "#";
@@ -381,62 +369,5 @@ export function handle_e_updatepool(event: e_updatepool): void {
         ttsenv.lasttime = event.block.timestamp;
         ttsenv.lsttime = event.params.poolstate.div(BI_128);
         ttsenv.poolasset = event.params.poolstate.mod(BI_128);
-        ttsenv.save();
-}
-
-export function handle_e_syncChainStake(event: e_syncChainStake): void {
-        let poolvalue = event.params.proofstate.div(BI_128);
-        let construct = event.params.proofstate.mod(BI_128);
-        let ttsenv = tts_env.load("1");
-        if (ttsenv === null) {
-                ttsenv = new tts_env("1");
-                ttsenv.poolvalue = ZERO_BI;
-                ttsenv.poolasset = ZERO_BI;
-                ttsenv.poolcontruct = ZERO_BI;
-                ttsenv.normalgoodid = "#";
-                ttsenv.valuegoodid = "#";
-                ttsenv.dao_admin = "#";
-                ttsenv.marketcontract = "#";
-                ttsenv.usdtcontract = "#";
-                ttsenv.publicsell = ZERO_BI;
-                ttsenv.lsttime = ZERO_BI;
-                ttsenv.actual_amount = ZERO_BI;
-                ttsenv.shares_index = ZERO_BI;
-                ttsenv.left_share = ZERO_BI;
-                ttsenv.usdt_amount = ZERO_BI;
-                ttsenv.lasttime = ZERO_BI;
-        }
-
-        let chainstake = tts_chainstake.load(event.params.chain.toString());
-        if (chainstake === null) {
-                chainstake = new tts_chainstake(event.params.chain.toString());
-                chainstake.chainvalue = ZERO_BI;
-                chainstake.chaincontruct = ZERO_BI;
-                chainstake.poolasset = ZERO_BI;
-                chainstake.totalasset = ZERO_BI;
-        }
-        ttsenv.poolvalue = ttsenv.poolvalue.minus(chainstake.chainvalue);
-        chainstake.chainvalue = poolvalue;
-        ttsenv.poolvalue = ttsenv.poolvalue.plus(chainstake.chainvalue);
-
-        ttsenv.poolcontruct = ttsenv.poolcontruct.minus(
-                chainstake.chaincontruct
-        );
-        chainstake.chaincontruct = construct;
-        ttsenv.poolcontruct = ttsenv.poolcontruct.plus(
-                chainstake.chaincontruct
-        );
-
-        ttsenv.poolasset = ttsenv.poolasset.minus(event.params.poolasset);
-
-        chainstake.poolasset = chainstake.poolasset.plus(
-                event.params.poolasset
-        );
-        chainstake.totalasset = chainstake.totalasset.plus(
-                event.params.poolasset
-        );
-        chainstake.save();
-
-        ttsenv.lasttime = event.block.timestamp;
         ttsenv.save();
 }
