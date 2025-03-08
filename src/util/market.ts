@@ -8,7 +8,7 @@ export function fetchMarketConfig(tokenAddress: Address): BigInt {
         let MarketConfigResult = contract.try_marketconfig();
         if (!MarketConfigResult.reverted) {
                 MarketConfig = BigInt.fromString(
-                        MarketConfigResult.value[0].toString()
+                        MarketConfigResult.value.toString()
                 );
         } else {
                 MarketConfig = BigInt.fromU32(0);

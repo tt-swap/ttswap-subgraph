@@ -4,7 +4,7 @@ import { TTSwap_Market as MarketContract } from "../../generated/TTSwap_Market/T
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export const ADDRESS_ONE = "0x0000000000000000000000000000000000000001";
-export const MARKET_ADDRESS = "0xf4d05B5D35E59Ef5B6988da7234cEf339ee796bc";
+export const MARKET_ADDRESS = "0x2d5ab924508ccbd4b7e062b8c16ef3d40083d356";
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
