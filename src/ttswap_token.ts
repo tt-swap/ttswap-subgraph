@@ -110,9 +110,9 @@ export function handle_e_addShare(event: e_addShare): void {
                 ttsenv.usdt_amount = ZERO_BI;
                 ttsenv.lasttime = ZERO_BI;
         }
-        let ttsshare = tts_share.load(event.params.index.toString());
+        let ttsshare = tts_share.load(event.params.recipient.toHexString());
         if (ttsshare === null) {
-                ttsshare = new tts_share(event.params.index.toString());
+                ttsshare = new tts_share(event.params.recipient.toHexString());
                 ttsshare.share_owner = event.params.recipient.toHexString();
                 ttsshare.share_leftamount = event.params.leftamount;
                 ttsshare.share_metric = event.params.metric;
@@ -150,7 +150,7 @@ export function handle_e_shareMint(event: e_shareMint): void {
 
         ttsenv.save();
 
-        let ttsshare = tts_share.load(event.params.index.toString());
+        let ttsshare = tts_share.load(event.params.owner.toString());
         if (ttsshare !== null) {
                 ttsshare.share_leftamount = ttsshare.share_leftamount.minus(
                         event.params.mintamount
@@ -178,9 +178,9 @@ export function handle_e_burnShare(event: e_burnShare): void {
                 ttsenv.usdt_amount = ZERO_BI;
                 ttsenv.lasttime = ZERO_BI;
         }
-        let ttsshare = tts_share.load(event.params.index.toString());
+        let ttsshare = tts_share.load(event.params.owner.toHexString());
         if (ttsshare === null) {
-                ttsshare = new tts_share(event.params.index.toString());
+                ttsshare = new tts_share(event.params.owner.toHexString());
                 ttsshare.share_owner = "#";
                 ttsshare.share_leftamount = ZERO_BI;
                 ttsshare.share_metric = ZERO_BI;
