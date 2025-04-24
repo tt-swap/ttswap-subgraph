@@ -667,11 +667,13 @@ export function handle_e_initGood(event: e_initGood): void {
 export function handle_e_buyGood(event: e_buyGood): void {
         let fromgood = event.params.sellgood.toHexString();
         let togood = event.params.forgood.toHexString();
-        let trade_value = event.params.swapvalue;
-        let from_quantity = event.params.sellgoodstate.div(BI_128);
-        let from_fee = event.params.sellgoodstate.mod(BI_128);
-        let to_quantity = event.params.forgoodstate.div(BI_128);
-        let to_fee = event.params.forgoodstate.mod(BI_128);
+        let trade_value1 = event.params.swapvalue.mod(BI_128);
+        let trade_value2 = event.params.swapvalue.div(BI_128);
+
+        let from_quantity = event.params.good1change.div(BI_128);
+        let from_fee = event.params.good1change.mod(BI_128);
+        let to_quantity = event.params.good2change.div(BI_128);
+        let to_fee = event.params.good2change.mod(BI_128);
         let marketstate = MarketState.load(MARKET_ADDRESS);
         if (marketstate === null) {
                 marketstate = new MarketState(MARKET_ADDRESS);
@@ -732,7 +734,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
         }
         from_good.totalTradeCount = from_good.totalTradeCount.plus(ONE_BI);
         from_good.totalTradeQuantity = from_good.totalTradeQuantity.plus(
-                event.params.sellgoodstate.div(BI_128)
+                event.params.good2change.div(BI_128)
         );
         from_good.txCount = from_good.txCount.plus(ONE_BI);
         from_good.modifiedTime = event.block.timestamp;
@@ -781,7 +783,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
         }
         to_good.totalTradeCount = to_good.totalTradeCount.plus(ONE_BI);
         to_good.totalTradeQuantity = to_good.totalTradeQuantity.plus(
-                event.params.forgoodstate.div(BI_128)
+                event.params.good2change.div(BI_128)
         );
         to_good.modifiedTime = event.block.timestamp;
         to_good.txCount = to_good.txCount.plus(ONE_BI);
@@ -838,8 +840,14 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 tx.timestamp = ZERO_BI;
         }
         tx.blockNumber = event.block.number;
-        tx.transtype = "buy";
-        tx.transvalue = trade_value;
+        if (trade_value1.gt(ZERO_BI)) {
+                tx.transtype = "buy";
+                tx.transvalue = trade_value1;
+        }
+        if (trade_value2.gt(ZERO_BI)) {
+                tx.transtype = "buy";
+                tx.transvalue = trade_value2;
+        }
         tx.fromgood = from_good.id;
         tx.togood = to_good.id;
         tx.fromgoodQuanity = from_quantity;

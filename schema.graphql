@@ -1,4 +1,4 @@
-type Customer @entity {
+type Customer @entity(immutable:false) {
   # address
   id: ID!
   refer: String
@@ -20,7 +20,7 @@ type Customer @entity {
   custdata:[CustomerData!]@derivedFrom(field: "customerid")
 }
 
-type CustomerData @entity {
+type CustomerData @entity(immutable:false) {
   # address
   id:ID!
   refer: String
@@ -42,7 +42,7 @@ type CustomerData @entity {
   create_time:BigInt!
 }
 
-type MarketState @entity {
+type MarketState @entity(immutable:false) {
   #market address
   id: ID!
   marketConfig: BigInt!
@@ -59,7 +59,7 @@ type MarketState @entity {
   totalDisinvestCount: BigInt!
 }
 
-type GoodState @entity {
+type GoodState @entity(immutable:false) {
   id: ID!
   goodseq:BigInt!
   isvaluegood:Boolean!
@@ -93,7 +93,7 @@ type GoodState @entity {
   goodData: [GoodData!] @derivedFrom(field: "good")
 }
 
-type ProofState @entity {
+type ProofState @entity(immutable:false) {
   id: ID!
   owner: String!
   good1: GoodState!
@@ -106,7 +106,7 @@ type ProofState @entity {
   createTime: BigInt!
 }
 
-type Transaction @entity {
+type Transaction @entity(immutable:false) {
   # goodid+goodtxcount%500
   id: ID!
   blockNumber: BigInt!
@@ -123,7 +123,7 @@ type Transaction @entity {
   timestamp: BigInt!
 }
 
-type GoodData @entity {
+type GoodData @entity(immutable:false) {
   # hour:GoodId+h+minute (60 rows)
   # day: GoodId+d+20minute (72 rows)
   # week:GoodId+w+3hour  (56 rows)
@@ -155,10 +155,7 @@ type GoodData @entity {
   close: BigInt!
 }
 
-
-
-
-type MarketData @entity {
+type MarketData @entity(immutable:false) {
   # hour:h+minute (60 rows)
   # day: d+20minute (72 rows)
   # week:w+3hour  (56 rows)
@@ -181,7 +178,7 @@ type MarketData @entity {
 }
 
 
-type tts_env  @entity {
+type tts_env  @entity(immutable:false) {
   id:ID!
   poolvalue:BigInt!
   poolasset:BigInt!
@@ -198,9 +195,7 @@ type tts_env  @entity {
   lasttime:BigInt!
 }
 
-
-
-type tts_share @entity{
+type tts_share @entity(immutable:false){
   id:ID!
   share_owner:String!
   share_leftamount:BigInt!
@@ -208,9 +203,30 @@ type tts_share @entity{
   share_chips:BigInt!
 }
 
-type tts_auth @entity{
+type tts_auth @entity(immutable:false){
   id:ID! #user
   priv:BigInt!
+}
+
+
+type ttswap_stakeeth_env @entity(immutable:false){
+  id:Bytes!
+  TotalState0:BigInt!
+  TotalState1:BigInt!
+  ethShare0:BigInt!
+  ethShare1:BigInt!
+  wethShare0:BigInt!
+  wethShare1:BigInt!
+  TotalStake0:BigInt!
+  TotalStake1:BigInt!
+  Total_stake:BigInt!
+  Total_reward:BigInt!
+  reth_staking0:BigInt!
+  reth_staking1:BigInt!
+  total_restakedAmount:BigInt!
+  total_restakedAward:BigInt!
+  total_ttsreward:BigInt!
+  rocketReward:BigInt!
 }
 
 
