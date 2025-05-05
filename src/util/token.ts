@@ -5,12 +5,16 @@ import { ERC20NameBytes } from "../../generated/TTSwap_Market/ERC20NameBytes";
 import { StaticTokenDefinition } from "./staticTokenDefinition";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { isNullEthValue } from ".";
-import { ADDRESS_ONE } from "./constants";
+import { ADDRESS_ONE, ADDRESS_TWO, ADDRESS_THREE } from "./constants";
 
 export function fetchTokenSymbol(tokenAddress: Address): string {
         let symbolValue = "unknown";
         if (tokenAddress.toHexString() == ADDRESS_ONE) {
                 symbolValue = "ETH";
+        } else if (tokenAddress.toHexString() == ADDRESS_TWO) {
+                symbolValue = "SETH";
+        } else if (tokenAddress.toHexString() == ADDRESS_THREE) {
+                symbolValue = "SWETH";
         } else {
                 let contract = ERC20.bind(tokenAddress);
                 let contractSymbolBytes = ERC20SymbolBytes.bind(tokenAddress);
@@ -52,7 +56,11 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
 export function fetchTokenName(tokenAddress: Address): string {
         let nameValue = "unknown";
         if (tokenAddress.toHexString() == ADDRESS_ONE) {
-                nameValue = "ETH";
+                nameValue = "Ether";
+        } else if (tokenAddress.toHexString() == ADDRESS_TWO) {
+                nameValue = "Stake Ether";
+        } else if (tokenAddress.toHexString() == ADDRESS_THREE) {
+                nameValue = "Stake Wrapped Ether ";
         } else {
                 let contract = ERC20.bind(tokenAddress);
                 let contractNameBytes = ERC20NameBytes.bind(tokenAddress);
@@ -91,7 +99,10 @@ export function fetchTokenName(tokenAddress: Address): string {
 
 export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
         let totalSupplyValue = BigInt.fromU64(0);
-        if (tokenAddress.toHexString() == ADDRESS_ONE) {
+        if (
+                tokenAddress.toHexString() == ADDRESS_ONE ||
+                tokenAddress.toHexString() == ADDRESS_TWO
+        ) {
                 totalSupplyValue = BigInt.fromString(
                         "117765776000000000000000000"
                 );
