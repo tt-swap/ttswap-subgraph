@@ -5,7 +5,7 @@ import { ERC20NameBytes } from "../../generated/TTSwap_Market/ERC20NameBytes";
 import { StaticTokenDefinition } from "./staticTokenDefinition";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { isNullEthValue } from ".";
-import { ADDRESS_ONE, ADDRESS_TWO, ADDRESS_THREE } from "./constants";
+import { ADDRESS_ONE, ADDRESS_TWO, ADDRESS_THREE, WETH } from "./constants";
 
 export function fetchTokenSymbol(tokenAddress: Address): string {
         let symbolValue = "unknown";
@@ -107,6 +107,9 @@ export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
                         "117765776000000000000000000"
                 );
         } else {
+                if (tokenAddress.toHexString() == ADDRESS_THREE) {
+                        tokenAddress = Address.fromString(WETH);
+                }
                 let contract = ERC20.bind(tokenAddress);
 
                 let totalSupplyResult = contract.try_totalSupply();
@@ -123,7 +126,11 @@ export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
         let decimalValue = BigInt.fromU64(0);
-        if (tokenAddress.toHexString() == ADDRESS_ONE) {
+        if (
+                tokenAddress.toHexString() == ADDRESS_ONE ||
+                tokenAddress.toHexString() == ADDRESS_TWO ||
+                tokenAddress.toHexString() == ADDRESS_THREE
+        ) {
                 decimalValue = BigInt.fromU64(18);
         } else {
                 let contract = ERC20.bind(tokenAddress);
