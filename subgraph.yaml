@@ -139,9 +139,9 @@ dataSources:
           handler: handle_e_stakeSETH
         - event: e_stakeSWETH(uint256,uint256,uint256,uint256,uint128)
           handler: handle_e_stakeSWETH
-        - event: e_unstakeSETH(uint256,uint256,uint256,uint256,uint128)
+        - event: e_unstakeSETH(uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_unstakeSETH
-        - event: e_unstakeSWETH(uint256,uint256,uint256,uint256,uint128)
+        - event: e_unstakeSWETH(uint256,uint256,uint256,uint256,uint256)
           handler: handle_e_unstakeSWETH
         - event: e_stakeeth_invest(uint256)
           handler: handle_e_stakeeth_invest

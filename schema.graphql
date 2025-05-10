@@ -226,6 +226,7 @@ type ttswap_stakeeth_env @entity(immutable:false){
   total_restakedAmount:BigInt!
   total_restakedAward:BigInt!
   total_ttsreward:BigInt!
+  total_ttstoreth:BigInt!
   rocketReward:BigInt!
 }
 
