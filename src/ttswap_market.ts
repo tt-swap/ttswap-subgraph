@@ -666,7 +666,7 @@ export function handle_e_initGood(event: e_initGood): void {
 export function handle_e_buyGood(event: e_buyGood): void {
         let fromgood = event.params.sellgood.toHexString();
         let togood = event.params.forgood.toHexString();
-        let trade_value1 = event.params.swapvalue.div(BI_128);
+        let trade_value1 = event.params.swapvalue.mod(BI_128);
         let trade_value2 = event.params.swapvalue.div(BI_128);
 
         let from_quantity = event.params.good1change.mod(BI_128);
@@ -844,7 +844,7 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 tx.transvalue = trade_value1;
         }
         if (trade_value2.gt(ZERO_BI)) {
-                tx.transtype = "buy";
+                tx.transtype = "pay";
                 tx.transvalue = trade_value2;
         }
         tx.fromgood = from_good.id;
