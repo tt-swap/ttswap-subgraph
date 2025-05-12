@@ -809,18 +809,28 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 newcustomer.stakettsvalue = ZERO_BI;
                 newcustomer.stakettscontruct = ZERO_BI;
         }
-        newcustomer.tradeValue = newcustomer.tradeValue.plus(
-                event.params.swapvalue
-        );
+        if (trade_value1.equals(ZERO_BI)) {
+                newcustomer.tradeValue =
+                        newcustomer.tradeValue.plus(trade_value2);
+        } else {
+                newcustomer.tradeValue =
+                        newcustomer.tradeValue.plus(trade_value1);
+        }
+
         newcustomer.tradeCount = newcustomer.tradeCount.plus(ONE_BI);
         newcustomer.lastoptime = event.block.timestamp;
         newcustomer.save();
         log_CustomerData(newcustomer, event.block.timestamp);
         marketstate.txCount = marketstate.txCount.plus(ONE_BI);
         marketstate.totalTradeCount = marketstate.totalTradeCount.plus(ONE_BI);
-        marketstate.totalTradeValue = marketstate.totalTradeValue.plus(
-                event.params.swapvalue
-        );
+        if (trade_value1.equals(ZERO_BI)) {
+                marketstate.totalTradeValue =
+                        marketstate.totalTradeValue.plus(trade_value2);
+        } else {
+                marketstate.totalTradeValue =
+                        marketstate.totalTradeValue.plus(trade_value1);
+        }
+
         marketstate.save();
         let transid =
                 from_good.id.toString() +
