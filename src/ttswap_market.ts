@@ -839,13 +839,12 @@ export function handle_e_buyGood(event: e_buyGood): void {
                 tx.timestamp = ZERO_BI;
         }
         tx.blockNumber = event.block.number;
-        if (trade_value1.gt(ZERO_BI)) {
-                tx.transtype = "buy";
-                tx.transvalue = trade_value1;
-        }
-        if (trade_value2.gt(ZERO_BI)) {
+        if (trade_value1.equals(ZERO_BI)) {
                 tx.transtype = "pay";
                 tx.transvalue = trade_value2;
+        } else {
+                tx.transtype = "buy";
+                tx.transvalue = trade_value1;
         }
         tx.fromgood = from_good.id;
         tx.togood = to_good.id;
