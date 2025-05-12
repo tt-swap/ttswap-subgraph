@@ -666,13 +666,13 @@ export function handle_e_initGood(event: e_initGood): void {
 export function handle_e_buyGood(event: e_buyGood): void {
         let fromgood = event.params.sellgood.toHexString();
         let togood = event.params.forgood.toHexString();
-        let trade_value1 = event.params.swapvalue.mod(BI_128);
+        let trade_value1 = event.params.swapvalue.div(BI_128);
         let trade_value2 = event.params.swapvalue.div(BI_128);
 
-        let from_quantity = event.params.good1change.div(BI_128);
-        let from_fee = event.params.good1change.mod(BI_128);
-        let to_quantity = event.params.good2change.div(BI_128);
-        let to_fee = event.params.good2change.mod(BI_128);
+        let from_quantity = event.params.good1change.mod(BI_128);
+        let from_fee = event.params.good1change.div(BI_128);
+        let to_quantity = event.params.good2change.mod(BI_128);
+        let to_fee = event.params.good2change.div(BI_128);
         let marketstate = MarketState.load(MARKET_ADDRESS);
         if (marketstate === null) {
                 marketstate = new MarketState(MARKET_ADDRESS);
