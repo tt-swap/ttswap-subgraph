@@ -43,6 +43,7 @@ export function handle_e_stakeSETH(event: e_stakeSETH): void {
                 ttsstakeenv.total_restakedAward = ZERO_BI;
                 ttsstakeenv.total_ttsreward = ZERO_BI;
                 ttsstakeenv.total_ttstoreth = ZERO_BI;
+                ttsstakeenv.rocketReward = ZERO_BI;
         }
         ttsstakeenv.TotalState0 = event.params.totalState.div(BI_128);
         ttsstakeenv.TotalState1 = event.params.totalState.mod(BI_128);
